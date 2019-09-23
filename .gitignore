@@ -1,0 +1,7 @@
+/node_modules/
+/dist/*
+!/dist/public/
+/dist/public/*
+!/dist/public/files/
+!/dist/public/files/*
+/.idea/
