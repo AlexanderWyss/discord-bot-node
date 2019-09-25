@@ -16,6 +16,7 @@ app.use((req: any, res: any) => {
 
 const bot = new Bot();
 const token = fs.readFileSync(path.join(__dirname, "../token.txt"), "utf8").toString().trim();
-bot.start(token);
+const owner = fs.readFileSync(path.join(__dirname, "../owner.txt"), "utf8").toString().trim();
+bot.start(token, owner);
 
 module.exports = app;

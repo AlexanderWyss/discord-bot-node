@@ -15,11 +15,13 @@
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "discord.js": "^11.5.1",
+    "discord.js-commando": "^0.10.0",
     "erlpack": "github:discordapp/erlpack",
     "express": "~4.16.1",
     "libsodium-wrappers": "^0.7.5",
     "morgan": "~1.9.1",
     "node-opus": "^0.3.2",
+    "sqlite": "^3.0.3",
     "zucc": "^0.1.2"
   },
   "devDependencies": {
