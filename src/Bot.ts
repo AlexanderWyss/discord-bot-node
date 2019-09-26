@@ -1,5 +1,6 @@
 import {CommandoClient} from "discord.js-commando";
 import sqlite from "sqlite";
+import {PlayCommand} from "./commands/PlayCommand";
 
 export class Bot {
 
@@ -8,13 +9,13 @@ export class Bot {
   public start(token: string, owner: string) {
     this.client = new CommandoClient({owner, commandPrefix: "!"});
     this.client.registry
-    // Registers your custom command groups
       .registerGroups([
+        ["music", "Music"]
       ])
       .registerDefaultGroups()
       .registerDefaultTypes()
-      .registerDefaultCommands({prefix: false, ping: false})
-      .registerCommands([]);
+      .registerDefaultCommands({ping: false})
+      .registerCommands([new PlayCommand(this.client)]);
     this.client.login(token);
   }
 }
