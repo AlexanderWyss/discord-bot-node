@@ -1,4 +1,4 @@
-export interface IPlayerObserver {
+export interface PlayerObserver {
    onDebug(information: string): void;
    onEnd(reason: string): void;
    onError(err: Error): void;

@@ -21,17 +21,22 @@ export class GuildMusicManager {
 
   public async playNow(url: string, channel: VoiceChannel): Promise<void> {
     if (this.guild.me.voiceChannel == null) {
-      if (channel == null) {
-        throw new Error("You must be in a channel.");
-      }
-      await channel.join();
+      await this.join(channel);
     }
-    ytdl.getBasicInfo(url).then(trackInfo => this.trackScheduler.now(trackInfo));
+    return ytdl.getBasicInfo(url).then(trackInfo => this.trackScheduler.now(trackInfo));
   }
 
   public leave() {
     if (this.guild.me.voiceChannel) {
       this.guild.me.voiceChannel.leave();
     }
+  }
+
+  public queue(url: string) {
+    return ytdl.getBasicInfo(url).then(trackInfo => this.trackScheduler.append(trackInfo));
+  }
+
+  public skip() {
+    return this.trackScheduler.playNext();
   }
 }

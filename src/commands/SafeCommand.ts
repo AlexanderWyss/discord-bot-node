@@ -7,7 +7,8 @@ export abstract class SafeCommand extends Command {
     super(client, info);
   }
 
-  public run(message: CommandMessage, args: object | string | string[], fromPattern: boolean): Promise<Message | Message[]> {
+  public run(message: CommandMessage, args: object | string | string[], fromPattern: boolean)
+    : Promise<Message | Message[]> {
     try {
       const promise = this.runSafe(message, args, fromPattern);
       if (promise) {
@@ -22,5 +23,6 @@ export abstract class SafeCommand extends Command {
     return;
   }
 
-  public abstract runSafe(message: CommandMessage, args: object | string | string[], fromPattern: boolean): Promise<any> | void;
+  public abstract runSafe(message: CommandMessage, args: object | string | string[], fromPattern: boolean)
+    : Promise<any> | void;
 }

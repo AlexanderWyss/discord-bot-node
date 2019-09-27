@@ -1,6 +1,6 @@
-import express = require("express");
-import fs = require("fs");
-import path = require("path");
+import express from "express";
+import fs from "fs";
+import path from "path";
 import {Bot} from "./Bot";
 
 const indexRouter = require("./index");

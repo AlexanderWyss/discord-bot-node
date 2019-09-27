@@ -1,8 +1,8 @@
 import {videoInfo} from "ytdl-core";
-import {IPlayerObserver} from "./IPlayerObserver";
 import {MusicPlayer} from "./MusicPlayer";
+import {PlayerObserver} from "./PlayerObserver";
 
-export class TrackScheduler implements IPlayerObserver {
+export class TrackScheduler implements PlayerObserver {
 
   private tracks: videoInfo[] = [];
 
