@@ -1,10 +1,10 @@
 import {Message} from "discord.js";
 import {Command, CommandMessage, CommandoClient} from "discord.js-commando";
-import ytdl from "ytdl-core";
+import {Bot} from "../Bot";
 
 export class PlayCommand extends Command {
 
-  public constructor(client: CommandoClient) {
+  public constructor(client: CommandoClient, private bot: Bot) {
     super(client, {
       name: "play",
       group: "music",
@@ -22,14 +22,11 @@ export class PlayCommand extends Command {
   }
 
   public run(message: CommandMessage, args: any, fromPattern: boolean): Promise<Message | Message[]> {
-    console.log(args);
-    message.member.voiceChannel.join().then(connection => {
-      const stream = ytdl(args.url, {filter: "audioonly", quality: "highestaudio"});
-      const streamDispatcher = connection.playStream(stream);
-      streamDispatcher.on("end", reason => {message.member.voiceChannel.leave(); });
-      ytdl.getInfo(args.url).then(info => console.log(info));
+    const guildMusicManager = this.bot.getGuildMusicManager(message.guild);
+    guildMusicManager.playNow(args.url, message.member.voiceChannel).catch(err => {
+      console.log(err);
+      message.reply(err);
     });
-
-    return undefined;
+    return;
   }
 }
