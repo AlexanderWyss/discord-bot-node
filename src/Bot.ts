@@ -1,6 +1,7 @@
 import {Guild, Snowflake} from "discord.js";
 import {CommandoClient} from "discord.js-commando";
-import sqlite from "sqlite";
+import {JoinCommand} from "./commands/JoinCommand";
+import {LeaveCommand} from "./commands/LeaveCommand";
 import {PlayCommand} from "./commands/PlayCommand";
 import {GuildMusicManager} from "./music/GuildMusicManager";
 
@@ -18,7 +19,9 @@ export class Bot {
       .registerDefaultGroups()
       .registerDefaultTypes()
       .registerDefaultCommands({ping: false})
-      .registerCommands([new PlayCommand(this.client, this)]);
+      .registerCommands([
+        new PlayCommand(this.client, this), new JoinCommand(this.client, this), new LeaveCommand(this.client, this)
+      ]);
     this.client.login(token);
   }
 

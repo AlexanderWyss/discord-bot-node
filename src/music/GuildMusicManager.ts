@@ -1,4 +1,4 @@
-import {Guild, VoiceChannel} from "discord.js";
+import {Guild, VoiceChannel, VoiceConnection} from "discord.js";
 import ytdl from "ytdl-core";
 import {MusicPlayer} from "./MusicPlayer";
 import {TrackScheduler} from "./TrackScheduler";
@@ -8,18 +8,30 @@ export class GuildMusicManager {
   private musicPlayer: MusicPlayer;
 
   constructor(private guild: Guild) {
-    this.musicPlayer = new MusicPlayer(this.guild.voiceConnection);
+    this.musicPlayer = new MusicPlayer(this.guild);
     this.trackScheduler = new TrackScheduler(this.musicPlayer);
   }
 
-  public playNow(url: string, channel: VoiceChannel): Promise<void> {
+  public join(channel: VoiceChannel): Promise<VoiceConnection> {
     if (channel == null) {
-      return Promise.reject("You must be in a channel.");
+      throw new Error("You must be in a channel.");
     }
-    let promise = Promise.resolve();
-    if (this.guild.me.voiceChannel == null || channel.id !== this.guild.me.voiceChannel.id) {
-      promise = channel.join().then(connection => this.musicPlayer.setConnection(connection));
+    return channel.join();
+  }
+
+  public async playNow(url: string, channel: VoiceChannel): Promise<void> {
+    if (this.guild.me.voiceChannel == null) {
+      if (channel == null) {
+        throw new Error("You must be in a channel.");
+      }
+      await channel.join();
     }
-    return promise.then(() => ytdl.getBasicInfo(url).then(trackInfo => this.trackScheduler.now(trackInfo)));
+    ytdl.getBasicInfo(url).then(trackInfo => this.trackScheduler.now(trackInfo));
+  }
+
+  public leave() {
+    if (this.guild.me.voiceChannel) {
+      this.guild.me.voiceChannel.leave();
+    }
   }
 }
