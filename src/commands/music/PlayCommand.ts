@@ -9,7 +9,7 @@ export class PlayCommand extends SafeCommand {
       name: "play",
       group: "music",
       memberName: "play",
-      description: "Play a song now or next",
+      description: "Play a song now, next or append to queue",
       examples: ["play https://www.youtube.com/watch?v=dQw4w9WgXcQ", "play https://www.youtube.com/watch?v=dQw4w9WgXcQ next"],
       args: [
         {
