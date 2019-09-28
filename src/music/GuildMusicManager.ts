@@ -47,4 +47,8 @@ export class GuildMusicManager {
   public resume() {
     this.trackScheduler.resume();
   }
+
+  public playNext(url: string): Promise<void> {
+    return ytdl.getBasicInfo(url).then(trackInfo => this.trackScheduler.next(trackInfo));
+  }
 }

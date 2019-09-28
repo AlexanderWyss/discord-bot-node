@@ -1,7 +1,7 @@
 import {Message, VoiceConnection} from "discord.js";
 import {CommandMessage, CommandoClient} from "discord.js-commando";
-import {Bot} from "../Bot";
-import {SafeCommand} from "./SafeCommand";
+import {Bot} from "../../Bot";
+import {SafeCommand} from "../SafeCommand";
 
 export class LeaveCommand extends SafeCommand {
 

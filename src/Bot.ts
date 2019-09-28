@@ -1,12 +1,12 @@
 import {Guild, Snowflake} from "discord.js";
 import {CommandoClient} from "discord.js-commando";
-import {JoinCommand} from "./commands/JoinCommand";
-import {LeaveCommand} from "./commands/LeaveCommand";
-import {PauseCommand} from "./commands/PauseCommand";
-import {PlayCommand} from "./commands/PlayCommand";
-import {QueueCommand} from "./commands/QueueCommand";
-import {ResumeCommand} from "./commands/ResumeCommand";
-import {SkipCommand} from "./commands/SkipCommand";
+import {JoinCommand} from "./commands/music/JoinCommand";
+import {LeaveCommand} from "./commands/music/LeaveCommand";
+import {PauseCommand} from "./commands/music/PauseCommand";
+import {PlayCommand} from "./commands/music/PlayCommand";
+import {QueueCommand} from "./commands/music/QueueCommand";
+import {ResumeCommand} from "./commands/music/ResumeCommand";
+import {SkipCommand} from "./commands/music/SkipCommand";
 import {GuildMusicManager} from "./music/GuildMusicManager";
 
 export class Bot {
