@@ -32,7 +32,7 @@ export class MusicPlayer {
       this.dispatcher.end("NewSong");
     }
     const stream = YoutubeService.getInstance().getStream(url);
-    const dispatcher = this.voiceConnection.playStream(stream);
+    const dispatcher = this.voiceConnection.playStream(stream, {volume: 0.1});
     dispatcher.on("debug", (information: string) => this.forObservers(observer => observer.onDebug(information)));
     dispatcher.on("end", (reason: string) => this.forObservers(observer => observer.onEnd(reason)));
     dispatcher.on("error", (err: Error) => this.forObservers(observer => observer.onError(err)));
