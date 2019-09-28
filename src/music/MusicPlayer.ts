@@ -28,6 +28,9 @@ export class MusicPlayer {
   }
 
   public play(url: string) {
+    if (this.voiceConnection.dispatcher) {
+      this.dispatcher.end("NewSong");
+    }
     const stream = ytdl(url, {filter: "audioonly", quality: "highestaudio"});
     const dispatcher = this.voiceConnection.playStream(stream);
     dispatcher.on("debug", (information: string) => this.forObservers(observer => observer.onDebug(information)));

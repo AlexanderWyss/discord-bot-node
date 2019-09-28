@@ -4,8 +4,8 @@ import {MusicPlayer} from "./MusicPlayer";
 import {TrackScheduler} from "./TrackScheduler";
 
 export class GuildMusicManager {
-  private trackScheduler: TrackScheduler;
-  private musicPlayer: MusicPlayer;
+  private readonly trackScheduler: TrackScheduler;
+  private readonly musicPlayer: MusicPlayer;
 
   constructor(private guild: Guild) {
     this.musicPlayer = new MusicPlayer(this.guild);
@@ -39,6 +39,9 @@ export class GuildMusicManager {
   public skip() {
     return this.trackScheduler.playNext();
   }
+  public skipBack() {
+    return this.trackScheduler.playPrevious();
+  }
 
   public pause() {
     this.trackScheduler.pause();
@@ -50,5 +53,9 @@ export class GuildMusicManager {
 
   public playNext(url: string): Promise<void> {
     return ytdl.getBasicInfo(url).then(trackInfo => this.trackScheduler.next(trackInfo));
+  }
+
+  public restart() {
+    this.trackScheduler.restart();
   }
 }

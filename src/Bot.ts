@@ -4,12 +4,15 @@ import {JoinCommand} from "./commands/music/JoinCommand";
 import {LeaveCommand} from "./commands/music/LeaveCommand";
 import {PauseCommand} from "./commands/music/PauseCommand";
 import {PlayCommand} from "./commands/music/PlayCommand";
-import {QueueCommand} from "./commands/music/QueueCommand";
 import {ResumeCommand} from "./commands/music/ResumeCommand";
 import {SkipCommand} from "./commands/music/SkipCommand";
 import {GuildMusicManager} from "./music/GuildMusicManager";
 
 export class Bot {
+
+  public get client(): CommandoClient {
+    return this.commandoClient;
+  }
 
   private commandoClient: CommandoClient;
   private musicManagers = new Map<Snowflake, GuildMusicManager>();
@@ -25,14 +28,16 @@ export class Bot {
       .registerDefaultCommands({ping: false})
       .registerCommands([
         new PlayCommand(this), new JoinCommand(this), new LeaveCommand(this),
-        new QueueCommand(this), new SkipCommand(this), new PauseCommand(this),
-        new ResumeCommand(this)
+        new SkipCommand(this), new PauseCommand(this), new ResumeCommand(this)
       ]);
     this.commandoClient.login(token);
-  }
-
-  public get client(): CommandoClient {
-    return this.commandoClient;
+    process.on("exit", () => {
+      this.leaveAllVoiceChannels();
+    });
+    process.on("SIGINT", () => {
+      this.leaveAllVoiceChannels();
+      process.exit();
+    });
   }
 
   public getGuildMusicManager(guild: Guild): GuildMusicManager {
@@ -42,5 +47,11 @@ export class Bot {
     const musicManager = new GuildMusicManager(guild);
     this.musicManagers.set(guild.id, musicManager);
     return musicManager;
+  }
+
+  private leaveAllVoiceChannels() {
+    for (const musicManager of this.musicManagers.values()) {
+      musicManager.leave();
+    }
   }
 }

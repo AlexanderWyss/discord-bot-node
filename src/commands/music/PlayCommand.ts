@@ -9,7 +9,7 @@ export class PlayCommand extends SafeCommand {
       name: "play",
       group: "music",
       memberName: "play",
-      description: "Play a song",
+      description: "Play a song now or next",
       examples: ["play https://www.youtube.com/watch?v=dQw4w9WgXcQ", "play https://www.youtube.com/watch?v=dQw4w9WgXcQ next"],
       args: [
         {
@@ -17,20 +17,22 @@ export class PlayCommand extends SafeCommand {
           prompt: "What song do you want to play?",
           type: "string"
         }, {
-          key: "nowOrNext",
+          key: "nextOrQueue",
+          label: "now (default) | next | queue",
           default: "now",
           type: "string",
           prompt: "",
-          oneOf: ["now", "next"]
+          oneOf: ["now", "next", "queue"]
         }
       ]
     });
   }
 
   public runSafe(message: CommandMessage, args: any, fromPattern: boolean): Promise<any> {
-    if (args.nowOrNext === "next") {
-      console.log("Next");
+    if (args.nextOrQueue === "next") {
       return this.bot.getGuildMusicManager(message.guild).playNext(args.url);
+    } else if (args.nextOrQueue == "queue") {
+      return this.bot.getGuildMusicManager(message.guild).queue(args.url);
     }
     return this.bot.getGuildMusicManager(message.guild).playNow(args.url, message.member.voiceChannel);
   }
