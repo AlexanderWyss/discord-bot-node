@@ -5,8 +5,8 @@ import {SafeCommand} from "./SafeCommand";
 
 export class LeaveCommand extends SafeCommand {
 
-  public constructor(client: CommandoClient, private bot: Bot) {
-    super(client, {
+  public constructor(private bot: Bot) {
+    super(bot.client, {
       name: "leave",
       group: "music",
       memberName: "leave",

@@ -2,19 +2,21 @@ import {Guild, Snowflake} from "discord.js";
 import {CommandoClient} from "discord.js-commando";
 import {JoinCommand} from "./commands/JoinCommand";
 import {LeaveCommand} from "./commands/LeaveCommand";
+import {PauseCommand} from "./commands/PauseCommand";
 import {PlayCommand} from "./commands/PlayCommand";
 import {QueueCommand} from "./commands/QueueCommand";
+import {ResumeCommand} from "./commands/ResumeCommand";
 import {SkipCommand} from "./commands/SkipCommand";
 import {GuildMusicManager} from "./music/GuildMusicManager";
 
 export class Bot {
 
-  private client: CommandoClient;
+  private commandoClient: CommandoClient;
   private musicManagers = new Map<Snowflake, GuildMusicManager>();
 
   public start(token: string, owner: string) {
-    this.client = new CommandoClient({owner, commandPrefix: "!"});
-    this.client.registry
+    this.commandoClient = new CommandoClient({owner, commandPrefix: "!"});
+    this.commandoClient.registry
       .registerGroups([
         ["music", "Music"]
       ])
@@ -22,10 +24,15 @@ export class Bot {
       .registerDefaultTypes()
       .registerDefaultCommands({ping: false})
       .registerCommands([
-        new PlayCommand(this.client, this), new JoinCommand(this.client, this), new LeaveCommand(this.client, this),
-        new QueueCommand(this.client, this), new SkipCommand(this.client, this)
+        new PlayCommand(this), new JoinCommand(this), new LeaveCommand(this),
+        new QueueCommand(this), new SkipCommand(this), new PauseCommand(this),
+        new ResumeCommand(this)
       ]);
-    this.client.login(token);
+    this.commandoClient.login(token);
+  }
+
+  public get client(): CommandoClient {
+    return this.commandoClient;
   }
 
   public getGuildMusicManager(guild: Guild): GuildMusicManager {

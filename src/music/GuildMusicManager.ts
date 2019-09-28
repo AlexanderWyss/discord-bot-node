@@ -39,4 +39,12 @@ export class GuildMusicManager {
   public skip() {
     return this.trackScheduler.playNext();
   }
+
+  public pause() {
+    this.trackScheduler.pause();
+  }
+
+  public resume() {
+    this.trackScheduler.resume();
+  }
 }

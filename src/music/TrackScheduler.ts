@@ -10,7 +10,12 @@ export class TrackScheduler implements PlayerObserver {
   }
 
   public playNext() {
-    this.musicPlayer.play(this.tracks.shift().video_url);
+    const videoInfo = this.tracks.shift();
+    if (videoInfo) {
+      this.musicPlayer.play(videoInfo.video_url);
+    } else {
+      throw new Error("No track in queue");
+    }
   }
 
   public append(track: videoInfo) {
@@ -30,10 +35,15 @@ export class TrackScheduler implements PlayerObserver {
   }
 
   public onEnd(reason: string): void {
-    this.playNext();
+    console.log(reason);
+    if (this.tracks.length > 0) {
+      this.playNext();
+    }
   }
 
   public onError(err: Error): void {
+    console.log(err);
+    this.onEnd("error");
   }
 
   public onSpeaking(value: boolean): void {
@@ -43,5 +53,13 @@ export class TrackScheduler implements PlayerObserver {
   }
 
   public onVolumeChange(oldVolume: number, newVolume: number): void {
+  }
+
+  public pause() {
+    this.musicPlayer.pause();
+  }
+
+  public resume() {
+    this.musicPlayer.resume();
   }
 }

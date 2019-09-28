@@ -5,8 +5,8 @@ import {SafeCommand} from "./SafeCommand";
 
 export class QueueCommand extends SafeCommand {
 
-  public constructor(client: CommandoClient, private bot: Bot) {
-    super(client, {
+  public constructor(private bot: Bot) {
+    super(bot.client, {
       name: "queue",
         group: "music",
         memberName: "queue",
