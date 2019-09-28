@@ -21,6 +21,7 @@
     "libsodium-wrappers": "^0.7.5",
     "morgan": "~1.9.1",
     "node-opus": "^0.3.2",
+    "simple-youtube-api": "^5.2.1",
     "sqlite": "^3.0.3",
     "ytdl-core": "^0.29.7",
     "zucc": "^0.1.2"

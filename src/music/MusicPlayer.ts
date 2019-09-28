@@ -1,5 +1,5 @@
 import {Guild} from "discord.js";
-import ytdl from "ytdl-core";
+import {YoutubeService} from "../YoutubeService";
 import {PlayerObserver} from "./PlayerObserver";
 
 export class MusicPlayer {
@@ -31,7 +31,7 @@ export class MusicPlayer {
     if (this.voiceConnection.dispatcher) {
       this.dispatcher.end("NewSong");
     }
-    const stream = ytdl(url, {filter: "audioonly", quality: "highestaudio"});
+    const stream = YoutubeService.getInstance().getStream(url);
     const dispatcher = this.voiceConnection.playStream(stream);
     dispatcher.on("debug", (information: string) => this.forObservers(observer => observer.onDebug(information)));
     dispatcher.on("end", (reason: string) => this.forObservers(observer => observer.onEnd(reason)));

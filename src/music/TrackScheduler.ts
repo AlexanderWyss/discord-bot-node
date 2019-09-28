@@ -1,12 +1,12 @@
-import {videoInfo as VideoInfo} from "ytdl-core";
+import {Video} from "simple-youtube-api";
 import {MusicPlayer} from "./MusicPlayer";
 import {PlayerObserver} from "./PlayerObserver";
 
 export class TrackScheduler implements PlayerObserver {
 
-  private tracks: VideoInfo[] = [];
-  private previousTracks: VideoInfo[] = [];
-  private currentlyPlaying: VideoInfo;
+  private tracks: Video[] = [];
+  private previousTracks: Video[] = [];
+  private currentlyPlaying: Video;
 
   constructor(private musicPlayer: MusicPlayer) {
     this.musicPlayer.register(this);
@@ -19,7 +19,7 @@ export class TrackScheduler implements PlayerObserver {
         this.previousTracks.unshift(this.currentlyPlaying);
       }
       this.currentlyPlaying = videoInfo;
-      this.musicPlayer.play(videoInfo.video_url);
+      this.musicPlayer.play(videoInfo.url);
     } else {
       throw new Error("No track in queue");
     }
@@ -32,7 +32,7 @@ export class TrackScheduler implements PlayerObserver {
         this.tracks.unshift(this.currentlyPlaying);
       }
       this.currentlyPlaying = videoInfo;
-      this.musicPlayer.play(videoInfo.video_url);
+      this.musicPlayer.play(videoInfo.url);
     } else {
       throw new Error("No tracks played previously");
     }
@@ -40,21 +40,21 @@ export class TrackScheduler implements PlayerObserver {
 
   public restart() {
     if (this.currentlyPlaying) {
-      this.musicPlayer.play(this.currentlyPlaying.video_url);
+      this.musicPlayer.play(this.currentlyPlaying.url);
     } else {
       throw new Error("Nothing currently playing");
     }
   }
 
-  public append(track: VideoInfo) {
+  public append(track: Video) {
     this.tracks.push(track);
   }
 
-  public next(track: VideoInfo) {
+  public next(track: Video) {
     this.tracks.unshift(track);
   }
 
-  public now(track: VideoInfo) {
+  public now(track: Video) {
     this.next(track);
     this.playNext();
   }

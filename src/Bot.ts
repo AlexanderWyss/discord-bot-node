@@ -30,12 +30,12 @@ export class Bot {
         new PlayCommand(this), new JoinCommand(this), new LeaveCommand(this),
         new SkipCommand(this), new PauseCommand(this), new ResumeCommand(this)
       ]);
-    this.commandoClient.login(token);
+    this.commandoClient.login(token).then(success => console.log("Logged in"), error => console.log("Login failed: " + error));
     process.on("exit", () => {
-      this.leaveAllVoiceChannels();
+      this.close();
     });
     process.on("SIGINT", () => {
-      this.leaveAllVoiceChannels();
+      this.close();
       process.exit();
     });
   }
@@ -47,6 +47,11 @@ export class Bot {
     const musicManager = new GuildMusicManager(guild);
     this.musicManagers.set(guild.id, musicManager);
     return musicManager;
+  }
+
+  private close() {
+    this.leaveAllVoiceChannels();
+    this.client.destroy().then((success => console.log("client destoryed")));
   }
 
   private leaveAllVoiceChannels() {

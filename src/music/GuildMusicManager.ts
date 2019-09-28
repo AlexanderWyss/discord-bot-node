@@ -1,5 +1,5 @@
 import {Guild, VoiceChannel, VoiceConnection} from "discord.js";
-import ytdl from "ytdl-core";
+import {YoutubeService} from "../YoutubeService";
 import {MusicPlayer} from "./MusicPlayer";
 import {TrackScheduler} from "./TrackScheduler";
 
@@ -19,26 +19,31 @@ export class GuildMusicManager {
     return channel.join();
   }
 
-  public async playNow(url: string, channel: VoiceChannel): Promise<void> {
-    if (this.guild.me.voiceChannel == null) {
-      await this.join(channel);
-    }
-    return ytdl.getBasicInfo(url).then(trackInfo => this.trackScheduler.now(trackInfo));
-  }
-
   public leave() {
     if (this.guild.me.voiceChannel) {
       this.guild.me.voiceChannel.leave();
     }
   }
 
+  public async playNow(url: string, channel: VoiceChannel): Promise<void> {
+    if (this.guild.me.voiceChannel == null) {
+      await this.join(channel);
+    }
+    return YoutubeService.getInstance().getInfo(url).then(trackInfo => this.trackScheduler.now(trackInfo));
+  }
+
+  public playNext(url: string): Promise<void> {
+    return YoutubeService.getInstance().getInfo(url).then(trackInfo => this.trackScheduler.next(trackInfo));
+  }
+
   public queue(url: string) {
-    return ytdl.getBasicInfo(url).then(trackInfo => this.trackScheduler.append(trackInfo));
+    return YoutubeService.getInstance().getInfo(url).then(trackInfo => this.trackScheduler.append(trackInfo));
   }
 
   public skip() {
     return this.trackScheduler.playNext();
   }
+
   public skipBack() {
     return this.trackScheduler.playPrevious();
   }
@@ -49,10 +54,6 @@ export class GuildMusicManager {
 
   public resume() {
     this.trackScheduler.resume();
-  }
-
-  public playNext(url: string): Promise<void> {
-    return ytdl.getBasicInfo(url).then(trackInfo => this.trackScheduler.next(trackInfo));
   }
 
   public restart() {
