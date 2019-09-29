@@ -8,7 +8,7 @@ export class YoutubeService {
 
   public static getInstance() {
     if (!this.instance) {
-      this.instance = new YoutubeService(fs.readFileSync(path.join(__dirname, "../youtube-api.txt"), "utf8").toString().trim());
+      this.instance = new YoutubeService(fs.readFileSync(path.join(__dirname, "../../youtube-api.txt"), "utf8").toString().trim());
     }
     return this.instance;
   }

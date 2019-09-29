@@ -1,4 +1,5 @@
 import {DMChannel, GroupDMChannel, Message, ReactionCollector, RichEmbed, TextChannel} from "discord.js";
+import he from "he";
 import {Video} from "simple-youtube-api";
 import {ReactionManager} from "./ReactionManager";
 import {TrackScheduler} from "./TrackScheduler";
@@ -41,9 +42,10 @@ export class MusicPanel implements TrackSchedulerObserver {
       .setTitle("Music Panel")
       .setColor("#0099ff");
     if (currentlyPlaying) {
-      embed.addField("Title", currentlyPlaying.title)
-        .addField("Artist", currentlyPlaying.channel.title)
+      embed.addField("Title", he.decode(currentlyPlaying.title))
+        .addField("Artist", he.decode(currentlyPlaying.channel.title))
         .addField("Url", currentlyPlaying.url)
+        .addField("Volume", this.trackScheduler.getVolume() * 100)
         .setThumbnail((currentlyPlaying.thumbnails as any).high.url);
     }
     return embed;

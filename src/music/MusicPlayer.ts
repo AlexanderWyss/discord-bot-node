@@ -1,6 +1,6 @@
 import {Guild} from "discord.js";
-import {YoutubeService} from "./YoutubeService";
 import {PlayerObserver} from "./PlayerObserver";
+import {YoutubeService} from "./YoutubeService";
 
 export class MusicPlayer {
 
@@ -53,6 +53,14 @@ export class MusicPlayer {
 
   public isPaused(): boolean {
     return this.dispatcher.paused;
+  }
+
+  public setVolume(volume: number) {
+    this.dispatcher.setVolume(volume);
+  }
+
+  public getVolume(): number {
+    return this.dispatcher.volume;
   }
 
   private forObservers(func: (observer: PlayerObserver) => void) {

@@ -6,6 +6,8 @@ export class ReactionManager {
   private static SKIP_START = "⏪";
   private static PAUSE_RESUME = "⏯";
   private static SKIP = "⏭";
+  private static VOLUME_DOWN = "🔉";
+  private static VOLUME_UP = "🔊";
 
   public constructor(private musicManager: GuildMusicManager) {
   }
@@ -14,7 +16,9 @@ export class ReactionManager {
     message.react(ReactionManager.SKIP_BACK)
       .then(() => message.react(ReactionManager.SKIP_START))
       .then(() => message.react(ReactionManager.PAUSE_RESUME))
-      .then(() => message.react(ReactionManager.SKIP));
+      .then(() => message.react(ReactionManager.SKIP))
+      .then(() => message.react(ReactionManager.VOLUME_DOWN))
+      .then(() => message.react(ReactionManager.VOLUME_UP));
   }
 
   public apply(reaction: MessageReaction) {
@@ -36,6 +40,12 @@ export class ReactionManager {
           break;
         case ReactionManager.SKIP:
           this.musicManager.skip();
+          break;
+        case ReactionManager.VOLUME_DOWN:
+          this.musicManager.decreseVolume();
+          break;
+        case ReactionManager.VOLUME_UP:
+          this.musicManager.increseVolume();
           break;
       }
     } catch (e) {

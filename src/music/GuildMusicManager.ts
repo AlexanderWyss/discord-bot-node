@@ -1,9 +1,9 @@
 import {DMChannel, GroupDMChannel, Guild, TextChannel, VoiceChannel, VoiceConnection} from "discord.js";
-import {YoutubeService} from "./YoutubeService";
 import {MusicPanel} from "./MusicPanel";
 import {MusicPlayer} from "./MusicPlayer";
 import {ReactionManager} from "./ReactionManager";
 import {TrackScheduler} from "./TrackScheduler";
+import {YoutubeService} from "./YoutubeService";
 
 export class GuildMusicManager {
   private readonly trackScheduler: TrackScheduler;
@@ -82,5 +82,21 @@ export class GuildMusicManager {
   public close() {
     this.leave();
     this.musicpanel.destroy();
+  }
+
+  public setVolume(volume: number) {
+    this.trackScheduler.setVolume(volume);
+  }
+
+  public getVolume(): number {
+    return this.trackScheduler.getVolume();
+  }
+
+  public decreseVolume() {
+    this.trackScheduler.setVolume(Math.max(this.trackScheduler.getVolume() - 0.1, 0));
+  }
+
+  public increseVolume() {
+    this.trackScheduler.setVolume(Math.min(this.trackScheduler.getVolume() + 0.1, 2));
   }
 }
