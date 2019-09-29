@@ -1,5 +1,5 @@
 import {DMChannel, GroupDMChannel, Guild, TextChannel, VoiceChannel, VoiceConnection} from "discord.js";
-import {YoutubeService} from "../YoutubeService";
+import {YoutubeService} from "./YoutubeService";
 import {MusicPanel} from "./MusicPanel";
 import {MusicPlayer} from "./MusicPlayer";
 import {ReactionManager} from "./ReactionManager";

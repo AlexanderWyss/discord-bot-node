@@ -1,5 +1,5 @@
 import {Guild} from "discord.js";
-import {YoutubeService} from "../YoutubeService";
+import {YoutubeService} from "./YoutubeService";
 import {PlayerObserver} from "./PlayerObserver";
 
 export class MusicPlayer {
