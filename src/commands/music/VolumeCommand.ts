@@ -9,8 +9,8 @@ export class VolumeCommand extends SafeCommand {
       name: "volume",
       group: "music",
       memberName: "volume",
-      description: "Set the volume",
-      examples: ["volume 1", "volume 0.5"],
+      description: "Set the volume (0 - 200)",
+      examples: ["volume 10", "volume 50"],
       args: [
         {
           key: "volume",
