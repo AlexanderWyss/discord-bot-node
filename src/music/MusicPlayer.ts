@@ -51,6 +51,10 @@ export class MusicPlayer {
     this.dispatcher.resume();
   }
 
+  public isPaused(): boolean {
+    return this.dispatcher.paused;
+  }
+
   private forObservers(func: (observer: PlayerObserver) => void) {
     for (const observer of this.observers) {
       func(observer);

@@ -1,12 +1,14 @@
 import {Video} from "simple-youtube-api";
 import {MusicPlayer} from "./MusicPlayer";
 import {PlayerObserver} from "./PlayerObserver";
+import {TrackSchedulerObserver} from "./TrackSchedulerObserver";
 
 export class TrackScheduler implements PlayerObserver {
 
   private tracks: Video[] = [];
   private previousTracks: Video[] = [];
   private currentlyPlaying: Video;
+  private observers: TrackSchedulerObserver[] = [];
 
   constructor(private musicPlayer: MusicPlayer) {
     this.musicPlayer.register(this);
@@ -77,6 +79,7 @@ export class TrackScheduler implements PlayerObserver {
         this.currentlyPlaying = null;
       }
     }
+    this.updateObservers();
   }
 
   public onError(err: Error): void {
@@ -91,8 +94,31 @@ export class TrackScheduler implements PlayerObserver {
   }
 
   public onStart(): void {
+    this.updateObservers();
   }
 
   public onVolumeChange(oldVolume: number, newVolume: number): void {
+  }
+
+  public register(observer: TrackSchedulerObserver) {
+    this.observers.push(observer);
+  }
+
+  public getCurrentlyPlaying(): Video {
+    return this.currentlyPlaying;
+  }
+
+  public deregister(observer: TrackSchedulerObserver) {
+    this.observers.splice(this.observers.indexOf(observer), 1);
+  }
+
+  public isPaused() {
+    return this.musicPlayer.isPaused();
+  }
+
+  private updateObservers() {
+    for (const observer of this.observers) {
+      observer.onChange(this.currentlyPlaying, this);
+    }
   }
 }

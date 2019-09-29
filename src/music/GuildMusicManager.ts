@@ -1,11 +1,14 @@
-import {Guild, VoiceChannel, VoiceConnection} from "discord.js";
+import {DMChannel, GroupDMChannel, Guild, TextChannel, VoiceChannel, VoiceConnection} from "discord.js";
 import {YoutubeService} from "../YoutubeService";
+import {MusicPanel} from "./MusicPanel";
 import {MusicPlayer} from "./MusicPlayer";
+import {ReactionManager} from "./ReactionManager";
 import {TrackScheduler} from "./TrackScheduler";
 
 export class GuildMusicManager {
   private readonly trackScheduler: TrackScheduler;
   private readonly musicPlayer: MusicPlayer;
+  private musicpanel: MusicPanel;
 
   constructor(private guild: Guild) {
     this.musicPlayer = new MusicPlayer(this.guild);
@@ -56,7 +59,28 @@ export class GuildMusicManager {
     this.trackScheduler.resume();
   }
 
+  public togglePause() {
+    if (this.trackScheduler.isPaused()) {
+      this.resume();
+    } else {
+      this.pause();
+    }
+  }
+
   public restart() {
     this.trackScheduler.restart();
+  }
+
+  public displayMusicPanel(channel: TextChannel | DMChannel | GroupDMChannel) {
+    if (this.musicpanel) {
+      this.musicpanel.destroy();
+    }
+    this.musicpanel = new MusicPanel(this.trackScheduler, new ReactionManager(this));
+    this.musicpanel.start(channel);
+  }
+
+  public close() {
+    this.leave();
+    this.musicpanel.destroy();
   }
 }
