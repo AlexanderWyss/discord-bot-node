@@ -1,6 +1,6 @@
-import {Video} from "simple-youtube-api";
+import {TrackInfo} from "./TrackInfo";
 import {TrackScheduler} from "./TrackScheduler";
 
 export interface TrackSchedulerObserver {
-  onChange(nowPlaying: Video, trackScheduler: TrackScheduler): void;
+  onChange(nowPlaying: TrackInfo, trackScheduler: TrackScheduler): void;
 }

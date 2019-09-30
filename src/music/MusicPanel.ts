@@ -1,7 +1,7 @@
 import {DMChannel, GroupDMChannel, Message, ReactionCollector, RichEmbed, TextChannel} from "discord.js";
 import he from "he";
-import {Video} from "simple-youtube-api";
 import {ReactionManager} from "./ReactionManager";
+import {TrackInfo} from "./TrackInfo";
 import {TrackScheduler} from "./TrackScheduler";
 import {TrackSchedulerObserver} from "./TrackSchedulerObserver";
 
@@ -27,7 +27,7 @@ export class MusicPanel implements TrackSchedulerObserver {
     );
   }
 
-  public onChange(nowPlaying: Video, trackScheduler: TrackScheduler): void {
+  public onChange(nowPlaying: TrackInfo, trackScheduler: TrackScheduler): void {
     this.message = this.message.then(message => message.edit(this.buildMessage(nowPlaying)));
   }
 
@@ -37,16 +37,16 @@ export class MusicPanel implements TrackSchedulerObserver {
     this.message.then(message => message.delete()).catch(e => console.log(e));
   }
 
-  private buildMessage(currentlyPlaying: Video): RichEmbed {
+  private buildMessage(currentlyPlaying: TrackInfo): RichEmbed {
     const embed = new RichEmbed()
       .setTitle("Music Panel")
       .setColor("#0099ff");
     if (currentlyPlaying) {
       embed.addField("Title", he.decode(currentlyPlaying.title))
-        .addField("Artist", he.decode(currentlyPlaying.channel.title))
+        .addField("Artist", he.decode(currentlyPlaying.artist))
         .addField("Url", currentlyPlaying.url)
         .addField("Volume", this.trackScheduler.getVolume() * 100)
-        .setThumbnail((currentlyPlaying.thumbnails as any).high.url);
+        .setThumbnail(currentlyPlaying.thumbnailUrl);
     }
     return embed;
   }

@@ -1,13 +1,13 @@
-import {Video} from "simple-youtube-api";
 import {MusicPlayer} from "./MusicPlayer";
 import {PlayerObserver} from "./PlayerObserver";
+import {CurrentTrackInfo, TrackInfo} from "./TrackInfo";
 import {TrackSchedulerObserver} from "./TrackSchedulerObserver";
 
 export class TrackScheduler implements PlayerObserver {
 
-  private tracks: Video[] = [];
-  private previousTracks: Video[] = [];
-  private currentlyPlaying: Video;
+  private tracks: TrackInfo[] = [];
+  private previousTracks: TrackInfo[] = [];
+  private currentlyPlaying: TrackInfo;
   private observers: TrackSchedulerObserver[] = [];
 
   constructor(private musicPlayer: MusicPlayer) {
@@ -15,26 +15,26 @@ export class TrackScheduler implements PlayerObserver {
   }
 
   public playNext() {
-    const videoInfo = this.tracks.shift();
-    if (videoInfo) {
+    const trackInfo = this.tracks.shift();
+    if (trackInfo) {
       if (this.currentlyPlaying) {
         this.previousTracks.unshift(this.currentlyPlaying);
       }
-      this.currentlyPlaying = videoInfo;
-      this.musicPlayer.play(videoInfo.url);
+      this.currentlyPlaying = trackInfo;
+      this.musicPlayer.play(trackInfo.url);
     } else {
       throw new Error("No track in queue");
     }
   }
 
   public playPrevious() {
-    const videoInfo = this.previousTracks.shift();
-    if (videoInfo) {
+    const trackInfo = this.previousTracks.shift();
+    if (trackInfo) {
       if (this.currentlyPlaying) {
         this.tracks.unshift(this.currentlyPlaying);
       }
-      this.currentlyPlaying = videoInfo;
-      this.musicPlayer.play(videoInfo.url);
+      this.currentlyPlaying = trackInfo;
+      this.musicPlayer.play(trackInfo.url);
     } else {
       throw new Error("No tracks played previously");
     }
@@ -48,15 +48,15 @@ export class TrackScheduler implements PlayerObserver {
     }
   }
 
-  public append(track: Video) {
+  public append(track: TrackInfo) {
     this.tracks.push(track);
   }
 
-  public next(track: Video) {
+  public next(track: TrackInfo) {
     this.tracks.unshift(track);
   }
 
-  public now(track: Video) {
+  public now(track: TrackInfo) {
     this.next(track);
     this.playNext();
   }
@@ -105,7 +105,7 @@ export class TrackScheduler implements PlayerObserver {
     this.observers.push(observer);
   }
 
-  public getCurrentlyPlaying(): Video {
+  public getCurrentlyPlaying(): CurrentTrackInfo {
     return this.currentlyPlaying;
   }
 
@@ -129,5 +129,13 @@ export class TrackScheduler implements PlayerObserver {
     for (const observer of this.observers) {
       observer.onChange(this.currentlyPlaying, this);
     }
+  }
+
+  getTracks(): TrackInfo[] {
+    return this.tracks;
+  }
+
+  getPreviousTracks(): TrackInfo[] {
+    return this.previousTracks;
   }
 }

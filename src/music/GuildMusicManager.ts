@@ -2,6 +2,7 @@ import {DMChannel, GroupDMChannel, Guild, TextChannel, VoiceChannel, VoiceConnec
 import {MusicPanel} from "./MusicPanel";
 import {MusicPlayer} from "./MusicPlayer";
 import {ReactionManager} from "./ReactionManager";
+import {CurrentTrackInfo, TrackInfo} from "./TrackInfo";
 import {TrackScheduler} from "./TrackScheduler";
 import {YoutubeService} from "./YoutubeService";
 
@@ -98,5 +99,16 @@ export class GuildMusicManager {
 
   public increseVolume() {
     this.trackScheduler.setVolume(Math.min(this.trackScheduler.getVolume() + 0.1, 2));
+  }
+
+  public getTracks(): TrackInfo[] {
+    return this.trackScheduler.getTracks();
+  }
+  public getPreviousTracks(): TrackInfo[] {
+    return this.trackScheduler.getPreviousTracks();
+  }
+
+  public getCurrentTrack(): CurrentTrackInfo {
+    return this.trackScheduler.getCurrentlyPlaying();
   }
 }

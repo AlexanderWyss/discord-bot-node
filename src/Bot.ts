@@ -1,5 +1,7 @@
 import {Guild, Snowflake} from "discord.js";
 import {CommandoClient} from "discord.js-commando";
+import fs from "fs";
+import path from "path";
 import {JoinCommand} from "./commands/music/JoinCommand";
 import {LeaveCommand} from "./commands/music/LeaveCommand";
 import {MusicPanelCommand} from "./commands/music/MusicPanelCommand";
@@ -9,7 +11,6 @@ import {ResumeCommand} from "./commands/music/ResumeCommand";
 import {SkipCommand} from "./commands/music/SkipCommand";
 import {VolumeCommand} from "./commands/music/VolumeCommand";
 import {GuildMusicManager} from "./music/GuildMusicManager";
-import {MusicPanel} from "./music/MusicPanel";
 
 export class Bot {
 
@@ -17,8 +18,28 @@ export class Bot {
     return this.commandoClient;
   }
 
+  public static getInstance(): Bot {
+    if (!this.bot) {
+      this.bot = new Bot();
+      const token = fs.readFileSync(path.join(__dirname, "../token.txt"), "utf8").toString().trim();
+      const owner = fs.readFileSync(path.join(__dirname, "../owner.txt"), "utf8").toString().trim();
+      this.bot.start(token, owner);
+    }
+    return this.bot;
+  }
+
+  public static start() {
+    this.getInstance();
+  }
+
+  private static bot: Bot;
+
   private commandoClient: CommandoClient;
   private musicManagers = new Map<Snowflake, GuildMusicManager>();
+
+  private constructor() {
+
+  }
 
   public start(token: string, owner: string) {
     this.commandoClient = new CommandoClient({owner, commandPrefix: "!"});
@@ -51,6 +72,15 @@ export class Bot {
     const musicManager = new GuildMusicManager(guild);
     this.musicManagers.set(guild.id, musicManager);
     return musicManager;
+  }
+
+  public getGuildMusicManagerById(guildId: Snowflake): GuildMusicManager {
+    const guild = this.client.guilds.get(guildId);
+    if (guild) {
+      return this.getGuildMusicManager(guild);
+    } else {
+      throw new Error("Guild not available.");
+    }
   }
 
   private close() {
