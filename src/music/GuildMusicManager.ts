@@ -82,7 +82,9 @@ export class GuildMusicManager {
 
   public close() {
     this.leave();
-    this.musicpanel.destroy();
+    if (this.musicpanel) {
+      this.musicpanel.destroy();
+    }
   }
 
   public setVolume(volume: number) {
@@ -104,6 +106,7 @@ export class GuildMusicManager {
   public getTracks(): TrackInfo[] {
     return this.trackScheduler.getTracks();
   }
+
   public getPreviousTracks(): TrackInfo[] {
     return this.trackScheduler.getPreviousTracks();
   }

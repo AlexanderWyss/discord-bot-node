@@ -6,6 +6,6 @@ export interface TrackInfo {
   readonly thumbnailUrl: string;
 }
 
-export interface CurrentTrackInfo extends TrackInfo{
+export interface CurrentTrackInfo extends TrackInfo {
 
 }

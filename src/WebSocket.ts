@@ -1,5 +1,17 @@
 import {Server} from "socket.io";
 import {Bot} from "./Bot";
+import {TrackInfo} from "./music/TrackInfo";
+
+export interface QueueInfo {
+  currentTrack: TrackInfo;
+  tracks: TrackInfo[];
+  previousTracks: TrackInfo[];
+}
+
+export interface JoinGuild {
+  guildId: string;
+  oldGuildId?: string;
+}
 
 export class WebSocket {
 
@@ -10,19 +22,20 @@ export class WebSocket {
   }
 
   public start() {
+    console.log("Start");
     this.io.on("connection", socket => {
-      socket.on("joinGuild", data => {
+      socket.on("joinGuild", (data: JoinGuild) => {
         if (data.oldGuildId) {
           socket.leave(data.oldGuildId);
         }
 
-        let musicManager = this.bot.getGuildMusicManagerById(data.guildId);
+        const musicManager = this.bot.getGuildMusicManagerById(data.guildId);
         socket.join(data.guildId);
         socket.emit("tracks", {
           currentTrack: musicManager.getCurrentTrack(),
           tracks: musicManager.getTracks(),
           previousTracks: musicManager.getPreviousTracks()
-        });
+        } as QueueInfo);
       });
     });
   }

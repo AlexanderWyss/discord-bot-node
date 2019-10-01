@@ -125,17 +125,17 @@ export class TrackScheduler implements PlayerObserver {
     return this.musicPlayer.getVolume();
   }
 
+  public getTracks(): TrackInfo[] {
+    return this.tracks;
+  }
+
+  public getPreviousTracks(): TrackInfo[] {
+    return this.previousTracks;
+  }
+
   private updateObservers() {
     for (const observer of this.observers) {
       observer.onChange(this.currentlyPlaying, this);
     }
-  }
-
-  getTracks(): TrackInfo[] {
-    return this.tracks;
-  }
-
-  getPreviousTracks(): TrackInfo[] {
-    return this.previousTracks;
   }
 }
