@@ -16,10 +16,8 @@ node {
     stage('Deploy') {
         sh 'docker pull alexanderwyss/discord-bot-node:latest'
         sh 'docker stop discord-bot-node || true && docker rm -f discord-bot-node || true'
-        TOKEN = credentials('Discord_Token')
-        OWNER = credentials('Discord_Owner')
         withCredentials([string(credentialsId: 'Discord_Token', variable: 'token'), string(credentialsId: 'Discord_Owner', variable: 'owner')]) {
-            sh "docker run -d -p 8083:8080 --restart unless-stopped --name discord-bot -e PORT=8080 -e TOKEN=${token} -e OWNER=${owner} alexanderwyss/discord-bot-node:latest"
+            sh "docker run -d -p 8083:8080 --restart unless-stopped --name discord-bot -e PORT=8080 -e TOKEN=$token -e OWNER=$owner alexanderwyss/discord-bot-node:latest"
         }
     }
 }
