@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import Youtube, {util, Video, YouTube} from "simple-youtube-api";
 import {Readable} from "stream";
 import ytdl from "ytdl-core";
