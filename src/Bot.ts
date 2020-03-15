@@ -1,7 +1,5 @@
 import {Guild, Snowflake} from "discord.js";
 import {CommandoClient} from "discord.js-commando";
-import fs from "fs";
-import path from "path";
 import {JoinCommand} from "./commands/music/JoinCommand";
 import {LeaveCommand} from "./commands/music/LeaveCommand";
 import {MusicPanelCommand} from "./commands/music/MusicPanelCommand";
