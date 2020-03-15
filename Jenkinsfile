@@ -16,7 +16,7 @@ node {
     stage('Deploy') {
         sh 'docker pull alexanderwyss/discord-bot-node:latest'
         sh 'docker stop discord-bot-node || true && docker rm -f discord-bot-node || true'
-        withCredentials([string(credentialsId: 'Discord_Token', variable: 'token'), string(credentialsId: 'Discord_Owner', variable: 'owner')], string(credentialsId: 'YouTube_api', variable: 'youtubeApi') {
+        withCredentials([string(credentialsId: 'Discord_Token', variable: 'token'), string(credentialsId: 'Discord_Owner', variable: 'owner'), string(credentialsId: 'YouTube_api', variable: 'youtubeApi')]) {
             sh 'docker run -d -p 8083:8080 --restart unless-stopped --name discord-bot-node -e PORT=8080 -e TOKEN=$token -e OWNER=$owner -e YOUTUBE_API=$youtubeApi alexanderwyss/discord-bot-node:latest'
         }
     }
