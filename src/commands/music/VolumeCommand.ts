@@ -1,4 +1,4 @@
-import {CommandMessage} from "discord.js-commando";
+import {CommandoMessage} from "discord.js-commando";
 import {Bot} from "../../Bot";
 import {SafeCommand} from "../SafeCommand";
 
@@ -24,7 +24,7 @@ export class VolumeCommand extends SafeCommand {
     });
   }
 
-  public runSafe(message: CommandMessage, args: any, fromPattern: boolean): Promise<any> | void {
+  public runSafe(message: CommandoMessage, args: any, fromPattern: boolean): Promise<any> | void {
     if (args.volume === -1) {
       return message.reply("Current Volume: " + this.bot.getGuildMusicManager(message.guild).getVolume() * 100);
     }

@@ -1,4 +1,4 @@
-import {DMChannel, GroupDMChannel, Message, ReactionCollector, RichEmbed, TextChannel} from "discord.js";
+import {DMChannel, Message, MessageEmbed, ReactionCollector, TextChannel} from "discord.js";
 import he from "he";
 import {ReactionManager} from "./ReactionManager";
 import {TrackInfo} from "./TrackInfo";
@@ -12,9 +12,9 @@ export class MusicPanel implements TrackSchedulerObserver {
   constructor(private trackScheduler: TrackScheduler, private reactionManager: ReactionManager) {
   }
 
-  public start(channel: TextChannel | DMChannel | GroupDMChannel) {
+  public start(channel: TextChannel | DMChannel) {
     this.trackScheduler.register(this);
-    this.message = channel.sendEmbed(this.buildMessage(this.trackScheduler.getCurrentlyPlaying()));
+    this.message = channel.send({embed: this.buildMessage(this.trackScheduler.getCurrentlyPlaying())});
     this.message.then(message => message.createReactionCollector((reaction, user) =>
       user.id !== channel.client.user.id)
     ).then(collector => {
@@ -37,8 +37,8 @@ export class MusicPanel implements TrackSchedulerObserver {
     this.message.then(message => message.delete()).catch(e => console.log(e));
   }
 
-  private buildMessage(currentlyPlaying: TrackInfo): RichEmbed {
-    const embed = new RichEmbed()
+  private buildMessage(currentlyPlaying: TrackInfo): MessageEmbed {
+    const embed = new MessageEmbed()
       .setTitle("Music Panel")
       .setColor("#0099ff");
     if (currentlyPlaying) {

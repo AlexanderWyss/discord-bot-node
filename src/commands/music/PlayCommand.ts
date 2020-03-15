@@ -1,4 +1,4 @@
-import {CommandMessage} from "discord.js-commando";
+import {CommandoMessage} from "discord.js-commando";
 import {Bot} from "../../Bot";
 import {SafeCommand} from "../SafeCommand";
 
@@ -27,12 +27,12 @@ export class PlayCommand extends SafeCommand {
     });
   }
 
-  public runSafe(message: CommandMessage, args: any, fromPattern: boolean): Promise<any> {
+  public runSafe(message: CommandoMessage, args: any, fromPattern: boolean): Promise<any> {
     if (args.nextOrQueue === "next") {
       return this.bot.getGuildMusicManager(message.guild).playNext(args.url);
     } else if (args.nextOrQueue == "queue") {
       return this.bot.getGuildMusicManager(message.guild).queue(args.url);
     }
-    return this.bot.getGuildMusicManager(message.guild).playNow(args.url, message.member.voiceChannel);
+    return this.bot.getGuildMusicManager(message.guild).playNow(args.url, message.member.voice.channel);
   }
 }

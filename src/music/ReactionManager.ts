@@ -23,11 +23,11 @@ export class ReactionManager {
 
   public apply(reaction: MessageReaction) {
     try {
-      reaction.users.forEach(user => {
+      reaction.users.fetch().then(users => users.forEach(user => {
         if (user.id !== reaction.message.client.user.id) {
-          reaction.remove(user).catch(e => console.log(e));
+          reaction.remove().catch(e => console.log(e));
         }
-      });
+      }));
       switch (reaction.emoji.name) {
         case ReactionManager.SKIP_BACK:
           this.musicManager.skipBack();

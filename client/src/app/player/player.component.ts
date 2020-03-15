@@ -1,6 +1,6 @@
-import {Component, OnInit} from "@angular/core";
-import {ActivatedRoute} from "@angular/router";
-import {Socket} from "ngx-socket-io";
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {Socket} from 'ngx-socket-io';
 
 interface TrackInfo {
   readonly id: number;
@@ -26,9 +26,9 @@ interface JoinGuild {
 }
 
 @Component({
-  selector: "app-player",
-  templateUrl: "./player.component.html",
-  styleUrls: ["./player.component.scss"]
+  selector: 'app-player',
+  templateUrl: './player.component.html',
+  styleUrls: ['./player.component.scss']
 })
 export class PlayerComponent implements OnInit {
 
@@ -38,13 +38,13 @@ export class PlayerComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("init");
-    this.socket.on("connect", () => {
-      this.socket.fromEvent("tracks").subscribe((queueInfo: QueueInfo) => {
+    console.log('init');
+    this.socket.on('connect', () => {
+      this.socket.fromEvent('tracks').subscribe((queueInfo: QueueInfo) => {
         this.tracks = queueInfo.tracks;
       });
       this.route.paramMap.subscribe(params => {
-        this.socket.emit("joinGuild", {guildId: params.get("guildId")} as JoinGuild);
+        this.socket.emit('joinGuild', {guildId: params.get('guildId')} as JoinGuild);
       });
     });
   }

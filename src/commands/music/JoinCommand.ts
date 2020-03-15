@@ -1,5 +1,4 @@
-import {Message, VoiceConnection} from "discord.js";
-import {CommandMessage, CommandoClient} from "discord.js-commando";
+import {CommandoMessage} from "discord.js-commando";
 import {Bot} from "../../Bot";
 import {SafeCommand} from "../SafeCommand";
 
@@ -15,7 +14,7 @@ export class JoinCommand extends SafeCommand {
     });
   }
 
-  public runSafe(message: CommandMessage, args: any, fromPattern: boolean): Promise<any> {
-    return this.bot.getGuildMusicManager(message.guild).join(message.member.voiceChannel);
+  public runSafe(message: CommandoMessage, args: any, fromPattern: boolean): Promise<any> {
+    return this.bot.getGuildMusicManager(message.guild).join(message.member.voice.channel);
   }
 }

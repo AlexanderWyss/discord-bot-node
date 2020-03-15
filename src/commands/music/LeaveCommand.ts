@@ -1,5 +1,4 @@
-import {Message, VoiceConnection} from "discord.js";
-import {CommandMessage, CommandoClient} from "discord.js-commando";
+import {CommandoMessage} from "discord.js-commando";
 import {Bot} from "../../Bot";
 import {SafeCommand} from "../SafeCommand";
 
@@ -16,7 +15,7 @@ export class LeaveCommand extends SafeCommand {
     });
   }
 
-  public runSafe(message: CommandMessage, args: any, fromPattern: boolean): Promise<any> | void {
+  public runSafe(message: CommandoMessage, args: any, fromPattern: boolean): Promise<any> | void {
     this.bot.getGuildMusicManager(message.guild).leave();
   }
 }

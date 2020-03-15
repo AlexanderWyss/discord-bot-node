@@ -75,7 +75,7 @@ export class Bot {
   }
 
   public getGuildMusicManagerById(guildId: Snowflake): GuildMusicManager {
-    const guild = this.client.guilds.get(guildId);
+    const guild = this.client.guilds.resolve(guildId);
     if (guild) {
       return this.getGuildMusicManager(guild);
     } else {
@@ -85,7 +85,7 @@ export class Bot {
 
   private close() {
     this.closeMusicManagers();
-    this.client.destroy().then((success => console.log("client destroyed")));
+    this.client.destroy();
   }
 
   private closeMusicManagers() {

@@ -1,4 +1,4 @@
-import {DMChannel, GroupDMChannel, Guild, TextChannel, VoiceChannel, VoiceConnection} from "discord.js";
+import {DMChannel, Guild, TextChannel, VoiceChannel, VoiceConnection} from "discord.js";
 import {MusicPanel} from "./MusicPanel";
 import {MusicPlayer} from "./MusicPlayer";
 import {ReactionManager} from "./ReactionManager";
@@ -24,13 +24,13 @@ export class GuildMusicManager {
   }
 
   public leave() {
-    if (this.guild.me.voiceChannel) {
-      this.guild.me.voiceChannel.leave();
+    if (this.guild.me.voice.channel) {
+      this.guild.me.voice.channel.leave();
     }
   }
 
   public async playNow(url: string, channel: VoiceChannel): Promise<void> {
-    if (this.guild.me.voiceChannel == null) {
+    if (this.guild.me.voice.channel == null) {
       await this.join(channel);
     }
     return YoutubeService.getInstance().getInfo(url).then(trackInfo => this.trackScheduler.now(trackInfo));
@@ -72,7 +72,7 @@ export class GuildMusicManager {
     this.trackScheduler.restart();
   }
 
-  public displayMusicPanel(channel: TextChannel | DMChannel | GroupDMChannel) {
+  public displayMusicPanel(channel: TextChannel | DMChannel) {
     if (this.musicpanel) {
       this.musicpanel.destroy();
     }

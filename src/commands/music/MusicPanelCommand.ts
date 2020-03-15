@@ -1,4 +1,4 @@
-import {CommandMessage} from "discord.js-commando";
+import {CommandoMessage} from "discord.js-commando";
 import {Bot} from "../../Bot";
 import {SafeCommand} from "../SafeCommand";
 
@@ -14,7 +14,7 @@ export class MusicPanelCommand extends SafeCommand {
     });
   }
 
-  public runSafe(message: CommandMessage, args: any, fromPattern: boolean): Promise<any> | void {
+  public runSafe(message: CommandoMessage, args: any, fromPattern: boolean): Promise<any> | void {
     this.bot.getGuildMusicManager(message.guild).displayMusicPanel(message.channel);
   }
 }

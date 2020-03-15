@@ -1,5 +1,5 @@
 import {Message} from "discord.js";
-import {Command, CommandInfo, CommandMessage, CommandoClient} from "discord.js-commando";
+import {Command, CommandInfo, CommandoClient, CommandoMessage} from "discord.js-commando";
 
 export abstract class SafeCommand extends Command {
 
@@ -7,7 +7,7 @@ export abstract class SafeCommand extends Command {
     super(client, info);
   }
 
-  public run(message: CommandMessage, args: object | string | string[], fromPattern: boolean)
+  public run(message: CommandoMessage, args: object | string | string[], fromPattern: boolean)
     : Promise<Message | Message[]> {
     try {
       const promise = this.runSafe(message, args, fromPattern);
@@ -23,6 +23,6 @@ export abstract class SafeCommand extends Command {
     return;
   }
 
-  public abstract runSafe(message: CommandMessage, args: object | string | string[], fromPattern: boolean)
+  public abstract runSafe(message: CommandoMessage, args: object | string | string[], fromPattern: boolean)
     : Promise<any> | void;
 }
