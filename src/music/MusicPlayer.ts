@@ -56,7 +56,7 @@ export class MusicPlayer {
   }
 
   public setVolume(volume: number) {
-    this.dispatcher.setVolume(volume);
+    this.dispatcher.setVolume(Math.floor(volume));
   }
 
   public getVolume(): number {

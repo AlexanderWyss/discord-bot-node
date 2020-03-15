@@ -1,12 +1,19 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import {SocketIoConfig, SocketIoModule} from "ngx-socket-io";
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {SocketIoConfig, SocketIoModule} from 'ngx-socket-io';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { PlayerComponent } from './player/player.component';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {PlayerComponent} from './player/player.component';
 
-const config: SocketIoConfig = { url: 'localhost:3000', options: {} };
+function getUrl() {
+  if (window.location.hostname === 'localhost') {
+    return 'localhost:3000';
+  }
+  return window.location.hostname + ':' + window.location.port;
+}
+
+const config: SocketIoConfig = {url: getUrl(), options: {}};
 
 @NgModule({
   declarations: [
@@ -21,4 +28,5 @@ const config: SocketIoConfig = { url: 'localhost:3000', options: {} };
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
