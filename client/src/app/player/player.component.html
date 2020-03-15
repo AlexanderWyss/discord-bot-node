@@ -1,5 +1,7 @@
 <div>
   <h2>Player</h2>
+  <input type="text" [(ngModel)]="url" >
+  <input type="button" value="Queue" (click)="queue()">
   <div *ngFor="let track of tracks">
     {{track.title}}
   </div>

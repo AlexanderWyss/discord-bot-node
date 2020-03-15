@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Socket} from 'ngx-socket-io';
+import {HttpClient} from '@angular/common/http';
 
 interface TrackInfo {
   readonly id: number;
@@ -8,10 +9,6 @@ interface TrackInfo {
   readonly title: string;
   readonly artist: string;
   readonly thumbnailUrl: string;
-}
-
-interface CurrentTrackInfo extends TrackInfo {
-
 }
 
 interface QueueInfo {
@@ -33,19 +30,26 @@ interface JoinGuild {
 export class PlayerComponent implements OnInit {
 
   tracks: TrackInfo[];
+  url: string;
+  guildId: string;
 
-  constructor(private socket: Socket, private route: ActivatedRoute) {
+  constructor(private socket: Socket, private route: ActivatedRoute, private http: HttpClient) {
   }
 
   ngOnInit() {
     console.log('init');
-    this.socket.on('connect', () => {
-      this.socket.fromEvent('tracks').subscribe((queueInfo: QueueInfo) => {
-        this.tracks = queueInfo.tracks;
-      });
-      this.route.paramMap.subscribe(params => {
-        this.socket.emit('joinGuild', {guildId: params.get('guildId')} as JoinGuild);
+    this.route.paramMap.subscribe(params => {
+      this.guildId = params.get('guildId');
+      this.socket.on('connect', () => {
+        this.socket.fromEvent('tracks').subscribe((queueInfo: QueueInfo) => {
+          this.tracks = queueInfo.tracks;
+          this.socket.emit('joinGuild', {guildId: this.guildId} as JoinGuild);
+        });
       });
     });
+  }
+
+  queue() {
+    this.http.get('/' + this.guildId + '/queue/' + this.url).subscribe();
   }
 }

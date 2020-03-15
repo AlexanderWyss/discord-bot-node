@@ -5,6 +5,8 @@ import {SocketIoConfig, SocketIoModule} from 'ngx-socket-io';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {PlayerComponent} from './player/player.component';
+import {FormsModule} from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
 
 function getUrl() {
   if (window.location.hostname === 'localhost') {
@@ -23,7 +25,9 @@ const config: SocketIoConfig = {url: getUrl(), options: {}};
   imports: [
     BrowserModule,
     AppRoutingModule,
-    SocketIoModule.forRoot(config)
+    SocketIoModule.forRoot(config),
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
