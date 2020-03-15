@@ -13,7 +13,7 @@ export class GuildMusicManager {
 
     constructor(private guild: Guild) {
         this.musicPlayer = new MusicPlayer(this.guild);
-        this.trackScheduler = new TrackScheduler(this.musicPlayer);
+        this.trackScheduler = new TrackScheduler(this.musicPlayer, this);
     }
 
     public join(channel: VoiceChannel): Promise<VoiceConnection> {
@@ -117,5 +117,13 @@ export class GuildMusicManager {
 
     public getPlayerUrl(): string {
         return "http://awyss.internet-box.ch:8083/player/" + this.guild.id;
+    }
+
+    public getTrackScheduler(): TrackScheduler {
+        return this.trackScheduler;
+    }
+
+    public getGuild(): Guild {
+        return this.guild;
     }
 }

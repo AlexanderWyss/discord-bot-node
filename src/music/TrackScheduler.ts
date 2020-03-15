@@ -2,6 +2,7 @@ import {MusicPlayer} from "./MusicPlayer";
 import {PlayerObserver} from "./PlayerObserver";
 import {CurrentTrackInfo, TrackInfo} from "./TrackInfo";
 import {TrackSchedulerObserver} from "./TrackSchedulerObserver";
+import {GuildMusicManager} from "./GuildMusicManager";
 
 export class TrackScheduler implements PlayerObserver {
 
@@ -10,7 +11,7 @@ export class TrackScheduler implements PlayerObserver {
   private currentlyPlaying: TrackInfo;
   private observers: TrackSchedulerObserver[] = [];
 
-  constructor(private musicPlayer: MusicPlayer) {
+  constructor(private musicPlayer: MusicPlayer, private musicManager: GuildMusicManager) {
     this.musicPlayer.register(this);
   }
 
@@ -50,10 +51,12 @@ export class TrackScheduler implements PlayerObserver {
 
   public append(track: TrackInfo) {
     this.tracks.push(track);
+    this.updateObservers();
   }
 
   public next(track: TrackInfo) {
     this.tracks.unshift(track);
+    this.updateObservers();
   }
 
   public now(track: TrackInfo) {
@@ -135,7 +138,11 @@ export class TrackScheduler implements PlayerObserver {
 
   private updateObservers() {
     for (const observer of this.observers) {
-      observer.onChange(this.currentlyPlaying, this);
+      observer.onChange(this);
     }
+  }
+
+  public getMusicManager(): GuildMusicManager {
+    return this.musicManager;
   }
 }

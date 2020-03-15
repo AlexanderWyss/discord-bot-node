@@ -4,6 +4,7 @@ import {ReactionManager} from "./ReactionManager";
 import {TrackInfo} from "./TrackInfo";
 import {TrackScheduler} from "./TrackScheduler";
 import {TrackSchedulerObserver} from "./TrackSchedulerObserver";
+import {GuildMusicManager} from "./GuildMusicManager";
 
 export class MusicPanel implements TrackSchedulerObserver {
   private message: Promise<Message>;
@@ -27,8 +28,8 @@ export class MusicPanel implements TrackSchedulerObserver {
     );
   }
 
-  public onChange(nowPlaying: TrackInfo, trackScheduler: TrackScheduler): void {
-    this.message = this.message.then(message => message.edit(this.buildMessage(nowPlaying)));
+  public onChange(trackScheduler: TrackScheduler): void {
+    this.message = this.message.then(message => message.edit(this.buildMessage(trackScheduler.getCurrentlyPlaying())));
   }
 
   public destroy() {
