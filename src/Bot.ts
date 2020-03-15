@@ -9,6 +9,7 @@ import {ResumeCommand} from "./commands/music/ResumeCommand";
 import {SkipCommand} from "./commands/music/SkipCommand";
 import {VolumeCommand} from "./commands/music/VolumeCommand";
 import {GuildMusicManager} from "./music/GuildMusicManager";
+import {PlayerCommand} from "./commands/music/PlayerCommand";
 
 export class Bot {
 
@@ -51,7 +52,7 @@ export class Bot {
       .registerCommands([
         new PlayCommand(this), new JoinCommand(this), new LeaveCommand(this),
         new SkipCommand(this), new PauseCommand(this), new ResumeCommand(this),
-        new MusicPanelCommand(this), new VolumeCommand(this)
+        new MusicPanelCommand(this), new VolumeCommand(this), new PlayerCommand(this)
       ]);
     this.commandoClient.login(token).then(success => console.log("Logged in"), error => console.log("Login failed: " + error));
     process.on("exit", () => {
