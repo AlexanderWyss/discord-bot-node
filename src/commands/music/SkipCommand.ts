@@ -17,8 +17,7 @@ export class SkipCommand extends SafeCommand {
           label: "next (default) | back | start",
           default: "next",
           type: "string",
-          prompt: "",
-          oneOf: ["next", "back", "start"]
+          prompt: ""
         }
       ]
     });

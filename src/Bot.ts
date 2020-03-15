@@ -21,8 +21,8 @@ export class Bot {
   public static getInstance(): Bot {
     if (!this.bot) {
       this.bot = new Bot();
-      const token = fs.readFileSync(path.join(__dirname, "../token.txt"), "utf8").toString().trim();
-      const owner = fs.readFileSync(path.join(__dirname, "../owner.txt"), "utf8").toString().trim();
+      const token = process.env.TOKEN;
+      const owner = process.env.OWNER;
       this.bot.start(token, owner);
     }
     return this.bot;
@@ -85,7 +85,7 @@ export class Bot {
 
   private close() {
     this.closeMusicManagers();
-    this.client.destroy().then((success => console.log("client destoryed")));
+    this.client.destroy().then((success => console.log("client destroyed")));
   }
 
   private closeMusicManagers() {

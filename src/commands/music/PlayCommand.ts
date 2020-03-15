@@ -21,8 +21,7 @@ export class PlayCommand extends SafeCommand {
           label: "now (default) | next | queue",
           default: "now",
           type: "string",
-          prompt: "",
-          oneOf: ["now", "next", "queue"]
+          prompt: ""
         }
       ]
     });
