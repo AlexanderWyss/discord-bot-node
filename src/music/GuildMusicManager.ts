@@ -116,7 +116,7 @@ export class GuildMusicManager {
     }
 
     public getPlayerUrl(): string {
-        return "http://awyss.internet-box.ch:8083/player/" + this.guild.id;
+        return "http://discord.wyss.tech/player/" + this.guild.id;
     }
 
     public getTrackScheduler(): TrackScheduler {
