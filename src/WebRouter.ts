@@ -12,7 +12,7 @@ export class WebRouter {
     }
 
     public setup(): Router {
-        this.router.get(":guildId/queue/:url", (req: any, res: any, next: any) => {
+        this.router.get("/:guildId/queue/:url", (req: any, res: any, next: any) => {
           return this.bot.getGuildMusicManagerById(req.params.guildId).queue(req.params.url)
               .then(() => res.sendStatus(200));
         });
