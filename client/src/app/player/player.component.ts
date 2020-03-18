@@ -50,6 +50,6 @@ export class PlayerComponent implements OnInit {
   }
 
   queue() {
-    this.http.get('/' + this.guildId + '/queue/' + this.url).subscribe();
+    this.http.get('/' + this.guildId + '/queue/' + encodeURIComponent(this.url)).subscribe();
   }
 }

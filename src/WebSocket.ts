@@ -4,7 +4,6 @@ import {TrackInfo} from "./music/TrackInfo";
 import {GuildMusicManager} from "./music/GuildMusicManager";
 import {TrackSchedulerObserver} from "./music/TrackSchedulerObserver";
 import {TrackScheduler} from "./music/TrackScheduler";
-import EventEmitter = NodeJS.EventEmitter;
 
 export interface QueueInfo {
     currentTrack: TrackInfo;
