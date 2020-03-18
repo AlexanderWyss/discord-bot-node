@@ -43,8 +43,8 @@ export class PlayerComponent implements OnInit {
       this.socket.on('connect', () => {
         this.socket.fromEvent('tracks').subscribe((queueInfo: QueueInfo) => {
           this.tracks = queueInfo.tracks;
-          this.socket.emit('joinGuild', {guildId: this.guildId} as JoinGuild);
         });
+        this.socket.emit('joinGuild', {guildId: this.guildId} as JoinGuild);
       });
     });
   }
