@@ -1,23 +1,33 @@
 <div>
   <h2>Player</h2>
-  <div>
+  <div id="player">
+    <div>
+        <img [src]="queueInfo?.currentTrack.thumbnailUrl">
+    </div>
+    <div>
+      {{queueInfo?.currentTrack.title}}
+      <input type="button" value="<<" (click)="skipBack()">
+      <input type="button" value=">||" (click)="togglePause()">
+      <input type="button" value=">>" (click)="skip()">
+      <input type="button" value="-" (click)="volumeDown()">
+      <input type="button" value="+" (click)="volumeUp()">
+    </div>
+  </div>
+  <div id="url-bar-container">
     <input type="text" [(ngModel)]="url">
     <input type="button" value="Now" (click)="now()">
     <input type="button" value="Next" (click)="next()">
     <input type="button" value="Queue" (click)="queue()">
   </div>
-  <div>
-    <input type="button" value=">>" (click)="skip()">
-    <input type="button" value="<<" (click)="skipBack()">
-  </div>
-  <div>
-    {{queueInfo.currentTrack.title}}
-  </div>
-  <div *ngFor="let track of queueInfo.tracks">
+  <div id="list" *ngFor="let track of queueInfo?.tracks">
     <div class="card">
-      <img [src]="track.thumbnailUrl">
-      <div>{{track.title}}</div>
-      <div>{{track.artist}}</div>
+      <div class="thumbnail">
+        <img [src]="track.thumbnailUrl">
+      </div>
+      <div class="track-info">
+        <h3>{{track.title}}</h3>
+        <small>{{track.artist}}</small>
+      </div>
     </div>
   </div>
 </div>

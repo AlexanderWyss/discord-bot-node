@@ -32,7 +32,6 @@ export class WebSocket implements TrackSchedulerObserver {
                 if (data.oldGuildId) {
                     socket.leave(data.oldGuildId);
                 }
-
                 let musicManager: GuildMusicManager;
                 if (this.musicManagers.has(data.guildId)) {
                     musicManager = this.musicManagers.get(data.guildId)

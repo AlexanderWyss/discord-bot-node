@@ -1,3 +1,13 @@
 .card {
   border: black thin solid;
+  display: flex;
+  img {
+    height: 10rem;
+  }
+  .track-info {
+    margin-left: 1rem;
+    * {
+      margin: 0.5rem 0;
+    }
+  }
 }

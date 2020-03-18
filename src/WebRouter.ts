@@ -25,11 +25,23 @@ export class WebRouter {
                 .then(() => res.end());
         });
         this.router.get("/:guildId/skip", (req: any, res: any, next: any) => {
-            return this.bot.getGuildMusicManagerById(req.params.guildId).skip()
+            return this.bot.getGuildMusicManagerById(req.params.guildId).skip();
             res.end();
         });
         this.router.get("/:guildId/skipBack", (req: any, res: any, next: any) => {
-            return this.bot.getGuildMusicManagerById(req.params.guildId).skipBack()
+            return this.bot.getGuildMusicManagerById(req.params.guildId).skipBack();
+            res.end();
+        });
+        this.router.get("/:guildId/togglePause", (req: any, res: any, next: any) => {
+            return this.bot.getGuildMusicManagerById(req.params.guildId).togglePause();
+            res.end();
+        });
+        this.router.get("/:guildId/volumeUp", (req: any, res: any, next: any) => {
+            return this.bot.getGuildMusicManagerById(req.params.guildId).increseVolume();
+            res.end();
+        });
+        this.router.get("/:guildId/volumeDown", (req: any, res: any, next: any) => {
+            return this.bot.getGuildMusicManagerById(req.params.guildId).decreseVolume();
             res.end();
         });
         return this.router;
