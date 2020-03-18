@@ -16,7 +16,7 @@ export interface JoinGuild {
     oldGuildId?: string;
 }
 
-export class WebSocket implements TrackSchedulerObserver{
+export class WebSocket implements TrackSchedulerObserver {
 
     private bot: Bot;
     private musicManagers = new Map<string, GuildMusicManager>();
@@ -35,27 +35,28 @@ export class WebSocket implements TrackSchedulerObserver{
 
                 let musicManager: GuildMusicManager;
                 if (this.musicManagers.has(data.guildId)) {
-                  musicManager = this.musicManagers.get(data.guildId)
+                    musicManager = this.musicManagers.get(data.guildId)
                 } else {
                     musicManager = this.bot.getGuildMusicManagerById(data.guildId);
                     this.musicManagers.set(data.guildId, musicManager);
                     musicManager.getTrackScheduler().register(this);
                 }
                 socket.join(data.guildId);
-                this.emitTracks(socket, musicManager);
+                socket.emit("tracks", this.getQueueInfo(musicManager));
             });
         });
     }
 
-  onChange(trackScheduler: TrackScheduler): void {
-    this.emitTracks(this.io.in(trackScheduler.getMusicManager().getGuild().id.toString()), trackScheduler.getMusicManager());
-  }
+    public onChange(trackScheduler: TrackScheduler): void {
+        this.io.in(trackScheduler.getMusicManager().getGuild().id.toString())
+            .emit("tracks", this.getQueueInfo(trackScheduler.getMusicManager()));
+    }
 
-  private emitTracks(emitter: NodeJS.EventEmitter, musicManager: GuildMusicManager) {
-    emitter.emit("tracks", {
-      currentTrack: musicManager.getCurrentTrack(),
-      tracks: musicManager.getTracks(),
-      previousTracks: musicManager.getPreviousTracks()
-    } as QueueInfo);
-  }
+    private getQueueInfo(musicManager: GuildMusicManager): QueueInfo {
+        return {
+            currentTrack: musicManager.getCurrentTrack(),
+            tracks: musicManager.getTracks(),
+            previousTracks: musicManager.getPreviousTracks()
+        };
+    }
 }
