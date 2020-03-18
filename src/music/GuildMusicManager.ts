@@ -29,8 +29,8 @@ export class GuildMusicManager {
         }
     }
 
-    public async playNow(url: string, channel: VoiceChannel): Promise<void> {
-        if (this.guild.me.voice.channel == null) {
+    public async playNow(url: string, channel?: VoiceChannel): Promise<void> {
+        if (channel && this.guild.me.voice.channel == null) {
             await this.join(channel);
         }
         return YoutubeService.getInstance().getInfo(url).then(trackInfo => this.trackScheduler.now(trackInfo));

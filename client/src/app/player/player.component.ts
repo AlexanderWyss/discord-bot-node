@@ -52,4 +52,16 @@ export class PlayerComponent implements OnInit {
   queue() {
     this.http.get('/' + this.guildId + '/queue/' + encodeURIComponent(this.url)).subscribe();
   }
+  next() {
+    this.http.get('/' + this.guildId + '/next/' + encodeURIComponent(this.url)).subscribe();
+  }
+  now() {
+    this.http.get('/' + this.guildId + '/now/' + encodeURIComponent(this.url)).subscribe();
+  }
+  skip() {
+    this.http.get('/' + this.guildId + '/skip').subscribe();
+  }
+  skipBack() {
+    this.http.get('/' + this.guildId + '/skipBack').subscribe();
+  }
 }

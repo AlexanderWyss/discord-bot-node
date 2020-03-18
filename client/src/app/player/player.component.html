@@ -1,7 +1,15 @@
 <div>
   <h2>Player</h2>
-  <input type="text" [(ngModel)]="url">
-  <input type="button" value="Queue" (click)="queue()">
+  <div>
+    <input type="text" [(ngModel)]="url">
+    <input type="button" value="Now" (click)="now()">
+    <input type="button" value="Next" (click)="next()">
+    <input type="button" value="Queue" (click)="queue()">
+  </div>
+  <div>
+    <input type="button" value=">>" (click)="skip()">
+    <input type="button" value="<<" (click)="skipBack()">
+  </div>
   <div>
     {{queueInfo.currentTrack.title}}
   </div>
