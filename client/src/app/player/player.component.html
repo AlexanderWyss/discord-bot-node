@@ -1,8 +1,15 @@
 <div>
   <h2>Player</h2>
-  <input type="text" [(ngModel)]="url" >
+  <input type="text" [(ngModel)]="url">
   <input type="button" value="Queue" (click)="queue()">
-  <div *ngFor="let track of tracks">
-    {{track.title}}
+  <div>
+    {{queueInfo.currentTrack.title}}
+  </div>
+  <div *ngFor="let track of queueInfo.tracks">
+    <div class="card">
+      <img [src]="track.thumbnailUrl">
+      <div>{{track.title}}</div>
+      <div>{{track.artist}}</div>
+    </div>
   </div>
 </div>

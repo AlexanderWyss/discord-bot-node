@@ -29,7 +29,7 @@ interface JoinGuild {
 })
 export class PlayerComponent implements OnInit {
 
-  tracks: TrackInfo[];
+  queueInfo: QueueInfo;
   url: string;
   guildId: string;
 
@@ -42,7 +42,7 @@ export class PlayerComponent implements OnInit {
       this.guildId = params.get('guildId');
       this.socket.on('connect', () => {
         this.socket.fromEvent('tracks').subscribe((queueInfo: QueueInfo) => {
-          this.tracks = queueInfo.tracks;
+          this.queueInfo = queueInfo;
         });
         this.socket.emit('joinGuild', {guildId: this.guildId} as JoinGuild);
       });
