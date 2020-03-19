@@ -1,8 +1,8 @@
+import {GuildMusicManager} from "./GuildMusicManager";
 import {MusicPlayer} from "./MusicPlayer";
 import {PlayerObserver} from "./PlayerObserver";
 import {CurrentTrackInfo, TrackInfo} from "./TrackInfo";
 import {TrackSchedulerObserver} from "./TrackSchedulerObserver";
-import {GuildMusicManager} from "./GuildMusicManager";
 
 export class TrackScheduler implements PlayerObserver {
 
@@ -72,22 +72,20 @@ export class TrackScheduler implements PlayerObserver {
     this.musicPlayer.resume();
   }
 
-  public onEnd(reason: string): void {
-    console.log(reason);
-    if (reason !== "NewSong") {
-      if (this.tracks.length > 0) {
+  public onEnd(): void {
+    console.log("end");
+    if (this.tracks.length > 0) {
         this.playNext();
       } else {
         this.previousTracks.unshift(this.currentlyPlaying);
         this.currentlyPlaying = null;
       }
-    }
     this.updateObservers();
   }
 
   public onError(err: Error): void {
     console.log(err);
-    this.onEnd("error");
+    this.onEnd();
   }
 
   public onDebug(information: string): void {
@@ -136,13 +134,13 @@ export class TrackScheduler implements PlayerObserver {
     return this.previousTracks;
   }
 
+  public getMusicManager(): GuildMusicManager {
+    return this.musicManager;
+  }
+
   private updateObservers() {
     for (const observer of this.observers) {
       observer.onChange(this);
     }
-  }
-
-  public getMusicManager(): GuildMusicManager {
-    return this.musicManager;
   }
 }

@@ -5,11 +5,11 @@ import {LeaveCommand} from "./commands/music/LeaveCommand";
 import {MusicPanelCommand} from "./commands/music/MusicPanelCommand";
 import {PauseCommand} from "./commands/music/PauseCommand";
 import {PlayCommand} from "./commands/music/PlayCommand";
+import {PlayerCommand} from "./commands/music/PlayerCommand";
 import {ResumeCommand} from "./commands/music/ResumeCommand";
 import {SkipCommand} from "./commands/music/SkipCommand";
 import {VolumeCommand} from "./commands/music/VolumeCommand";
 import {GuildMusicManager} from "./music/GuildMusicManager";
-import {PlayerCommand} from "./commands/music/PlayerCommand";
 
 export class Bot {
 
@@ -77,6 +77,14 @@ export class Bot {
     const guild = this.client.guilds.resolve(guildId);
     if (guild) {
       return this.getGuildMusicManager(guild);
+    } else {
+      throw new Error("Guild not available.");
+    }
+  }
+
+  public getGuildMusicManagerByIdIfExists(guildId: Snowflake): GuildMusicManager {
+    if (this.musicManagers.has(guildId)) {
+      return this.musicManagers.get(guildId);
     } else {
       throw new Error("Guild not available.");
     }

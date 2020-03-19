@@ -31,7 +31,7 @@ interface JoinGuild {
 export class PlayerComponent implements OnInit {
 
   queueInfo: QueueInfo;
-  url: string;
+  url = '';
   guildId: string;
 
   constructor(private socket: Socket, private route: ActivatedRoute, private musicService: MusicService) {

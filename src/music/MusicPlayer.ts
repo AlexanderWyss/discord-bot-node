@@ -1,4 +1,5 @@
 import {Guild} from "discord.js";
+import {Readable} from "stream";
 import {PlayerObserver} from "./PlayerObserver";
 import {YoutubeService} from "./YoutubeService";
 
@@ -33,11 +34,13 @@ export class MusicPlayer {
     }
     const stream = YoutubeService.getInstance().getStream(url);
     const dispatcher = this.voiceConnection.play(stream, {volume: 0.1});
+    dispatcher.on("volumeChange", (oldVolume: number, newVolume: number) => console.log("volumeChange"));
+
     dispatcher.on("debug", (information: string) => this.forObservers(observer => observer.onDebug(information)));
-    dispatcher.on("end", (reason: string) => this.forObservers(observer => observer.onEnd(reason)));
+    dispatcher.on("start", () => this.forObservers(observer => observer.onStart()));
+    dispatcher.on("finish", () => this.forObservers(observer => observer.onEnd()));
     dispatcher.on("error", (err: Error) => this.forObservers(observer => observer.onError(err)));
     dispatcher.on("speaking", (value: boolean) => this.forObservers(observer => observer.onSpeaking(value)));
-    dispatcher.on("start", () => this.forObservers(observer => observer.onStart()));
     dispatcher.on("volumeChange", (oldVolume: number, newVolume: number) =>
       this.forObservers(observer => observer.onVolumeChange(oldVolume, newVolume)));
 

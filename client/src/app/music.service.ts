@@ -3,16 +3,23 @@ import {HttpClient} from '@angular/common/http';
 
 export function getUrl() {
   if (window.location.hostname === 'localhost') {
-    return 'discord.wyss.tech';
+    return 'localhost:3000';
   }
   return window.location.hostname + ':' + window.location.port;
+}
+
+export function getProtocol() {
+  if (window.location.hostname === 'localhost') {
+    return 'http://';
+  }
+  return 'https://';
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class MusicService {
-  private readonly baseUrl = 'https://' + getUrl();
+  private readonly baseUrl = getProtocol() + getUrl();
 
   constructor(private http: HttpClient) {
   }

@@ -2,10 +2,10 @@
   <h2>Player</h2>
   <div id="player">
     <div>
-        <img [src]="queueInfo?.currentTrack.thumbnailUrl">
+        <img [src]="queueInfo?.currentTrack?.thumbnailUrl">
     </div>
     <div>
-      {{queueInfo?.currentTrack.title}}
+      {{queueInfo?.currentTrack?.title}}
       <input type="button" value="<<" (click)="skipBack()">
       <input type="button" value=">||" (click)="togglePause()">
       <input type="button" value=">>" (click)="skip()">
@@ -22,11 +22,11 @@
   <div id="list" *ngFor="let track of queueInfo?.tracks">
     <div class="card">
       <div class="thumbnail">
-        <img [src]="track.thumbnailUrl">
+        <img [src]="track?.thumbnailUrl">
       </div>
       <div class="track-info">
-        <h3>{{track.title}}</h3>
-        <small>{{track.artist}}</small>
+        <h3>{{track?.title}}</h3>
+        <small>{{track?.artist}}</small>
       </div>
     </div>
   </div>

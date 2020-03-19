@@ -17,7 +17,7 @@ node {
         sh 'docker pull alexanderwyss/discord-bot-node:latest'
         sh 'docker stop discord-bot-node || true && docker rm -f discord-bot-node || true'
         withCredentials([string(credentialsId: 'Discord_Token', variable: 'token'), string(credentialsId: 'Discord_Owner', variable: 'owner'), string(credentialsId: 'YouTube_api', variable: 'youtubeApi')]) {
-            sh 'docker run -d --expose 8080 --restart unless-stopped --name discord-bot-node -e PORT=8080 -e TOKEN=$token -e OWNER=$owner -e YOUTUBE_API=$youtubeApi -e VIRTUAL_HOST=discord.wyss.tech -e VIRTUAL_PORT=8080 -e LETSENCRYPT_HOST=discord.wyss.tech alexanderwyss/discord-bot-node:latest'
+            sh 'docker run -d --expose 8080 --restart unless-stopped --name discord-bot-node -e NODE_ENV=production -e PORT=8080 -e TOKEN=$token -e OWNER=$owner -e YOUTUBE_API=$youtubeApi -e VIRTUAL_HOST=discord.wyss.tech -e VIRTUAL_PORT=8080 -e LETSENCRYPT_HOST=discord.wyss.tech alexanderwyss/discord-bot-node:latest'
         }
     }
 }

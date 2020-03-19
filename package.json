@@ -21,6 +21,7 @@
     "debug": "~4.1.1",
     "discord.js": "^12.0.2",
     "discord.js-commando": "github:discordjs/Commando",
+    "dotenv": "^8.2.0",
     "erlpack": "github:discordapp/erlpack",
     "express": "^4.17.1",
     "ffmpeg-static": "^4.0.1",

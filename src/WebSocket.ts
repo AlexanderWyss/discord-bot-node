@@ -1,9 +1,9 @@
 import {Server} from "socket.io";
 import {Bot} from "./Bot";
-import {TrackInfo} from "./music/TrackInfo";
 import {GuildMusicManager} from "./music/GuildMusicManager";
-import {TrackSchedulerObserver} from "./music/TrackSchedulerObserver";
+import {TrackInfo} from "./music/TrackInfo";
 import {TrackScheduler} from "./music/TrackScheduler";
+import {TrackSchedulerObserver} from "./music/TrackSchedulerObserver";
 
 export interface QueueInfo {
     currentTrack: TrackInfo;
@@ -29,19 +29,23 @@ export class WebSocket implements TrackSchedulerObserver {
         console.log("Start");
         this.io.on("connection", socket => {
             socket.on("joinGuild", (data: JoinGuild) => {
-                if (data.oldGuildId) {
-                    socket.leave(data.oldGuildId);
+                try {
+                    if (data.oldGuildId) {
+                        socket.leave(data.oldGuildId);
+                    }
+                    let musicManager: GuildMusicManager;
+                    if (this.musicManagers.has(data.guildId)) {
+                        musicManager = this.musicManagers.get(data.guildId);
+                    } else {
+                        musicManager = this.bot.getGuildMusicManagerByIdIfExists(data.guildId);
+                        this.musicManagers.set(data.guildId, musicManager);
+                        musicManager.getTrackScheduler().register(this);
+                    }
+                    socket.join(data.guildId);
+                    socket.emit("tracks", this.getQueueInfo(musicManager));
+                } catch (e) {
+                    console.error(e);
                 }
-                let musicManager: GuildMusicManager;
-                if (this.musicManagers.has(data.guildId)) {
-                    musicManager = this.musicManagers.get(data.guildId)
-                } else {
-                    musicManager = this.bot.getGuildMusicManagerById(data.guildId);
-                    this.musicManagers.set(data.guildId, musicManager);
-                    musicManager.getTrackScheduler().register(this);
-                }
-                socket.join(data.guildId);
-                socket.emit("tracks", this.getQueueInfo(musicManager));
             });
         });
     }
@@ -52,6 +56,7 @@ export class WebSocket implements TrackSchedulerObserver {
     }
 
     private getQueueInfo(musicManager: GuildMusicManager): QueueInfo {
+        console.log("getQueueInfo");
         return {
             currentTrack: musicManager.getCurrentTrack(),
             tracks: musicManager.getTracks(),

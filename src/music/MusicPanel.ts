@@ -1,10 +1,10 @@
 import {DMChannel, Message, MessageEmbed, ReactionCollector, TextChannel} from "discord.js";
 import he from "he";
+import {GuildMusicManager} from "./GuildMusicManager";
 import {ReactionManager} from "./ReactionManager";
 import {TrackInfo} from "./TrackInfo";
 import {TrackScheduler} from "./TrackScheduler";
 import {TrackSchedulerObserver} from "./TrackSchedulerObserver";
-import {GuildMusicManager} from "./GuildMusicManager";
 
 export class MusicPanel implements TrackSchedulerObserver {
   private message: Promise<Message>;
