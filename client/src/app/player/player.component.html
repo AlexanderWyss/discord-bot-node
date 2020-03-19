@@ -2,7 +2,7 @@
   <h2>Player</h2>
   <div id="player">
     <div>
-        <img [src]="queueInfo?.currentTrack?.thumbnailUrl">
+      <img [src]="queueInfo?.currentTrack?.thumbnailUrl">
     </div>
     <div>
       {{queueInfo?.currentTrack?.title}}
@@ -27,6 +27,7 @@
       <div class="track-info">
         <h3>{{track?.title}}</h3>
         <small>{{track?.artist}}</small>
+        <input type="button" value="X" (click)="remove(track.id)">
       </div>
     </div>
   </div>

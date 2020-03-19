@@ -36,6 +36,9 @@ export class WebRouter {
         this.router.get("/:guildId/volumeDown", (req: any, res: any, next: any) => {
             this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).decreseVolume(), res);
         });
+        this.router.get("/:guildId/remove/:id", (req: any, res: any, next: any) => {
+            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).removeTrackById(req.params.id), res);
+        });
         return this.router;
     }
 

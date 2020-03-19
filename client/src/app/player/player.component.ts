@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Socket} from 'ngx-socket-io';
-import {HttpClient} from '@angular/common/http';
-import {MusicService} from "../music.service";
+import {MusicService} from '../music.service';
 
 interface TrackInfo {
   readonly id: number;
@@ -83,5 +82,9 @@ export class PlayerComponent implements OnInit {
 
   togglePause() {
     this.musicService.togglePause(this.guildId);
+  }
+
+  remove(id: number) {
+    this.musicService.remove(this.guildId, id);
   }
 }

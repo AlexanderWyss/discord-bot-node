@@ -134,4 +134,8 @@ export class GuildMusicManager {
     public isVoiceConnected(): boolean {
         return !!this.guild.me.voice.channel;
     }
+
+    public removeTrackById(id: number) {
+        this.trackScheduler.removeById(id);
+    }
 }

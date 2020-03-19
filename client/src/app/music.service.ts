@@ -55,4 +55,8 @@ export class MusicService {
   togglePause(guildId: string) {
     this.http.get(this.baseUrl + '/' + guildId + '/togglePause').subscribe();
   }
+
+  remove(guildId: string, id: number) {
+    this.http.get(this.baseUrl + '/' + guildId + '/remove/' + id).subscribe();
+  }
 }
