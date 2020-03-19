@@ -15,6 +15,6 @@ export class PlayerCommand extends SafeCommand {
   }
 
   public runSafe(message: CommandoMessage, args: any, fromPattern: boolean): Promise<any> {
-    return message.reply(this.bot.getGuildMusicManager(message.guild).getPlayerUrl());
+    return message.reply(this.bot.getGuildMusicManager(message.guild).getPlayerUrl(message.author.id));
   }
 }

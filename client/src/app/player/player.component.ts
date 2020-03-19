@@ -21,6 +21,7 @@ interface QueueInfo {
 interface JoinGuild {
   guildId: string;
   oldGuildId?: string;
+  userId?: string;
 }
 
 @Component({
@@ -33,6 +34,7 @@ export class PlayerComponent implements OnInit {
   queueInfo: QueueInfo;
   url = '';
   guildId: string;
+  userId: string;
 
   constructor(private socket: Socket, private route: ActivatedRoute, private musicService: MusicService) {
   }
@@ -41,11 +43,12 @@ export class PlayerComponent implements OnInit {
     console.log('init');
     this.route.paramMap.subscribe(params => {
       this.guildId = params.get('guildId');
+      this.userId = params.get('userId');
       this.socket.on('connect', () => {
         this.socket.fromEvent('tracks').subscribe((queueInfo: QueueInfo) => {
           this.queueInfo = queueInfo;
         });
-        this.socket.emit('joinGuild', {guildId: this.guildId} as JoinGuild);
+        this.socket.emit('joinGuild', {guildId: this.guildId, userId: this.userId } as JoinGuild);
       });
     });
   }

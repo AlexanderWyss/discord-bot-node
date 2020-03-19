@@ -1,4 +1,4 @@
-import {DMChannel, Guild, TextChannel, VoiceChannel, VoiceConnection} from "discord.js";
+import {DMChannel, Guild, Snowflake, TextChannel, VoiceChannel, VoiceConnection} from "discord.js";
 import {MusicPanel} from "./MusicPanel";
 import {MusicPlayer} from "./MusicPlayer";
 import {ReactionManager} from "./ReactionManager";
@@ -24,7 +24,7 @@ export class GuildMusicManager {
     }
 
     public leave() {
-        if (this.guild.me.voice.channel) {
+        if (this.isVoiceConnected()) {
             this.guild.me.voice.channel.leave();
         }
     }
@@ -115,8 +115,8 @@ export class GuildMusicManager {
         return this.trackScheduler.getCurrentlyPlaying();
     }
 
-    public getPlayerUrl(): string {
-        return "https://discord.wyss.tech/player/" + this.guild.id;
+    public getPlayerUrl(userId?: Snowflake): string {
+        return "https://discord.wyss.tech/player/" + this.guild.id + (userId ? "/" + userId : "");
     }
 
     public getTrackScheduler(): TrackScheduler {
@@ -125,5 +125,13 @@ export class GuildMusicManager {
 
     public getGuild(): Guild {
         return this.guild;
+    }
+
+    public joinByUserId(userId: string) {
+        return this.guild.members.fetch(userId).then(user => this.join(user.voice.channel));
+    }
+
+    public isVoiceConnected(): boolean {
+        return !!this.guild.me.voice.channel;
     }
 }

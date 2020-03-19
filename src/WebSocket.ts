@@ -14,6 +14,7 @@ export interface QueueInfo {
 export interface JoinGuild {
     guildId: string;
     oldGuildId?: string;
+    userId?: string;
 }
 
 export class WebSocket implements TrackSchedulerObserver {
@@ -37,12 +38,16 @@ export class WebSocket implements TrackSchedulerObserver {
                     if (this.musicManagers.has(data.guildId)) {
                         musicManager = this.musicManagers.get(data.guildId);
                     } else {
-                        musicManager = this.bot.getGuildMusicManagerByIdIfExists(data.guildId);
+                        musicManager = this.bot.getGuildMusicManagerById(data.guildId);
                         this.musicManagers.set(data.guildId, musicManager);
                         musicManager.getTrackScheduler().register(this);
                     }
                     socket.join(data.guildId);
                     socket.emit("tracks", this.getQueueInfo(musicManager));
+
+                    if (data.userId && !musicManager.isVoiceConnected()) {
+                        musicManager.joinByUserId(data.userId).catch(err => console.error(err));
+                    }
                 } catch (e) {
                     console.error(e);
                 }

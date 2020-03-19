@@ -13,30 +13,52 @@ export class WebRouter {
 
     public setup(): Router {
         this.router.get("/:guildId/queue/:url", (req: any, res: any, next: any) => {
-            return this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).queue(req.params.url);
+            this.handleResponse(this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).queue(req.params.url), res);
         });
         this.router.get("/:guildId/next/:url", (req: any, res: any, next: any) => {
-            console.log("next");
-            return this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).playNext(req.params.url);
+            this.handleResponse(this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).playNext(req.params.url), res);
         });
         this.router.get("/:guildId/now/:url", (req: any, res: any, next: any) => {
-            return this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).playNow(req.params.url);
+            this.handleResponse(this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).playNow(req.params.url), res);
         });
         this.router.get("/:guildId/skip", (req: any, res: any, next: any) => {
-            return this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).skip();
+            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).skip(), res);
         });
         this.router.get("/:guildId/skipBack", (req: any, res: any, next: any) => {
-            return this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).skipBack();
+            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).skipBack(), res);
         });
         this.router.get("/:guildId/togglePause", (req: any, res: any, next: any) => {
-            return this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).togglePause();
+            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).togglePause(), res);
         });
         this.router.get("/:guildId/volumeUp", (req: any, res: any, next: any) => {
-            return this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).increseVolume();
+            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).increseVolume(), res);
         });
         this.router.get("/:guildId/volumeDown", (req: any, res: any, next: any) => {
-            return this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).decreseVolume();
+            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).decreseVolume(), res);
         });
         return this.router;
+    }
+
+    private handleResponse(promise: (() => void) | Promise<any>, res: Response) {
+        if (promise instanceof Promise) {
+            promise.then(() => this.ok(res)).catch(err => this.error(err, res));
+        } else {
+            try {
+                promise();
+                this.ok(res);
+            } catch
+                (e) {
+                this.error(e, res);
+            }
+        }
+    }
+
+    private ok(res: Response) {
+        res.status(200).send({status: 200, message: "OK"});
+    }
+
+    private error(err: any, res: Response) {
+        console.error(err);
+        res.status(500).send({status: 500, message: err});
     }
 }
