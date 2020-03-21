@@ -18,6 +18,7 @@ export class PlayerComponent implements OnInit {
   queueInfo: QueueInfo;
   url = '';
   searchResult: TrackInfo[] = [];
+  loading: boolean;
 
   constructor(private socket: Socket, private route: ActivatedRoute, private musicService: MusicService, private titleService: Title) {
   }
@@ -77,7 +78,14 @@ export class PlayerComponent implements OnInit {
   }
 
   search() {
-    this.musicService.search(this.url).subscribe(result => this.searchResult = result);
+    this.loading = true;
+    this.musicService.search(this.url).subscribe(result => {
+      this.searchResult = result;
+      this.loading = false;
+    }, error => {
+      console.error(error);
+      this.loading = false;
+    });
   }
 
   enter() {

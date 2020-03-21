@@ -37,18 +37,21 @@
       <input type="button" value="Next" (click)="next()">
       <input type="button" value="Queue" (click)="queue()">
     </div>
-    <div id="result" *ngFor="let track of searchResult">
-      <div class="card">
-        <div class="thumbnail">
-          <img [src]="track.thumbnailUrl">
-        </div>
-        <div class="track-info">
-          <h3>{{track.title}}</h3>
-          <small>{{track.artist}}</small>
-          <div>
-            <input type="button" value="Now" (click)="now(track.url)">
-            <input type="button" value="Next" (click)="next(track.url)">
-            <input type="button" value="Queue" (click)="queue(track.url)">
+    <div *ngIf="loading"><img src="assets/loading.gif"></div>
+    <div *ngIf="!loading" >
+      <div *ngFor="let track of searchResult">
+        <div class="card">
+          <div class="thumbnail">
+            <img [src]="track.thumbnailUrl">
+          </div>
+          <div class="track-info">
+            <h3>{{track.title}}</h3>
+            <small>{{track.artist}}</small>
+            <div>
+              <input type="button" value="Now" (click)="now(track.url)">
+              <input type="button" value="Next" (click)="next(track.url)">
+              <input type="button" value="Queue" (click)="queue(track.url)">
+            </div>
           </div>
         </div>
       </div>
