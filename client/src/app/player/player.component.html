@@ -6,11 +6,11 @@
       <h3>{{queueInfo?.currentTrack?.title}}</h3>
       <small>{{queueInfo?.currentTrack?.artist}}</small>
       <div>
-        <input type="button" value="<<" (click)="skipBack()">
-        <input type="button" value=">||" (click)="togglePause()">
-        <input type="button" value=">>" (click)="skip()">
-        <input type="button" value="-" (click)="volumeDown()">
-        <input type="button" value="+" (click)="volumeUp()">
+        <span (click)="skipBack()">⏮</span>
+        <span (click)="togglePause()">⏯</span>
+        <span (click)="skip()">⏭</span>
+        <span (click)="volumeDown()">🔉</span>
+        <span (click)="volumeUp()">🔊</span>
       </div>
     </div>
     <div id="list" *ngFor="let track of queueInfo?.tracks">
