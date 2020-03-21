@@ -1,5 +1,6 @@
 import express, {NextFunction, Response, Router} from "express";
 import {Bot} from "./Bot";
+import {YoutubeService} from "./music/YoutubeService";
 
 export class WebRouter {
 
@@ -38,6 +39,9 @@ export class WebRouter {
         });
         this.router.get("/:guildId/remove/:id", (req: any, res: any, next: any) => {
             this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).removeTrackById(req.params.id), res);
+        });
+        this.router.get("/youtube/key", (req: any, res: any, next: any) => {
+            res.send({key: YoutubeService.getKey()});
         });
         return this.router;
     }

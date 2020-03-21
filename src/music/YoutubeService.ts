@@ -7,9 +7,13 @@ export class YoutubeService {
 
   public static currentId = 0;
 
+  public static getKey() {
+    return process.env.YOUTUBE_API;
+  }
+
   public static getInstance() {
     if (!this.instance) {
-      this.instance = new YoutubeService(process.env.YOUTUBE_API);
+      this.instance = new YoutubeService(YoutubeService.getKey());
     }
     return this.instance;
   }
@@ -37,7 +41,7 @@ export class YoutubeService {
   }
 
   public getStream(url: string): Readable {
-    return ytdl(url, {filter: "audioonly", quality: "highestaudio", highWaterMark: 1<<25});
+    return ytdl(url, {filter: "audioonly", quality: "highestaudio", highWaterMark: 1 << 25});
   }
 
   private map(video: Video): TrackInfo {

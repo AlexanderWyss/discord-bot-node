@@ -1,13 +1,40 @@
-.card {
-  border: black thin solid;
+#title {
+  margin: 1.5rem 0 0 1.5rem;
+}
+#container {
   display: flex;
-  img {
-    height: 10rem;
+  .component {
+    flex: 1 1 50%;
+    margin: 1rem;
+   & > div {
+     margin: 0.5rem;
+   }
   }
-  .track-info {
-    margin-left: 1rem;
+  input {
+    margin-right: 0.4rem;
+  }
+
+  #player {
     * {
-      margin: 0.5rem 0;
+      margin: 0.2rem 0.1rem;
+    }
+  }
+
+  .card {
+    border: black thin solid;
+    display: flex;
+
+    img {
+      height: 10rem;
+    }
+
+    .track-info {
+      margin-left: 1rem;
+
+      * {
+        margin-top: 0.5rem;
+      }
     }
   }
 }
+

@@ -1,33 +1,56 @@
-<div>
-  <h2>Player</h2>
-  <div id="player">
-    <div>
+<h2 id="title">Player</h2>
+<div id="container">
+  <div class="component">
+    <div id="player" >
       <img [src]="queueInfo?.currentTrack?.thumbnailUrl">
-    </div>
-    <div>
-      {{queueInfo?.currentTrack?.title}}
-      <input type="button" value="<<" (click)="skipBack()">
-      <input type="button" value=">||" (click)="togglePause()">
-      <input type="button" value=">>" (click)="skip()">
-      <input type="button" value="-" (click)="volumeDown()">
-      <input type="button" value="+" (click)="volumeUp()">
-    </div>
-  </div>
-  <div id="url-bar-container">
-    <input type="text" [(ngModel)]="url">
-    <input type="button" value="Now" (click)="now()">
-    <input type="button" value="Next" (click)="next()">
-    <input type="button" value="Queue" (click)="queue()">
-  </div>
-  <div id="list" *ngFor="let track of queueInfo?.tracks">
-    <div class="card">
-      <div class="thumbnail">
-        <img [src]="track?.thumbnailUrl">
+      <h3>{{queueInfo?.currentTrack?.title}}</h3>
+      <small>{{queueInfo?.currentTrack?.artist}}</small>
+      <div>
+        <input type="button" value="<<" (click)="skipBack()">
+        <input type="button" value=">||" (click)="togglePause()">
+        <input type="button" value=">>" (click)="skip()">
+        <input type="button" value="-" (click)="volumeDown()">
+        <input type="button" value="+" (click)="volumeUp()">
       </div>
-      <div class="track-info">
-        <h3>{{track?.title}}</h3>
-        <small>{{track?.artist}}</small>
-        <input type="button" value="X" (click)="remove(track.id)">
+    </div>
+    <div id="list" *ngFor="let track of queueInfo?.tracks">
+      <div class="card">
+        <div class="thumbnail">
+          <img [src]="track?.thumbnailUrl">
+        </div>
+        <div class="track-info">
+          <h3>{{track?.title}}</h3>
+          <small>{{track?.artist}}</small>
+          <div>
+            <input type="button" value="X" (click)="remove(track.id)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="component">
+    <div id="url-bar-container">
+      <input type="text" [(ngModel)]="url" placeholder="url / query" (keyup.enter)="enter()"
+             (click)="$event.target.select()">
+      <input type="button" value="Search" (click)="search()">
+      <input type="button" value="Now" (click)="now()">
+      <input type="button" value="Next" (click)="next()">
+      <input type="button" value="Queue" (click)="queue()">
+    </div>
+    <div id="result" *ngFor="let track of searchResult">
+      <div class="card">
+        <div class="thumbnail">
+          <img [src]="track.thumbnailUrl">
+        </div>
+        <div class="track-info">
+          <h3>{{track.title}}</h3>
+          <small>{{track.artist}}</small>
+          <div>
+            <input type="button" value="Now" (click)="now(track.url)">
+            <input type="button" value="Next" (click)="next(track.url)">
+            <input type="button" value="Queue" (click)="queue(track.url)">
+          </div>
+        </div>
       </div>
     </div>
   </div>

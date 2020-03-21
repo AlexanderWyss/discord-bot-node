@@ -2,26 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Socket} from 'ngx-socket-io';
 import {MusicService} from '../music.service';
-
-interface TrackInfo {
-  readonly id: number;
-  readonly url: string;
-  readonly title: string;
-  readonly artist: string;
-  readonly thumbnailUrl: string;
-}
-
-interface QueueInfo {
-  currentTrack: TrackInfo;
-  tracks: TrackInfo[];
-  previousTracks: TrackInfo[];
-}
-
-interface JoinGuild {
-  guildId: string;
-  oldGuildId?: string;
-  userId?: string;
-}
+import {JoinGuild, QueueInfo, TrackInfo} from '../models';
 
 @Component({
   selector: 'app-player',
@@ -34,6 +15,7 @@ export class PlayerComponent implements OnInit {
   url = '';
   guildId: string;
   userId: string;
+  searchResult: TrackInfo[] = [];
 
   constructor(private socket: Socket, private route: ActivatedRoute, private musicService: MusicService) {
   }
@@ -60,16 +42,16 @@ export class PlayerComponent implements OnInit {
     this.musicService.skip(this.guildId);
   }
 
-  now() {
-    this.musicService.now(this.guildId, this.url);
+  now(url?: string) {
+    this.musicService.now(this.guildId, url ? url : this.url);
   }
 
-  next() {
-    this.musicService.next(this.guildId, this.url);
+  next(url?: string) {
+    this.musicService.next(this.guildId, url ? url : this.url);
   }
 
-  queue() {
-    this.musicService.queue(this.guildId, this.url);
+  queue(url?: string) {
+    this.musicService.queue(this.guildId, url ? url : this.url);
   }
 
   volumeUp() {
@@ -86,5 +68,17 @@ export class PlayerComponent implements OnInit {
 
   remove(id: number) {
     this.musicService.remove(this.guildId, id);
+  }
+
+  search() {
+    this.musicService.search(this.url).then(result => this.searchResult = result);
+  }
+
+  enter() {
+    if (this.url.toLowerCase().startsWith('http://') || this.url.toLowerCase().startsWith('https://')) {
+      this.queue();
+    } else {
+      this.search();
+    }
   }
 }
