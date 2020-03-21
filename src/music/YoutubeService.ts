@@ -37,7 +37,7 @@ export class YoutubeService {
   }
 
   public getStream(url: string): Readable {
-    return ytdl(url, {filter: "audioonly", quality: "highestaudio"});
+    return ytdl(url, {filter: "audioonly", quality: "highestaudio", highWaterMark: 1<<25});
   }
 
   private map(video: Video): TrackInfo {
