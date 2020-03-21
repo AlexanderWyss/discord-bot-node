@@ -13,4 +13,4 @@ RUN npm run build --prod
 WORKDIR client
 RUN npm run build --prod
 WORKDIR ..
-CMD [ "npm", "run", "start:prod" ]
+CMD [ "node", "./bin/www" ]
