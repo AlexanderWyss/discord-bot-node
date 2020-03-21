@@ -1,15 +1,19 @@
 #title {
   margin: 1.5rem 0 0 1.5rem;
 }
+
 #container {
   display: flex;
+
   .component {
     flex: 1 1 50%;
     margin: 1rem;
-   & > div {
-     margin: 0.5rem;
-   }
+
+    & > div {
+      margin: 0.5rem;
+    }
   }
+
   input {
     margin-right: 0.4rem;
   }
@@ -18,13 +22,15 @@
     * {
       margin: 0.2rem 0.1rem;
     }
-    span {
-      margin: 0 0.2rem;
-      font-size: larger;
-    }
-    span:hover {
-      cursor: pointer;
-    }
+  }
+
+  .button {
+    margin: 0 0.2rem;
+    font-size: larger;
+  }
+
+  .button:hover {
+    cursor: pointer;
   }
 
   .card {

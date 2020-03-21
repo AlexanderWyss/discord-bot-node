@@ -1,16 +1,16 @@
 <h2 id="title">Player</h2>
 <div id="container">
   <div class="component">
-    <div id="player" >
+    <div id="player">
       <img [src]="queueInfo?.currentTrack?.thumbnailUrl">
       <h3>{{queueInfo?.currentTrack?.title}}</h3>
       <small>{{queueInfo?.currentTrack?.artist}}</small>
       <div>
-        <span (click)="skipBack()">⏮</span>
-        <span (click)="togglePause()">⏯</span>
-        <span (click)="skip()">⏭</span>
-        <span (click)="volumeDown()">🔉</span>
-        <span (click)="volumeUp()">🔊</span>
+        <span class="button" (click)="skipBack()">⏮</span>
+        <span class="button" (click)="togglePause()">⏯</span>
+        <span class="button" (click)="skip()">⏭</span>
+        <span class="button" (click)="volumeDown()">🔉</span>
+        <span class="button" (click)="volumeUp()">🔊</span>
       </div>
     </div>
     <div id="list" *ngFor="let track of queueInfo?.tracks">
@@ -22,7 +22,7 @@
           <h3>{{track?.title}}</h3>
           <small>{{track?.artist}}</small>
           <div>
-            <input type="button" value="X" (click)="remove(track.id)">
+            <span class="button" (click)="remove(track.id)">🗑</span>
           </div>
         </div>
       </div>
