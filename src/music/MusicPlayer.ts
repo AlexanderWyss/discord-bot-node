@@ -1,5 +1,4 @@
 import {Guild} from "discord.js";
-import {Readable} from "stream";
 import {PlayerObserver} from "./PlayerObserver";
 import {YoutubeService} from "./YoutubeService";
 
@@ -48,10 +47,12 @@ export class MusicPlayer {
 
     public pause() {
         this.dispatcher.pause();
+        this.forObservers(observer => observer.onTogglePause(this.isPaused()));
     }
 
     public resume() {
         this.dispatcher.resume();
+        this.forObservers(observer => observer.onTogglePause(this.isPaused()));
     }
 
     public isPaused(): boolean {
@@ -64,6 +65,10 @@ export class MusicPlayer {
 
     public getVolume(): number {
         return this.dispatcher.volume;
+    }
+
+    public isCurrentlyPlaying() {
+        return this.guild && this.guild.voice && this.guild.voice.connection && this.guild.voice.connection.dispatcher;
     }
 
     private forObservers(func: (observer: PlayerObserver) => void) {

@@ -1,38 +1,60 @@
-<h2 id="title">Player {{guild}}</h2>
+<h1 id="title">Player {{guild}}</h1>
 <div id="container">
   <div class="component">
-    <div id="player">
-      <img [src]="queueInfo?.currentTrack?.thumbnailUrl">
-      <h3>{{queueInfo?.currentTrack?.title}}</h3>
-      <small>{{queueInfo?.currentTrack?.artist}}</small>
-      <div>
-        <span class="button" (click)="skipBack()">⏮</span>
-        <span class="button" (click)="togglePause()">⏯</span>
-        <span class="button" (click)="skip()">⏭</span>
+    <mat-card id="player">
+      <mat-card-content>
+        <div>
+          <img [src]="queueInfo?.currentTrack?.thumbnailUrl">
+        </div>
+        <h3>{{queueInfo?.currentTrack?.title}}</h3>
+        <small>{{queueInfo?.currentTrack?.artist}}</small>
         <small>{{queueInfo?.currentTrack?.duration | minuteSeconds}}</small>
-        <span class="button" (click)="volumeDown()">🔉</span>
-        <span class="button" (click)="volumeUp()">🔊</span>
-      </div>
-    </div>
-    <div id="list" *ngFor="let track of queueInfo?.tracks">
-      <app-track-info [track]="track" [events]="['REMOVE']" (event)="trackInfoEvent($event)"></app-track-info>
-    </div>
+        <div class="buttons">
+          <button mat-icon-button class="dummy">
+          </button>
+          <button mat-icon-button class="dummy">
+          </button>
+          <div class="filler"></div>
+          <button mat-icon-button (click)="skipBack()">
+            <mat-icon>skip_previous</mat-icon>
+          </button>
+          <button mat-icon-button (click)="togglePause()">
+            <mat-icon>{{queueInfo?.currentTrack?.paused ? 'play_arrow' : 'pause'}}</mat-icon>
+          </button>
+          <button mat-icon-button (click)="skip()">
+            <mat-icon>skip_next</mat-icon>
+          </button>
+          <div class="filler"></div>
+          <button mat-icon-button (click)="volumeDown()">
+            <mat-icon>volume_down</mat-icon>
+          </button>
+          <button mat-icon-button (click)="volumeUp()">
+            <mat-icon>volume_up</mat-icon>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <app-track-info *ngFor="let track of queueInfo?.tracks" [track]="track" [events]="['REMOVE']"
+                    (event)="trackInfoEvent($event)"></app-track-info>
   </div>
   <div class="component">
     <div id="url-bar-container">
-      <input type="text" [(ngModel)]="url" placeholder="url / query" (keyup.enter)="enter()"
-             (click)="$event.target.select()">
-      <input type="button" value="Search" (click)="search()">
-      <input type="button" value="Now" (click)="now()">
-      <input type="button" value="Next" (click)="next()">
-      <input type="button" value="Queue" (click)="queue()">
+      <mat-form-field>
+        <mat-label>Search / Url</mat-label>
+        <input matInput [(ngModel)]="url" (keyup.enter)="enter()"
+               (click)="$event.target.select()">
+      </mat-form-field>
+      <button mat-stroked-button (click)="search()">Search</button>
+      <button mat-stroked-button (click)="now()">Now</button>
+      <button mat-stroked-button (click)="next()">Next</button>
+      <button mat-stroked-button (click)="queue()">Queue</button>
     </div>
-    <div *ngIf="loading"><img src="assets/loading.gif"></div>
+    <div *ngIf="loading" class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
     <div *ngIf="!loading">
-      <div *ngFor="let track of searchResult">
-        <app-track-info [track]="track" [events]="['NOW', 'NEXT', 'QUEUE']"
-                        (event)="trackInfoEvent($event)"></app-track-info>
-      </div>
+      <app-track-info *ngFor="let track of searchResult" [track]="track" [events]="['NOW', 'NEXT', 'QUEUE']"
+                      (event)="trackInfoEvent($event)"></app-track-info>
     </div>
   </div>
 </div>

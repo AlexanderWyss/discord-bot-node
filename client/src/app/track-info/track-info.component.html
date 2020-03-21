@@ -1,4 +1,25 @@
-<div class="card">
+<mat-card>
+  <mat-card-content>
+    <div class="thumbnail">
+      <img [src]="track.thumbnailUrl">
+    </div>
+    <div class="track-info">
+      <h3>{{track.title}}</h3>
+      <small>{{track.artist}}</small>
+      <small>{{track.duration | minuteSeconds}}</small>
+      <div class="buttons">
+        <button mat-icon-button *ngIf="events.includes('REMOVE')" (click)="emit('REMOVE', track.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-stroked-button *ngIf="events.includes('NOW')" (click)="emit('NOW', track.url)">Now</button>
+        <button mat-stroked-button *ngIf="events.includes('NEXT')" (click)="emit('NEXT', track.url)">Next</button>
+        <button mat-stroked-button *ngIf="events.includes('QUEUE')" (click)="emit('QUEUE', track.url)">Queue</button>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<div *ngIf="false" class="card">
   <div class="thumbnail">
     <img [src]="track.thumbnailUrl">
   </div>
@@ -7,10 +28,10 @@
     <div><small>{{track.artist}}</small></div>
     <div><small>{{track.duration | minuteSeconds}}</small></div>
     <div>
-      <button mat-button *ngIf="events.includes('REMOVE')" (click)="emit('REMOVE', track.id)">🗑</button>
-      <button mat-button *ngIf="events.includes('NOW')" (click)="emit('NOW', track.url)">Now</button>
-      <button mat-button *ngIf="events.includes('NEXT')" (click)="emit('NEXT', track.url)">Next</button>
-      <button mat-button *ngIf="events.includes('QUEUE')" (click)="emit('QUEUE', track.url)">Queue</button>
+      <button mat-stroked-button *ngIf="events.includes('REMOVE')" (click)="emit('REMOVE', track.id)">🗑</button>
+      <button mat-stroked-button *ngIf="events.includes('NOW')" (click)="emit('NOW', track.url)">Now</button>
+      <button mat-stroked-button *ngIf="events.includes('NEXT')" (click)="emit('NEXT', track.url)">Next</button>
+      <button mat-stroked-button *ngIf="events.includes('QUEUE')" (click)="emit('QUEUE', track.url)">Queue</button>
     </div>
   </div>
 </div>

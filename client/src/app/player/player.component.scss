@@ -8,29 +8,55 @@
   .component {
     flex: 1 1 50%;
     margin: 1rem;
-
-    & > div {
-      margin: 0.5rem;
-    }
-  }
-
-  input {
-    margin-right: 0.4rem;
   }
 
   #player {
-    * {
-      margin: 0.2rem 0.1rem;
+    padding: 0;
+    margin: 0.3rem;
+
+    mat-card-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      > * {
+        flex: 1 1 auto;
+        text-align: center;
+      }
+
+      img {
+        max-height: 100%;
+        max-width: 100%;
+      }
+
+      h3 {
+        margin: 0;
+      }
+
+      .buttons {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        > * {
+          flex: 0 0 auto;
+        }
+        .filler {
+          flex-grow: 1;
+        }
+        .dummy {
+          visibility: hidden;
+        }
+      }
     }
   }
 
-  .button {
-    margin: 0 0.2rem;
-    font-size: larger;
+  .spinner-container {
+    display: flex;
+    justify-content: center;
   }
 
-  .button:hover {
-    cursor: pointer;
+  #url-bar-container > * {
+    margin: 0.2rem;
   }
 }
 

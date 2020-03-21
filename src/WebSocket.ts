@@ -1,12 +1,12 @@
 import {Server} from "socket.io";
 import {Bot} from "./Bot";
 import {GuildMusicManager} from "./music/GuildMusicManager";
-import {TrackInfo} from "./music/TrackInfo";
+import {CurrentTrackInfo, TrackInfo} from "./music/TrackInfo";
 import {TrackScheduler} from "./music/TrackScheduler";
 import {TrackSchedulerObserver} from "./music/TrackSchedulerObserver";
 
 export interface QueueInfo {
-    currentTrack: TrackInfo;
+    currentTrack: CurrentTrackInfo;
     tracks: TrackInfo[];
     previousTracks: TrackInfo[];
 }

@@ -1,19 +1,36 @@
-.card {
-  border: black thin solid;
-  display: flex;
+mat-card {
+  padding: 0;
+  margin: 0.3rem;
 
-  img {
-    height: 10rem;
-  }
+  mat-card-content {
+    display: flex;
 
-  .track-info {
-    margin-left: 1rem;
-    h3, div {
-      margin: 0;
+    .thumbnail {
+      flex: 0 0 40%;
+
+      img {
+        max-height: 100%;
+        max-width: 100%;
+      }
     }
 
-    * {
-      margin-top: 0.5rem;
+    .track-info {
+      flex: 0 0 60%;
+      padding: 0.4rem;
+      display: flex;
+      flex-direction: column;
+      h3 {
+        margin: 0;
+      }
+      .buttons {
+        padding-right: 1rem;
+        display: flex;
+        justify-content: flex-end;
+        > * {
+          flex: 0 0 auto;
+          margin: 0 0.2rem;
+        }
+      }
     }
   }
 }

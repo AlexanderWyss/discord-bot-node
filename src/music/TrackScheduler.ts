@@ -15,6 +15,10 @@ export class TrackScheduler implements PlayerObserver {
         this.musicPlayer.register(this);
     }
 
+    public onTogglePause(value: boolean): void {
+        this.updateObservers();
+    }
+
     public playNext() {
         const trackInfo = this.tracks.shift();
         if (trackInfo) {
@@ -107,7 +111,10 @@ export class TrackScheduler implements PlayerObserver {
     }
 
     public getCurrentlyPlaying(): CurrentTrackInfo {
-        return this.currentlyPlaying;
+        return {
+            paused: this.musicPlayer.isCurrentlyPlaying() ? this.isPaused() : false,
+            ...this.currentlyPlaying
+        };
     }
 
     public deregister(observer: TrackSchedulerObserver) {

@@ -8,9 +8,13 @@ export interface TrackInfo {
 }
 
 export interface QueueInfo {
-  currentTrack: TrackInfo;
+  currentTrack: CurrentTrackInfo;
   tracks: TrackInfo[];
   previousTracks: TrackInfo[];
+}
+
+export interface CurrentTrackInfo extends TrackInfo {
+  readonly paused: boolean;
 }
 
 export interface JoinGuild {

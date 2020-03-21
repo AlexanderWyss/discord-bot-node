@@ -7,10 +7,18 @@ import {AppComponent} from './app.component';
 import {PlayerComponent} from './player/player.component';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
+import {getUrl} from './music.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TrackInfoComponent } from './track-info/track-info.component';
 import { MinuteSecondsPipe } from './minute-seconds.pipe';
 import {MatButtonModule} from '@angular/material/button';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatIconModule} from '@angular/material/icon';
+import {MatCardModule} from '@angular/material/card';
+
+const config: SocketIoConfig = {url: getUrl(), options: {}};
 
 @NgModule({
   declarations: [
@@ -22,11 +30,16 @@ import {MatButtonModule} from '@angular/material/button';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    SocketIoModule.forRoot(null),
+    SocketIoModule.forRoot(config),
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MatButtonModule
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent]
