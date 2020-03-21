@@ -40,8 +40,8 @@ export class WebRouter {
         this.router.get("/:guildId/remove/:id", (req: any, res: any, next: any) => {
             this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).removeTrackById(req.params.id), res);
         });
-        this.router.get("/youtube/key", (req: any, res: any, next: any) => {
-            res.send({key: YoutubeService.getKey()});
+        this.router.get("/search/:query", (req: any, res: any, next: any) => {
+            YoutubeService.getInstance().search(req.params.query, 20).then(result => res.send(result)).catch(err => this.error(err, res));
         });
         return this.router;
     }

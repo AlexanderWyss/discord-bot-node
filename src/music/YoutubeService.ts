@@ -1,64 +1,77 @@
-import Youtube, {util, Video, YouTube} from "simple-youtube-api";
 import {Readable} from "stream";
 import ytdl from "ytdl-core";
+import ytsr from "ytsr";
 import {TrackInfo} from "./TrackInfo";
 
 export class YoutubeService {
 
-  public static currentId = 0;
+    public static currentId = 0;
 
-  public static getKey() {
-    return process.env.YOUTUBE_API;
-  }
-
-  public static getInstance() {
-    if (!this.instance) {
-      this.instance = new YoutubeService(YoutubeService.getKey());
+    public static getInstance() {
+        if (!this.instance) {
+            this.instance = new YoutubeService();
+        }
+        return this.instance;
     }
-    return this.instance;
-  }
 
-  private static instance: YoutubeService;
+    private static instance: YoutubeService;
 
-  private youtube: YouTube;
-
-  private constructor(key: string) {
-    // @ts-ignore
-    this.youtube = new Youtube(key);
-  }
-
-  public getInfo(param: string): Promise<TrackInfo> {
-    try {
-      const urlInfo = util.parseURL(param);
-      if (urlInfo.video) {
-        return this.getVideoInfo(urlInfo.video).then(video => this.map(video));
-      } else {
-        return this.searchVideoInfo(param).then(video => this.map(video));
-      }
-    } catch (e) {
-      throw new Error("No Video found.");
+    private constructor() {
     }
-  }
 
-  public getStream(url: string): Readable {
-    return ytdl(url, {filter: "audioonly", quality: "highestaudio", highWaterMark: 1 << 25});
-  }
+    public getInfo(param: string): Promise<TrackInfo> {
+        try {
+            if (ytdl.validateURL(param)) {
+                return this.getVideoInfo(param);
+            } else {
+                return this.searchVideoInfo(param);
+            }
+        } catch (e) {
+            throw new Error("No Video found.");
+        }
+    }
 
-  private map(video: Video): TrackInfo {
-    return {
-      id: YoutubeService.currentId++,
-      url: video.url,
-      title: video.title,
-      artist: video.channel.title,
-      thumbnailUrl: (video.thumbnails as any).high.url
-    };
-  }
+    public getStream(url: string): Readable {
+        return ytdl(url, {filter: "audioonly", quality: "highestaudio", highWaterMark: 1 << 25});
+    }
 
-  private searchVideoInfo(query: string): Promise<Video> {
-    return this.youtube.searchVideos(query, 1).then(videos => videos[0]);
-  }
+    public search(query: string, limit: number): Promise<TrackInfo[]> {
+        return ytsr.getFilters(query).then(filters => {
+            const videoFilter = filters.get("Type").find(filter => filter.name === "Video");
+            return ytsr(null, {
+                limit,
+                nextpageRef: videoFilter.ref
+            }).then(res => res.items.map(video => {
+                    return {
+                        id: YoutubeService.currentId++,
+                        url: video.link,
+                        title: video.title,
+                        artist: video.author.name,
+                        thumbnailUrl: video.thumbnail
+                    };
+                }
+            ));
+        });
+    }
 
-  private getVideoInfo(id: string): Promise<Video> {
-    return this.youtube.getVideoByID(id);
-  }
+    private searchVideoInfo(query: string): Promise<TrackInfo> {
+        return this.search(query, 1).then(res => res[0]);
+    }
+
+    private getVideoInfo(url: string): Promise<TrackInfo> {
+        return ytdl.getBasicInfo(url).then(video => {
+            if (video) {
+                const thumbnails = video.player_response.videoDetails.thumbnail.thumbnails;
+                return {
+                    id: YoutubeService.currentId++,
+                    url: video.video_url,
+                    title: video.title,
+                    artist: video.author.name,
+                    thumbnailUrl: thumbnails[thumbnails.length - 2].url
+                };
+            } else {
+                throw new Error("Video not found");
+            }
+        });
+    }
 }

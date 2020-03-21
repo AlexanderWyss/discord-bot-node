@@ -77,7 +77,7 @@ export class PlayerComponent implements OnInit {
   }
 
   search() {
-    this.musicService.search(this.url).then(result => this.searchResult = result);
+    this.musicService.search(this.url).subscribe(result => this.searchResult = result);
   }
 
   enter() {

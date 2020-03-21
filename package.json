@@ -28,10 +28,10 @@
     "he": "^1.2.0",
     "libsodium-wrappers": "^0.7.6",
     "morgan": "~1.9.1",
-    "simple-youtube-api": "^5.2.1",
     "socket.io": "^2.3.0",
     "sqlite": "^3.0.3",
     "ytdl-core": "^2.0.0",
+    "ytsr": "^0.1.11",
     "zucc": "^0.1.2"
   },
   "devDependencies": {
