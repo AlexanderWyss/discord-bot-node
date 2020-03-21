@@ -3,6 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import {Socket} from 'ngx-socket-io';
 import {MusicService} from '../music.service';
 import {JoinGuild, QueueInfo, TrackInfo} from '../models';
+import {Title} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-player',
@@ -18,7 +19,7 @@ export class PlayerComponent implements OnInit {
   url = '';
   searchResult: TrackInfo[] = [];
 
-  constructor(private socket: Socket, private route: ActivatedRoute, private musicService: MusicService) {
+  constructor(private socket: Socket, private route: ActivatedRoute, private musicService: MusicService, private titleService: Title) {
   }
 
   ngOnInit() {
@@ -30,8 +31,11 @@ export class PlayerComponent implements OnInit {
         this.socket.fromEvent('tracks').subscribe((queueInfo: QueueInfo) => {
           this.queueInfo = queueInfo;
         });
-        this.socket.fromEvent('guild').subscribe((guild: string) => this.guild = guild);
-        this.socket.emit('joinGuild', {guildId: this.guildId, userId: this.userId } as JoinGuild);
+        this.socket.fromEvent('guild').subscribe((guild: string) => {
+          this.guild = guild;
+          this.titleService.setTitle(this.guild);
+        });
+        this.socket.emit('joinGuild', {guildId: this.guildId, userId: this.userId} as JoinGuild);
       });
     });
   }
