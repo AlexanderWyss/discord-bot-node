@@ -7,10 +7,10 @@
     <div><small>{{track.artist}}</small></div>
     <div><small>{{track.duration | minuteSeconds}}</small></div>
     <div>
-      <input *ngIf="events.includes('REMOVE')" type="button" value="🗑" (click)="emit('REMOVE', track.id)">
-      <input *ngIf="events.includes('NOW')" type="button" value="Now" (click)="emit('NOW', track.url)">
-      <input *ngIf="events.includes('NEXT')" type="button" value="Next" (click)="emit('NEXT', track.url)">
-      <input *ngIf="events.includes('QUEUE')" type="button" value="Queue" (click)="emit('QUEUE', track.url)">
+      <button mat-button *ngIf="events.includes('REMOVE')" (click)="emit('REMOVE', track.id)">🗑</button>
+      <button mat-button *ngIf="events.includes('NOW')" (click)="emit('NOW', track.url)">Now</button>
+      <button mat-button *ngIf="events.includes('NEXT')" (click)="emit('NEXT', track.url)">Next</button>
+      <button mat-button *ngIf="events.includes('QUEUE')" (click)="emit('QUEUE', track.url)">Queue</button>
     </div>
   </div>
 </div>

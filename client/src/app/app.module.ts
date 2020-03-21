@@ -11,6 +11,8 @@ import {getUrl} from './music.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TrackInfoComponent } from './track-info/track-info.component';
 import { MinuteSecondsPipe } from './minute-seconds.pipe';
+import {MatButtonModule} from '@angular/material/button';
+import {HighContrastMode, HighContrastModeDetector} from "@angular/cdk/a11y";
 
 const config: SocketIoConfig = {url: getUrl(), options: {}};
 
@@ -27,7 +29,8 @@ const config: SocketIoConfig = {url: getUrl(), options: {}};
     SocketIoModule.forRoot(config),
     FormsModule,
     HttpClientModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
