@@ -5,16 +5,13 @@ import {Observable} from 'rxjs';
 
 export function getUrl() {
   if (window.location.hostname === 'localhost') {
-    return 'discord.wyss.tech';
+    return 'localhost:3000';
   }
   return window.location.hostname + ':' + window.location.port;
 }
 
 export function getProtocol() {
-  if (window.location.hostname === 'localhost') {
-    return 'http://';
-  }
-  return 'https://';
+  return window.location.protocol + '//';
 }
 
 @Injectable({

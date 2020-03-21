@@ -4,6 +4,7 @@ export interface TrackInfo {
   readonly title: string;
   readonly artist: string;
   readonly thumbnailUrl: string;
+  readonly duration: number;
 }
 
 export interface QueueInfo {

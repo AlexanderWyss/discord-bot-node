@@ -4,6 +4,7 @@ import {Socket} from 'ngx-socket-io';
 import {MusicService} from '../music.service';
 import {JoinGuild, QueueInfo, TrackInfo} from '../models';
 import {Title} from '@angular/platform-browser';
+import {TrackInfoEvent} from '../track-info/track-info.component';
 
 @Component({
   selector: 'app-player',
@@ -93,6 +94,23 @@ export class PlayerComponent implements OnInit {
       this.queue();
     } else {
       this.search();
+    }
+  }
+
+  trackInfoEvent(event: TrackInfoEvent) {
+    switch (event.type) {
+      case 'REMOVE':
+        this.remove(event.params);
+        break;
+      case 'NOW':
+        this.now(event.params);
+        break;
+      case 'NEXT':
+        this.next(event.params);
+        break;
+      case 'QUEUE':
+        this.queue(event.params);
+        break;
     }
   }
 }

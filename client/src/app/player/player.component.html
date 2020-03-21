@@ -9,23 +9,13 @@
         <span class="button" (click)="skipBack()">⏮</span>
         <span class="button" (click)="togglePause()">⏯</span>
         <span class="button" (click)="skip()">⏭</span>
+        <small>{{queueInfo?.currentTrack?.duration | minuteSeconds}}</small>
         <span class="button" (click)="volumeDown()">🔉</span>
         <span class="button" (click)="volumeUp()">🔊</span>
       </div>
     </div>
     <div id="list" *ngFor="let track of queueInfo?.tracks">
-      <div class="card">
-        <div class="thumbnail">
-          <img [src]="track?.thumbnailUrl">
-        </div>
-        <div class="track-info">
-          <h3>{{track?.title}}</h3>
-          <small>{{track?.artist}}</small>
-          <div>
-            <span class="button" (click)="remove(track.id)">🗑</span>
-          </div>
-        </div>
-      </div>
+      <app-track-info [track]="track" [events]="['REMOVE']" (event)="trackInfoEvent($event)"></app-track-info>
     </div>
   </div>
   <div class="component">
@@ -38,22 +28,10 @@
       <input type="button" value="Queue" (click)="queue()">
     </div>
     <div *ngIf="loading"><img src="assets/loading.gif"></div>
-    <div *ngIf="!loading" >
+    <div *ngIf="!loading">
       <div *ngFor="let track of searchResult">
-        <div class="card">
-          <div class="thumbnail">
-            <img [src]="track.thumbnailUrl">
-          </div>
-          <div class="track-info">
-            <h3>{{track.title}}</h3>
-            <small>{{track.artist}}</small>
-            <div>
-              <input type="button" value="Now" (click)="now(track.url)">
-              <input type="button" value="Next" (click)="next(track.url)">
-              <input type="button" value="Queue" (click)="queue(track.url)">
-            </div>
-          </div>
-        </div>
+        <app-track-info [track]="track" [events]="['NOW', 'NEXT', 'QUEUE']"
+                        (event)="trackInfoEvent($event)"></app-track-info>
       </div>
     </div>
   </div>

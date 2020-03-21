@@ -1,0 +1,19 @@
+.card {
+  border: black thin solid;
+  display: flex;
+
+  img {
+    height: 10rem;
+  }
+
+  .track-info {
+    margin-left: 1rem;
+    h3, div {
+      margin: 0;
+    }
+
+    * {
+      margin-top: 0.5rem;
+    }
+  }
+}

@@ -9,13 +9,17 @@ import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {getUrl} from './music.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TrackInfoComponent } from './track-info/track-info.component';
+import { MinuteSecondsPipe } from './minute-seconds.pipe';
 
 const config: SocketIoConfig = {url: getUrl(), options: {}};
 
 @NgModule({
   declarations: [
     AppComponent,
-    PlayerComponent
+    PlayerComponent,
+    TrackInfoComponent,
+    MinuteSecondsPipe
   ],
   imports: [
     BrowserModule,

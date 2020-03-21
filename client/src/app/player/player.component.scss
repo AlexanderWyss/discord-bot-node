@@ -32,22 +32,5 @@
   .button:hover {
     cursor: pointer;
   }
-
-  .card {
-    border: black thin solid;
-    display: flex;
-
-    img {
-      height: 10rem;
-    }
-
-    .track-info {
-      margin-left: 1rem;
-
-      * {
-        margin-top: 0.5rem;
-      }
-    }
-  }
 }
 

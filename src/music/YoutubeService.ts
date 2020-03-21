@@ -47,11 +47,23 @@ export class YoutubeService {
                         url: video.link,
                         title: video.title,
                         artist: video.author.name,
-                        thumbnailUrl: video.thumbnail
+                        thumbnailUrl: video.thumbnail,
+                        duration: this.getInSeconds(video.duration)
                     };
                 }
             ));
         });
+    }
+
+    private getInSeconds(duration: string): number {
+        if (duration) {
+            const split = duration.split(":");
+            const minutes = split[0];
+            const seconds = split[1];
+            return parseInt(minutes) * 60 + parseInt(seconds);
+        } else {
+            return 0;
+        }
     }
 
     private searchVideoInfo(query: string): Promise<TrackInfo> {
@@ -67,7 +79,8 @@ export class YoutubeService {
                     url: video.video_url,
                     title: video.title,
                     artist: video.author.name,
-                    thumbnailUrl: thumbnails[thumbnails.length - 2].url
+                    thumbnailUrl: thumbnails[thumbnails.length - 2].url,
+                    duration: video.player_response.videoDetails.lengthSeconds
                 };
             } else {
                 throw new Error("Video not found");
