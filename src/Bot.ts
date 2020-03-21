@@ -65,6 +65,14 @@ export class Bot {
             this.close();
             process.exit();
         });
+        process.on("SIGHUP", () => {
+            this.close();
+            process.exit();
+        });
+        process.on("SIGTERM", () => {
+            this.close();
+            process.exit();
+        });
     }
 
     public getGuildMusicManager(guild: Guild): GuildMusicManager {
