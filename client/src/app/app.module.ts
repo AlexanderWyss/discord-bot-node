@@ -7,14 +7,10 @@ import {AppComponent} from './app.component';
 import {PlayerComponent} from './player/player.component';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
-import {getUrl} from './music.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TrackInfoComponent } from './track-info/track-info.component';
 import { MinuteSecondsPipe } from './minute-seconds.pipe';
 import {MatButtonModule} from '@angular/material/button';
-import {HighContrastMode, HighContrastModeDetector} from "@angular/cdk/a11y";
-
-const config: SocketIoConfig = {url: getUrl(), options: {}};
 
 @NgModule({
   declarations: [
@@ -26,7 +22,7 @@ const config: SocketIoConfig = {url: getUrl(), options: {}};
   imports: [
     BrowserModule,
     AppRoutingModule,
-    SocketIoModule.forRoot(config),
+    SocketIoModule.forRoot(null),
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
