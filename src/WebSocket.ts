@@ -43,6 +43,7 @@ export class WebSocket implements TrackSchedulerObserver {
                         musicManager.getTrackScheduler().register(this);
                     }
                     socket.join(data.guildId);
+                    socket.emit("guild", musicManager.getGuild().name);
                     socket.emit("tracks", this.getQueueInfo(musicManager));
 
                     if (data.userId && !musicManager.isVoiceConnected()) {

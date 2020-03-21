@@ -11,10 +11,11 @@ import {JoinGuild, QueueInfo, TrackInfo} from '../models';
 })
 export class PlayerComponent implements OnInit {
 
+  guildId: string;
+  guild = '';
+  userId: string;
   queueInfo: QueueInfo;
   url = '';
-  guildId: string;
-  userId: string;
   searchResult: TrackInfo[] = [];
 
   constructor(private socket: Socket, private route: ActivatedRoute, private musicService: MusicService) {
@@ -29,6 +30,7 @@ export class PlayerComponent implements OnInit {
         this.socket.fromEvent('tracks').subscribe((queueInfo: QueueInfo) => {
           this.queueInfo = queueInfo;
         });
+        this.socket.fromEvent('guild').subscribe((guild: string) => this.guild = guild);
         this.socket.emit('joinGuild', {guildId: this.guildId, userId: this.userId } as JoinGuild);
       });
     });
