@@ -5,7 +5,7 @@ import {Observable} from 'rxjs';
 
 export function getUrl() {
   if (window.location.hostname === 'localhost') {
-    return 'localhost:3000';
+    return 'discord.wyss.tech';
   }
   return window.location.hostname + ':' + window.location.port;
 }
