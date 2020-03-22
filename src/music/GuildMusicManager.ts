@@ -1,4 +1,5 @@
 import {DMChannel, Guild, Snowflake, TextChannel, VoiceChannel, VoiceConnection} from "discord.js";
+import {ChannelInfo} from "./ChannelInfo";
 import {MusicPanel} from "./MusicPanel";
 import {MusicPlayer} from "./MusicPlayer";
 import {ReactionManager} from "./ReactionManager";
@@ -137,5 +138,21 @@ export class GuildMusicManager {
 
     public removeTrackById(id: number) {
         this.trackScheduler.removeById(id);
+    }
+
+    public getVoiceChannels(): ChannelInfo[] {
+        return this.guild.channels.cache.filter(channel => channel.type === "voice").map(channel => {
+            return {
+                id: channel.id,
+                name: channel.name
+            };
+        });
+    }
+
+    public joinByChannelId(id: string) {
+        const channel = this.guild.channels.resolve(id);
+        if (channel.type === "voice") {
+            return this.join(channel as VoiceChannel);
+        }
     }
 }

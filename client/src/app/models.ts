@@ -22,3 +22,8 @@ export interface JoinGuild {
   oldGuildId?: string;
   userId?: string;
 }
+
+export interface Channel {
+  id: string;
+  name: string;
+}

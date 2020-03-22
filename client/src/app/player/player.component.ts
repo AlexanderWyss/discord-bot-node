@@ -7,6 +7,7 @@ import {Title} from '@angular/platform-browser';
 import {TrackInfoEvent} from '../track-info/track-info.component';
 import {MatDialog} from '@angular/material/dialog';
 import {BookmarkCreatorComponent} from '../bookmark-creator/bookmark-creator.component';
+import {JoinChannelComponent} from '../join-channel/join-channel.component';
 
 interface GuildInfo {
   name: string;
@@ -129,6 +130,14 @@ export class PlayerComponent implements OnInit {
 
   bookmarkTools() {
     this.dialog.open(BookmarkCreatorComponent, {
+      data: {
+        guildId: this.guildId
+      }
+    });
+  }
+
+  channels() {
+    this.dialog.open(JoinChannelComponent, {
       data: {
         guildId: this.guildId
       }

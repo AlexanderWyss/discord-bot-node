@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {TrackInfo} from './models';
+import {Channel, TrackInfo} from './models';
 import {Observable} from 'rxjs';
 
 export function getUrl() {
@@ -61,5 +61,13 @@ export class MusicService {
 
   search(query: string): Observable<TrackInfo[]> {
     return this.http.get(this.baseUrl + '/search/' + encodeURIComponent(query)) as Observable<TrackInfo[]>;
+  }
+
+  getChannels(guildId: string): Observable<Channel[]> {
+    return this.http.get(this.baseUrl + '/' + guildId + '/channels') as Observable<Channel[]>;
+  }
+
+  join(guildId: string, id: string) {
+    this.http.get(this.baseUrl + '/' + guildId + '/join/' + id).subscribe();
   }
 }

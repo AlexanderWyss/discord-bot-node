@@ -21,6 +21,8 @@ import { BookmarkCreatorComponent } from './bookmark-creator/bookmark-creator.co
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {ClipboardModule} from '@angular/cdk/clipboard';
+import { JoinChannelComponent } from './join-channel/join-channel.component';
+import {MatListModule} from '@angular/material/list';
 
 const config: SocketIoConfig = {url: getUrl(), options: {}};
 
@@ -30,7 +32,8 @@ const config: SocketIoConfig = {url: getUrl(), options: {}};
     PlayerComponent,
     TrackInfoComponent,
     MinuteSecondsPipe,
-    BookmarkCreatorComponent
+    BookmarkCreatorComponent,
+    JoinChannelComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +50,8 @@ const config: SocketIoConfig = {url: getUrl(), options: {}};
     MatCardModule,
     MatDialogModule,
     MatButtonToggleModule,
-    ClipboardModule
+    ClipboardModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

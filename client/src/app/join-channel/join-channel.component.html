@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>Channels</h1>
+<div mat-dialog-content>
+  <mat-list>
+    <mat-list-item *ngFor="let channel of channels"><button mat-button (click)="join(channel.id)">{{channel.name}}</button></mat-list-item>
+  </mat-list>
+</div>
+<div mat-dialog-actions>
+  <button mat-stroked-button id="done-button" (click)="this.dialogRef.close()">Cancel</button>
+</div>
