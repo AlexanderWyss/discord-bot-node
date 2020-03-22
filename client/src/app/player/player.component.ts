@@ -5,6 +5,7 @@ import {TrackInfoEvent} from '../track-info/track-info.component';
 import {MatDialog} from '@angular/material/dialog';
 import {BookmarkCreatorComponent} from '../bookmark-creator/bookmark-creator.component';
 import {JoinChannelComponent} from '../join-channel/join-channel.component';
+import {CdkDragDrop, moveItemInArray, copyArrayItem} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-player',
@@ -111,5 +112,15 @@ export class PlayerComponent implements OnInit {
 
   toggleRepeat() {
     this.musicService.toggleRepeat();
+  }
+
+  drop(event: CdkDragDrop<TrackInfo[], any>) {
+    if (event.previousContainer.id === 'searchList') {
+      this.musicService.add(this.searchResult[event.previousIndex], event.currentIndex);
+      copyArrayItem(this.searchResult, this.queueInfo.tracks, event.previousIndex, event.currentIndex);
+    } else {
+      this.musicService.move(this.queueInfo.tracks[event.previousIndex].id, event.currentIndex);
+      moveItemInArray(this.queueInfo.tracks, event.previousIndex, event.currentIndex);
+    }
   }
 }

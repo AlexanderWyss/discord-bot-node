@@ -155,4 +155,12 @@ export class GuildMusicManager {
     public getRepeat(): boolean {
         return this.trackScheduler.getRepeat();
     }
+
+    public add(track: TrackInfo, index: number) {
+        this.trackScheduler.add(track, index);
+    }
+
+    public move(id: string, index: number) {
+         this.trackScheduler.move(id, index);
+    }
 }

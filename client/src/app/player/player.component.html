@@ -35,8 +35,10 @@
         </div>
       </mat-card-content>
     </mat-card>
+    <div cdkDropList id="queueList" #queueList="cdkDropList" [cdkDropListData]="queueInfo?.tracks" (cdkDropListDropped)="drop($event)">
     <app-track-info *ngFor="let track of queueInfo?.tracks" [track]="track" [events]="['REMOVE']"
                     (event)="trackInfoEvent($event)"></app-track-info>
+    </div>
   </div>
   <div class="component">
     <div id="url-bar-container">
@@ -53,7 +55,7 @@
     <div *ngIf="loading" class="spinner-container">
       <mat-spinner></mat-spinner>
     </div>
-    <div *ngIf="!loading">
+    <div *ngIf="!loading" id="searchList" cdkDropList [cdkDropListConnectedTo]="queueList" [cdkDropListSortingDisabled]="true" [cdkDropListData]="searchResult">
       <app-track-info *ngFor="let track of searchResult" [track]="track" [events]="['NOW', 'NEXT', 'QUEUE']"
                       (event)="trackInfoEvent($event)"></app-track-info>
     </div>

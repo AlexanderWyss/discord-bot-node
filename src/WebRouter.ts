@@ -52,6 +52,12 @@ export class WebRouter {
         this.router.get("/:guildId/toggleRepeat", (req: any, res: any, next: any) => {
             this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).toggleRepeat(), res);
         });
+        this.router.post("/:guildId/add/:index", (req: any, res: any, next: any) => {
+            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).add(req.body.track, req.params.index), res);
+        });
+        this.router.get("/:guildId/move/:id/:index", (req: any, res: any, next: any) => {
+            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).move(req.params.id, req.params.index), res);
+        });
         return this.router;
     }
 

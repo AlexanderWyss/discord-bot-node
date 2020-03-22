@@ -21,7 +21,6 @@ export class TrackScheduler implements PlayerObserver {
     }
 
     public playNext() {
-        console.log("playNext");
         if (this.musicPlayer.isConnected()) {
             let trackInfo = this.tracks.shift();
             if (!trackInfo && this.repeat && this.previousTracks.length > 0) {
@@ -49,7 +48,6 @@ export class TrackScheduler implements PlayerObserver {
     }
 
     public playPrevious() {
-        console.log("play previous");
         if (this.musicPlayer.isConnected()) {
             let trackInfo = this.previousTracks.shift();
             if (!trackInfo && this.repeat && this.tracks.length > 0) {
@@ -108,7 +106,6 @@ export class TrackScheduler implements PlayerObserver {
     }
 
     public onEnd(): void {
-        console.log("end");
         try {
             this.playNext();
         } catch (e) {
@@ -178,6 +175,27 @@ export class TrackScheduler implements PlayerObserver {
 
     public getRepeat(): boolean {
         return this.repeat;
+    }
+
+    public add(trackInfo: TrackInfo, index: number) {
+        try {
+            this.tracks.splice(index, 0, trackInfo);
+        } finally {
+            this.updateObservers();
+        }
+    }
+
+    public move(id: string, newIndex: number) {
+        try {
+            const currentIndex = this.tracks.findIndex(track => track.id === parseInt(id));
+            if (currentIndex >= 0 && newIndex >= 0 && newIndex < this.tracks.length) {
+                this.tracks.splice(newIndex, 0, this.tracks.splice(currentIndex, 1)[0]);
+            } else {
+                throw new Error("Move failed");
+            }
+        } finally {
+            this.updateObservers();
+        }
     }
 
     private updateObservers() {

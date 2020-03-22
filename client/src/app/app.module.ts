@@ -24,7 +24,8 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
 import { JoinChannelComponent } from './join-channel/join-channel.component';
 import {MatListModule} from '@angular/material/list';
 import { GuildSelectComponent } from './guild-select/guild-select.component';
-import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 const config: SocketIoConfig = {url: getUrl(), options: {}};
 
@@ -55,7 +56,8 @@ const config: SocketIoConfig = {url: getUrl(), options: {}};
     MatButtonToggleModule,
     ClipboardModule,
     MatListModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]

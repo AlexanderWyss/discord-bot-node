@@ -122,6 +122,14 @@ export class MusicService {
     this.http.get(this.baseUrl + '/' + this.guildId + '/leave/').pipe(this.handleError()).subscribe();
   }
 
+  add(track: TrackInfo, index: number) {
+    this.http.post(this.baseUrl + '/' + this.guildId + '/add/' + index, {track}).pipe(this.handleError()).subscribe();
+  }
+
+  move(id: number, index: number) {
+    this.http.get(this.baseUrl + '/' + this.guildId + '/move/' + id + '/' + index).pipe(this.handleError()).subscribe();
+  }
+
   getGuilds(): Observable<GuildInfo[]> {
     return this.http.get(this.baseUrl + '/guilds').pipe(this.handleError()) as Observable<GuildInfo[]>;
   }
