@@ -52,14 +52,6 @@ export class PlayerComponent implements OnInit {
     this.musicService.queue(url ? url : this.url);
   }
 
-  volumeUp() {
-    this.musicService.volumeUp();
-  }
-
-  volumeDown() {
-    this.musicService.volumeDown();
-  }
-
   togglePause() {
     this.musicService.togglePause();
   }

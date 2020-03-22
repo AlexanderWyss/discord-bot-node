@@ -38,8 +38,6 @@ export class MusicPlayer {
         dispatcher.on("finish", () => this.forObservers(observer => observer.onEnd()));
         dispatcher.on("error", (err: Error) => this.forObservers(observer => observer.onError(err)));
         dispatcher.on("speaking", (value: boolean) => this.forObservers(observer => observer.onSpeaking(value)));
-        dispatcher.on("volumeChange", (oldVolume: number, newVolume: number) =>
-            this.forObservers(observer => observer.onVolumeChange(oldVolume, newVolume)));
 
     }
 
@@ -55,14 +53,6 @@ export class MusicPlayer {
 
     public isPaused(): boolean {
         return this.dispatcher.paused;
-    }
-
-    public setVolume(volume: number) {
-        this.dispatcher.setVolume(Math.floor(volume));
-    }
-
-    public getVolume(): number {
-        return this.dispatcher.volume;
     }
 
     public isCurrentlyPlaying() {

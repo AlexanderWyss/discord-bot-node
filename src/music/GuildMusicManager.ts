@@ -88,22 +88,6 @@ export class GuildMusicManager {
         }
     }
 
-    public setVolume(volume: number) {
-        this.trackScheduler.setVolume(volume);
-    }
-
-    public getVolume(): number {
-        return this.trackScheduler.getVolume();
-    }
-
-    public decreseVolume() {
-        this.trackScheduler.setVolume(Math.max(this.trackScheduler.getVolume() - 0.1, 0));
-    }
-
-    public increseVolume() {
-        this.trackScheduler.setVolume(Math.min(this.trackScheduler.getVolume() + 0.1, 2));
-    }
-
     public getTracks(): TrackInfo[] {
         return this.trackScheduler.getTracks();
     }

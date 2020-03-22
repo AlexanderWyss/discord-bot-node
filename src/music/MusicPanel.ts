@@ -45,7 +45,6 @@ export class MusicPanel implements TrackSchedulerObserver {
       embed.addField("Title", he.decode(currentlyPlaying.title))
         .addField("Artist", he.decode(currentlyPlaying.artist))
         .addField("Url", currentlyPlaying.url)
-        .addField("Volume", this.trackScheduler.getVolume() * 100)
         .setThumbnail(currentlyPlaying.thumbnailUrl);
     }
     return embed;

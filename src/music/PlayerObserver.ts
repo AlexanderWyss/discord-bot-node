@@ -9,7 +9,5 @@ export interface PlayerObserver {
 
     onStart(): void;
 
-    onVolumeChange(oldVolume: number, newVolume: number): void;
-
     onTogglePause(value: boolean): void;
 }

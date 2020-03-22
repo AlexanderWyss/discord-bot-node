@@ -101,10 +101,6 @@ export class TrackScheduler implements PlayerObserver {
         this.updateObservers();
     }
 
-    public onVolumeChange(oldVolume: number, newVolume: number): void {
-        this.updateObservers();
-    }
-
     public register(observer: TrackSchedulerObserver) {
         this.observers.push(observer);
     }
@@ -122,14 +118,6 @@ export class TrackScheduler implements PlayerObserver {
 
     public isPaused() {
         return this.musicPlayer.isPaused();
-    }
-
-    public setVolume(volume: number) {
-        this.musicPlayer.setVolume(volume);
-    }
-
-    public getVolume() {
-        return this.musicPlayer.getVolume();
     }
 
     public getTracks(): TrackInfo[] {

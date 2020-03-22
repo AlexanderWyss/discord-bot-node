@@ -8,7 +8,6 @@ import {PlayCommand} from "./commands/music/PlayCommand";
 import {PlayerCommand} from "./commands/music/PlayerCommand";
 import {ResumeCommand} from "./commands/music/ResumeCommand";
 import {SkipCommand} from "./commands/music/SkipCommand";
-import {VolumeCommand} from "./commands/music/VolumeCommand";
 import {GuildInfo} from "./music/GuildInfo";
 import {GuildMusicManager} from "./music/GuildMusicManager";
 
@@ -53,7 +52,7 @@ export class Bot {
             .registerCommands([
                 new PlayCommand(this), new JoinCommand(this), new LeaveCommand(this),
                 new SkipCommand(this), new PauseCommand(this), new ResumeCommand(this),
-                new MusicPanelCommand(this), new VolumeCommand(this), new PlayerCommand(this)
+                new MusicPanelCommand(this), new PlayerCommand(this)
             ]);
         this.commandoClient.login(token).then(success => {
             this.commandoClient.user.setActivity(this.commandoClient.commandPrefix + "Help").catch(err => console.error("Set Activity failed: " + err));

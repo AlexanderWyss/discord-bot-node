@@ -91,14 +91,6 @@ export class MusicService {
     this.http.get(this.baseUrl + '/' + this.guildId + '/skipBack').subscribe();
   }
 
-  volumeUp() {
-    this.http.get(this.baseUrl + '/' + this.guildId + '/volumeUp').subscribe();
-  }
-
-  volumeDown() {
-    this.http.get(this.baseUrl + '/' + this.guildId + '/volumeDown').subscribe();
-  }
-
   togglePause() {
     this.http.get(this.baseUrl + '/' + this.guildId + '/togglePause').subscribe();
   }
