@@ -41,7 +41,7 @@ export class Bot {
     }
 
     public start(token: string, owner: string) {
-        this.commandoClient = new CommandoClient({owner, commandPrefix: "!"});
+        this.commandoClient = new CommandoClient({owner, commandPrefix: process.env.PREFIX});
         this.commandoClient.registry
             .registerGroups([
                 ["music", "Music"]
