@@ -33,8 +33,6 @@ export class MusicPlayer {
         }
         const stream = YoutubeService.getInstance().getStream(url);
         const dispatcher = this.voiceConnection.play(stream, {highWaterMark: 1});
-        dispatcher.on("volumeChange", (oldVolume: number, newVolume: number) => console.log("volumeChange"));
-
         dispatcher.on("debug", (information: string) => this.forObservers(observer => observer.onDebug(information)));
         dispatcher.on("start", () => this.forObservers(observer => observer.onStart()));
         dispatcher.on("finish", () => this.forObservers(observer => observer.onEnd()));

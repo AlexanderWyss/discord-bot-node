@@ -31,7 +31,6 @@ export class PlayerComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('init');
     this.route.paramMap.subscribe(params => {
       this.guildId = params.get('guildId');
       this.userId = params.get('userId');

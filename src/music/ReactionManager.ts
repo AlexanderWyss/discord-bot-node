@@ -25,7 +25,7 @@ export class ReactionManager {
     try {
       reaction.users.fetch().then(users => users.forEach(user => {
         if (user.id !== reaction.message.client.user.id) {
-          reaction.users.remove(user).catch(e => console.log(e));
+          reaction.users.remove(user).catch(e => console.error(e));
         }
       }));
       switch (reaction.emoji.name) {

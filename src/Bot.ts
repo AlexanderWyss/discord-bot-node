@@ -57,7 +57,7 @@ export class Bot {
         this.commandoClient.login(token).then(success => {
             this.commandoClient.user.setActivity(this.commandoClient.commandPrefix + "Help").catch(err => console.error("Set Activity failed: " + err));
             console.log("Logged in");
-        }, error => console.log("Login failed: " + error));
+        }, error => console.error("Login failed: " + error));
         process.on("exit", () => {
             this.close();
         });

@@ -34,7 +34,7 @@ export class MusicPanel implements TrackSchedulerObserver {
   public destroy() {
     this.trackScheduler.deregister(this);
     this.collector.stop();
-    this.message.then(message => message.delete()).catch(e => console.log(e));
+    this.message.then(message => message.delete()).catch(e => console.error(e));
   }
 
   private buildMessage(currentlyPlaying: TrackInfo): MessageEmbed {

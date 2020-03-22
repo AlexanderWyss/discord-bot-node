@@ -62,7 +62,6 @@ export class WebSocket implements TrackSchedulerObserver {
     }
 
     private getQueueInfo(musicManager: GuildMusicManager): QueueInfo {
-        console.log("getQueueInfo");
         return {
             currentTrack: musicManager.getCurrentTrack(),
             tracks: musicManager.getTracks(),

@@ -13,7 +13,7 @@ export abstract class SafeCommand extends Command {
       const promise = this.runSafe(message, args, fromPattern);
       if (promise) {
         (promise as Promise<any>).catch(e => {
-          console.log(e);
+          console.error(e);
           return message.reply(e.toString());
         });
       }

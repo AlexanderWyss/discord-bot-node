@@ -77,7 +77,6 @@ export class TrackScheduler implements PlayerObserver {
     }
 
     public onEnd(): void {
-        console.log("end");
         if (this.tracks.length > 0) {
             this.playNext();
         } else {
@@ -88,7 +87,7 @@ export class TrackScheduler implements PlayerObserver {
     }
 
     public onError(err: Error): void {
-        console.log(err);
+        console.error(err);
         this.onEnd();
     }
 
@@ -146,9 +145,7 @@ export class TrackScheduler implements PlayerObserver {
     }
 
     public removeById(id: number) {
-        console.log("R" + id);
         this.tracks = this.tracks.filter(track => {
-            console.log(track.id);
             return "" + track.id !== id + "";
         });
         this.previousTracks = this.previousTracks.filter(track => track.id.valueOf() !== id.valueOf());
