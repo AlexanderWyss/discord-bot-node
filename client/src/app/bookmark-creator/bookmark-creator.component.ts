@@ -1,5 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {getProtocol, getUrl} from '../music.service';
 
 export interface DialogData {
   guildId: string;
@@ -24,7 +25,7 @@ export class BookmarkCreatorComponent implements OnInit {
   }
 
   createCode() {
-    this.code = 'javascript:(function() {const http = new XMLHttpRequest();http.open("GET", "https://discord.wyss.tech/'
-      + this.data.guildId + '/' + this.action + '/" + encodeURIComponent(window.location.toString()));http.send();})();';
+    this.code = 'javascript:(function() {const http = new XMLHttpRequest();http.open("GET", "' + getProtocol() + getUrl() +
+      '/' + this.data.guildId + '/' + this.action + '/" + encodeURIComponent(window.location.toString()));http.send();})();';
   }
 }

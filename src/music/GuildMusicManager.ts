@@ -101,7 +101,7 @@ export class GuildMusicManager {
     }
 
     public getPlayerUrl(userId?: Snowflake): string {
-        return "https://discord.wyss.tech/player/" + this.guild.id;
+        return process.env.URL + "/player/" + this.guild.id;
     }
 
     public getTrackScheduler(): TrackScheduler {
