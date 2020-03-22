@@ -50,6 +50,18 @@
         > * {
           flex: 0 0 auto;
         }
+
+        .filler {
+          flex-grow: 1;
+        }
+
+        .dummy {
+          visibility: hidden;
+        }
+
+        .disabled {
+          color: darkgray;
+        }
       }
     }
   }

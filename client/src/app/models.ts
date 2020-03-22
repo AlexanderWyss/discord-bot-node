@@ -11,6 +11,7 @@ export interface QueueInfo {
   currentTrack: CurrentTrackInfo;
   tracks: TrackInfo[];
   previousTracks: TrackInfo[];
+  repeat: boolean;
 }
 
 export interface CurrentTrackInfo extends TrackInfo {

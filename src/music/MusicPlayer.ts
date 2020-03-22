@@ -1,4 +1,4 @@
-import {Guild} from "discord.js";
+import {Guild, StreamDispatcher} from "discord.js";
 import {PlayerObserver} from "./PlayerObserver";
 import {YoutubeService} from "./YoutubeService";
 
@@ -29,7 +29,8 @@ export class MusicPlayer {
 
     public play(url: string) {
         if (this.voiceConnection.dispatcher) {
-            this.dispatcher.end("NewSong");
+            this.dispatcher.end();
+            this.dispatcher.removeAllListeners();
         }
         const stream = YoutubeService.getInstance().getStream(url);
         const dispatcher = this.voiceConnection.play(stream, {highWaterMark: 1});
@@ -38,7 +39,6 @@ export class MusicPlayer {
         dispatcher.on("finish", () => this.forObservers(observer => observer.onEnd()));
         dispatcher.on("error", (err: Error) => this.forObservers(observer => observer.onError(err)));
         dispatcher.on("speaking", (value: boolean) => this.forObservers(observer => observer.onSpeaking(value)));
-
     }
 
     public pause() {

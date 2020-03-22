@@ -16,6 +16,9 @@
         <small>{{queueInfo?.currentTrack?.artist}}</small>
         <small>{{queueInfo?.currentTrack?.duration | minuteSeconds}}</small>
         <div class="buttons">
+          <button mat-icon-button class="dummy">
+          </button>
+          <div class="filler"></div>
           <button mat-icon-button (click)="skipBack()">
             <mat-icon>skip_previous</mat-icon>
           </button>
@@ -24,6 +27,10 @@
           </button>
           <button mat-icon-button (click)="skip()">
             <mat-icon>skip_next</mat-icon>
+          </button>
+          <div class="filler"></div>
+          <button mat-icon-button (click)="toggleRepeat()">
+            <mat-icon [class]="queueInfo?.repeat ? '' : 'disabled'">repeat</mat-icon>
           </button>
         </div>
       </mat-card-content>

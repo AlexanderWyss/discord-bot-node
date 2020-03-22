@@ -147,4 +147,12 @@ export class GuildMusicManager {
             return this.join(channel as VoiceChannel);
         }
     }
+
+    public toggleRepeat() {
+        this.trackScheduler.setRepeat(!this.trackScheduler.getRepeat());
+    }
+
+    public getRepeat(): boolean {
+        return this.trackScheduler.getRepeat();
+    }
 }

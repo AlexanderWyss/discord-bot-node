@@ -49,6 +49,9 @@ export class WebRouter {
         this.router.get("/:guildId/leave", (req: any, res: any, next: any) => {
             this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).leave(), res);
         });
+        this.router.get("/:guildId/toggleRepeat", (req: any, res: any, next: any) => {
+            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).toggleRepeat(), res);
+        });
         return this.router;
     }
 
