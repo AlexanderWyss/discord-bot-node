@@ -9,6 +9,7 @@ import {PlayerCommand} from "./commands/music/PlayerCommand";
 import {ResumeCommand} from "./commands/music/ResumeCommand";
 import {SkipCommand} from "./commands/music/SkipCommand";
 import {VolumeCommand} from "./commands/music/VolumeCommand";
+import {GuildInfo} from "./music/GuildInfo";
 import {GuildMusicManager} from "./music/GuildMusicManager";
 
 export class Bot {
@@ -99,6 +100,16 @@ export class Bot {
         } else {
             throw new Error("Guild not available.");
         }
+    }
+
+    public getGuilds(): GuildInfo[] {
+        return this.client.guilds.cache.map(guild => {
+            return {
+                id: guild.id,
+                name: guild.name,
+                icon: guild.iconURL()
+            };
+        });
     }
 
     private close() {

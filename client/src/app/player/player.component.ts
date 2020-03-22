@@ -1,18 +1,13 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, DoCheck, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Socket} from 'ngx-socket-io';
 import {MusicService} from '../music.service';
-import {JoinGuild, QueueInfo, TrackInfo} from '../models';
+import {GuildInfo, JoinGuild, QueueInfo, TrackInfo} from '../models';
 import {Title} from '@angular/platform-browser';
 import {TrackInfoEvent} from '../track-info/track-info.component';
 import {MatDialog} from '@angular/material/dialog';
 import {BookmarkCreatorComponent} from '../bookmark-creator/bookmark-creator.component';
 import {JoinChannelComponent} from '../join-channel/join-channel.component';
-
-interface GuildInfo {
-  name: string;
-  icon: string;
-}
 
 @Component({
   selector: 'app-player',
@@ -21,8 +16,8 @@ interface GuildInfo {
 })
 export class PlayerComponent implements OnInit {
 
-  guildId: string;
   guild: GuildInfo = {
+    id: '',
     name: '',
     icon: undefined
   };
@@ -32,64 +27,49 @@ export class PlayerComponent implements OnInit {
   searchResult: TrackInfo[] = [];
   loading: boolean;
 
-  constructor(private socket: Socket,
-              private route: ActivatedRoute,
-              private musicService: MusicService,
-              private titleService: Title,
+  constructor(private musicService: MusicService,
               private dialog: MatDialog) {
   }
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
-      this.guildId = params.get('guildId');
-      this.userId = params.get('userId');
-      this.socket.on('connect', () => {
-        this.socket.fromEvent('tracks').subscribe((queueInfo: QueueInfo) => {
-          this.queueInfo = queueInfo;
-        });
-        this.socket.fromEvent('guild').subscribe((guild: GuildInfo) => {
-          this.guild = guild;
-          this.titleService.setTitle(this.guild.name);
-        });
-        this.socket.emit('joinGuild', {guildId: this.guildId, userId: this.userId} as JoinGuild);
-      });
-    });
+    this.musicService.onTracks().subscribe(queueInfo => this.queueInfo = queueInfo);
+    this.musicService.onGuild().subscribe(guild => this.guild = guild);
   }
 
   skipBack() {
-    this.musicService.skipBack(this.guildId);
+    this.musicService.skipBack();
   }
 
   skip() {
-    this.musicService.skip(this.guildId);
+    this.musicService.skip();
   }
 
   now(url?: string) {
-    this.musicService.now(this.guildId, url ? url : this.url);
+    this.musicService.now(url ? url : this.url);
   }
 
   next(url?: string) {
-    this.musicService.next(this.guildId, url ? url : this.url);
+    this.musicService.next(url ? url : this.url);
   }
 
   queue(url?: string) {
-    this.musicService.queue(this.guildId, url ? url : this.url);
+    this.musicService.queue(url ? url : this.url);
   }
 
   volumeUp() {
-    this.musicService.volumeUp(this.guildId);
+    this.musicService.volumeUp();
   }
 
   volumeDown() {
-    this.musicService.volumeDown(this.guildId);
+    this.musicService.volumeDown();
   }
 
   togglePause() {
-    this.musicService.togglePause(this.guildId);
+    this.musicService.togglePause();
   }
 
   remove(id: number) {
-    this.musicService.remove(this.guildId, id);
+    this.musicService.remove(id);
   }
 
   search() {
@@ -131,20 +111,16 @@ export class PlayerComponent implements OnInit {
   bookmarkTools() {
     this.dialog.open(BookmarkCreatorComponent, {
       data: {
-        guildId: this.guildId
+        guildId: this.guild.id
       }
     });
   }
 
   channels() {
-    this.dialog.open(JoinChannelComponent, {
-      data: {
-        guildId: this.guildId
-      }
-    });
+    this.dialog.open(JoinChannelComponent);
   }
 
   leave() {
-    this.musicService.leave(this.guildId);
+    this.musicService.leave();
   }
 }

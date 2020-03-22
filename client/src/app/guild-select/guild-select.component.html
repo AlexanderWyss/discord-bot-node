@@ -1,0 +1,4 @@
+<h1 id="title">Guilds</h1>
+<mat-list>
+  <mat-list-item *ngFor="let guild of guilds"><img mat-list-avatar *ngIf="guild.icon" [src]="guild.icon"><button mat-button [routerLink]="'/player/' + guild.id">{{guild.name}}</button></mat-list-item>
+</mat-list>

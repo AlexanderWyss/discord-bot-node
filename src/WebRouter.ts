@@ -43,6 +43,9 @@ export class WebRouter {
         this.router.get("/search/:query", (req: any, res: any, next: any) => {
             YoutubeService.getInstance().search(req.params.query, 20).then(result => res.send(result)).catch(err => this.error(err, res));
         });
+        this.router.get("/guilds", (req: any, res: any, next: any) => {
+            res.send(this.bot.getGuilds());
+        });
         this.router.get("/:guildId/channels", (req: any, res: any, next: any) => {
             res.send(this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).getVoiceChannels());
         });

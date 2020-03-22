@@ -1,7 +1,10 @@
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Channel, TrackInfo} from './models';
+import {Channel, GuildInfo, JoinGuild, QueueInfo, TrackInfo} from './models';
 import {Observable} from 'rxjs';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {Socket} from 'ngx-socket-io';
+import {Title} from '@angular/platform-browser';
 
 export function getUrl() {
   if (window.location.hostname === 'localhost') {
@@ -19,59 +22,108 @@ export function getProtocol() {
 })
 export class MusicService {
   private readonly baseUrl = getProtocol() + getUrl();
+  private guildId: string;
+  private tracksEmitter = new EventEmitter<QueueInfo>();
+  private guildEmitter = new EventEmitter<GuildInfo>();
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router, private activatedRoute: ActivatedRoute,
+              private socket: Socket, private titleService: Title) {
+    this.socket.on('connect', () => {
+      this.socket.fromEvent('tracks').subscribe((queueInfo: QueueInfo) => {
+        this.tracksEmitter.emit(queueInfo);
+      });
+      this.socket.fromEvent('guild').subscribe((guild: GuildInfo) => {
+        this.guildEmitter.emit(guild);
+        this.guildId = guild.id;
+        this.titleService.setTitle(guild.name);
+      });
+      this.router.events.subscribe(route => {
+        if (route instanceof NavigationEnd) {
+          this.handleRoute();
+        }
+      });
+      this.handleRoute();
+    });
   }
 
-  queue(guildId: string, url: string) {
-    this.http.get(this.baseUrl + '/' + guildId + '/queue/' + encodeURIComponent(url)).subscribe();
+  private handleRoute() {
+    let currentRoute = this.activatedRoute;
+    while (currentRoute.firstChild) {
+      currentRoute = currentRoute.firstChild;
+    }
+    currentRoute.paramMap.subscribe(params => {
+      if (params.has('guildId')) {
+        const guildId = params.get('guildId');
+        const userId = params.get('userId');
+        this.socket.emit('joinGuild', {guildId, oldGuildId: this.guildId, userId} as JoinGuild);
+        this.guildId = guildId;
+      } else {
+        this.titleService.setTitle('FuckingAwesomeBot');
+      }
+    });
   }
 
-  next(guildId: string, url: string) {
-    this.http.get(this.baseUrl + '/' + guildId + '/next/' + encodeURIComponent(url)).subscribe();
+  onTracks() {
+    return this.tracksEmitter;
   }
 
-  now(guildId: string, url: string) {
-    this.http.get(this.baseUrl + '/' + guildId + '/now/' + encodeURIComponent(url)).subscribe();
+  onGuild() {
+    return this.guildEmitter;
   }
 
-  skip(guildId: string) {
-    this.http.get(this.baseUrl + '/' + guildId + '/skip').subscribe();
+  queue(url: string) {
+    this.http.get(this.baseUrl + '/' + this.guildId + '/queue/' + encodeURIComponent(url)).subscribe();
   }
 
-  skipBack(guildId: string) {
-    this.http.get(this.baseUrl + '/' + guildId + '/skipBack').subscribe();
+  next(url: string) {
+    this.http.get(this.baseUrl + '/' + this.guildId + '/next/' + encodeURIComponent(url)).subscribe();
   }
 
-  volumeUp(guildId: string) {
-    this.http.get(this.baseUrl + '/' + guildId + '/volumeUp').subscribe();
+  now(url: string) {
+    this.http.get(this.baseUrl + '/' + this.guildId + '/now/' + encodeURIComponent(url)).subscribe();
   }
 
-  volumeDown(guildId: string) {
-    this.http.get(this.baseUrl + '/' + guildId + '/volumeDown').subscribe();
+  skip() {
+    this.http.get(this.baseUrl + '/' + this.guildId + '/skip').subscribe();
   }
 
-  togglePause(guildId: string) {
-    this.http.get(this.baseUrl + '/' + guildId + '/togglePause').subscribe();
+  skipBack() {
+    this.http.get(this.baseUrl + '/' + this.guildId + '/skipBack').subscribe();
   }
 
-  remove(guildId: string, id: number) {
-    this.http.get(this.baseUrl + '/' + guildId + '/remove/' + id).subscribe();
+  volumeUp() {
+    this.http.get(this.baseUrl + '/' + this.guildId + '/volumeUp').subscribe();
+  }
+
+  volumeDown() {
+    this.http.get(this.baseUrl + '/' + this.guildId + '/volumeDown').subscribe();
+  }
+
+  togglePause() {
+    this.http.get(this.baseUrl + '/' + this.guildId + '/togglePause').subscribe();
+  }
+
+  remove(id: number) {
+    this.http.get(this.baseUrl + '/' + this.guildId + '/remove/' + id).subscribe();
   }
 
   search(query: string): Observable<TrackInfo[]> {
     return this.http.get(this.baseUrl + '/search/' + encodeURIComponent(query)) as Observable<TrackInfo[]>;
   }
 
-  getChannels(guildId: string): Observable<Channel[]> {
-    return this.http.get(this.baseUrl + '/' + guildId + '/channels') as Observable<Channel[]>;
+  getChannels(): Observable<Channel[]> {
+    return this.http.get(this.baseUrl + '/' + this.guildId + '/channels') as Observable<Channel[]>;
   }
 
-  join(guildId: string, id: string) {
-    this.http.get(this.baseUrl + '/' + guildId + '/join/' + id).subscribe();
+  join(id: string) {
+    this.http.get(this.baseUrl + '/' + this.guildId + '/join/' + id).subscribe();
   }
 
-  leave(guildId: string) {
-    this.http.get(this.baseUrl + '/' + guildId + '/leave/').subscribe();
+  leave() {
+    this.http.get(this.baseUrl + '/' + this.guildId + '/leave/').subscribe();
+  }
+
+  getGuilds(): Observable<GuildInfo[]> {
+    return this.http.get(this.baseUrl + '/guilds') as Observable<GuildInfo[]>;
   }
 }

@@ -27,3 +27,10 @@ export interface Channel {
   id: string;
   name: string;
 }
+
+
+export interface GuildInfo {
+  id: string;
+  name: string;
+  icon: string;
+}

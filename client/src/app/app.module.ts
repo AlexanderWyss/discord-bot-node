@@ -23,6 +23,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import { JoinChannelComponent } from './join-channel/join-channel.component';
 import {MatListModule} from '@angular/material/list';
+import { GuildSelectComponent } from './guild-select/guild-select.component';
 
 const config: SocketIoConfig = {url: getUrl(), options: {}};
 
@@ -33,7 +34,8 @@ const config: SocketIoConfig = {url: getUrl(), options: {}};
     TrackInfoComponent,
     MinuteSecondsPipe,
     BookmarkCreatorComponent,
-    JoinChannelComponent
+    JoinChannelComponent,
+    GuildSelectComponent
   ],
   imports: [
     BrowserModule,
