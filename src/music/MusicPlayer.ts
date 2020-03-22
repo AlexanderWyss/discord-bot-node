@@ -5,10 +5,10 @@ import {YoutubeService} from "./YoutubeService";
 export class MusicPlayer {
 
     private get voiceConnection() {
-        if (this.guild.voice.connection) {
+        if (this.guild.voice && this.guild.voice.connection) {
             return this.guild.voice.connection;
         }
-        throw new Error("There is no active voice connection.");
+        throw new Error("Voice not connected");
     }
 
     private get dispatcher() {

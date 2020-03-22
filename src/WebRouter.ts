@@ -72,6 +72,6 @@ export class WebRouter {
 
     private error(err: any, res: Response) {
         console.error(err);
-        res.status(500).send({status: 500, message: err});
+        res.status(500).send({status: 500, message: err.message});
     }
 }

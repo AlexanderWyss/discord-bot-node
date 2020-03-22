@@ -1,9 +1,6 @@
-import {Component, DoCheck, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Socket} from 'ngx-socket-io';
+import {Component, OnInit} from '@angular/core';
 import {MusicService} from '../music.service';
-import {GuildInfo, JoinGuild, QueueInfo, TrackInfo} from '../models';
-import {Title} from '@angular/platform-browser';
+import {GuildInfo, QueueInfo, TrackInfo} from '../models';
 import {TrackInfoEvent} from '../track-info/track-info.component';
 import {MatDialog} from '@angular/material/dialog';
 import {BookmarkCreatorComponent} from '../bookmark-creator/bookmark-creator.component';

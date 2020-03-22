@@ -1,10 +1,12 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Channel, GuildInfo, JoinGuild, QueueInfo, TrackInfo} from './models';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Socket} from 'ngx-socket-io';
 import {Title} from '@angular/platform-browser';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {catchError} from 'rxjs/operators';
 
 export function getUrl() {
   if (window.location.hostname === 'localhost') {
@@ -27,7 +29,7 @@ export class MusicService {
   private guildEmitter = new EventEmitter<GuildInfo>();
 
   constructor(private http: HttpClient, private router: Router, private activatedRoute: ActivatedRoute,
-              private socket: Socket, private titleService: Title) {
+              private socket: Socket, private titleService: Title, private snackBar: MatSnackBar) {
     this.socket.on('connect', () => {
       this.socket.fromEvent('tracks').subscribe((queueInfo: QueueInfo) => {
         this.tracksEmitter.emit(queueInfo);
@@ -72,50 +74,69 @@ export class MusicService {
   }
 
   queue(url: string) {
-    this.http.get(this.baseUrl + '/' + this.guildId + '/queue/' + encodeURIComponent(url)).subscribe();
+    this.http.get(this.baseUrl + '/' + this.guildId + '/queue/' + encodeURIComponent(url)).pipe(this.handleError()).subscribe();
   }
 
   next(url: string) {
-    this.http.get(this.baseUrl + '/' + this.guildId + '/next/' + encodeURIComponent(url)).subscribe();
+    this.http.get(this.baseUrl + '/' + this.guildId + '/next/' + encodeURIComponent(url)).pipe(this.handleError()).subscribe();
   }
 
   now(url: string) {
-    this.http.get(this.baseUrl + '/' + this.guildId + '/now/' + encodeURIComponent(url)).subscribe();
+    this.http.get(this.baseUrl + '/' + this.guildId + '/now/' + encodeURIComponent(url)).pipe(this.handleError()).subscribe();
   }
 
+
   skip() {
-    this.http.get(this.baseUrl + '/' + this.guildId + '/skip').subscribe();
+    this.http.get(this.baseUrl + '/' + this.guildId + '/skip').pipe(this.handleError()).subscribe();
   }
 
   skipBack() {
-    this.http.get(this.baseUrl + '/' + this.guildId + '/skipBack').subscribe();
+    this.http.get(this.baseUrl + '/' + this.guildId + '/skipBack').pipe(this.handleError()).subscribe();
   }
 
   togglePause() {
-    this.http.get(this.baseUrl + '/' + this.guildId + '/togglePause').subscribe();
+    this.http.get(this.baseUrl + '/' + this.guildId + '/togglePause').pipe(this.handleError()).subscribe();
   }
 
   remove(id: number) {
-    this.http.get(this.baseUrl + '/' + this.guildId + '/remove/' + id).subscribe();
+    this.http.get(this.baseUrl + '/' + this.guildId + '/remove/' + id).pipe(this.handleError()).subscribe();
   }
 
   search(query: string): Observable<TrackInfo[]> {
-    return this.http.get(this.baseUrl + '/search/' + encodeURIComponent(query)) as Observable<TrackInfo[]>;
+    return this.http.get(this.baseUrl + '/search/' + encodeURIComponent(query)).pipe(this.handleError()) as Observable<TrackInfo[]>;
   }
 
   getChannels(): Observable<Channel[]> {
-    return this.http.get(this.baseUrl + '/' + this.guildId + '/channels') as Observable<Channel[]>;
+    return this.http.get(this.baseUrl + '/' + this.guildId + '/channels').pipe(this.handleError()) as Observable<Channel[]>;
   }
 
   join(id: string) {
-    this.http.get(this.baseUrl + '/' + this.guildId + '/join/' + id).subscribe();
+    this.http.get(this.baseUrl + '/' + this.guildId + '/join/' + id).pipe(this.handleError()).subscribe();
   }
 
   leave() {
-    this.http.get(this.baseUrl + '/' + this.guildId + '/leave/').subscribe();
+    this.http.get(this.baseUrl + '/' + this.guildId + '/leave/').pipe(this.handleError()).subscribe();
   }
 
   getGuilds(): Observable<GuildInfo[]> {
-    return this.http.get(this.baseUrl + '/guilds') as Observable<GuildInfo[]>;
+    return this.http.get(this.baseUrl + '/guilds').pipe(this.handleError()) as Observable<GuildInfo[]>;
+  }
+
+  private handleError() {
+    return catchError(err => {
+        let message: string;
+        if (err.error && err.error.message) {
+          message = err.error.message;
+        } else {
+          message = err.message;
+        }
+        console.log(message);
+        this.snackBar.open(message, null, {
+          duration: 3000,
+          panelClass: 'error'
+        });
+        throw err;
+      }
+    );
   }
 }

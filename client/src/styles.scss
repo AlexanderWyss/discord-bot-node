@@ -7,3 +7,10 @@ body, html, app-root {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+snack-bar-container {
+  &.error {
+    background: red;
+    color: white;
+  }
+}
