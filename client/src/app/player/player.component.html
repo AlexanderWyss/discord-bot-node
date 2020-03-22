@@ -42,7 +42,7 @@
   </div>
   <div class="component">
     <div id="url-bar-container">
-      <mat-form-field>
+      <mat-form-field id="urlInput">
         <mat-label>Search / Url</mat-label>
         <input matInput [(ngModel)]="url" (keyup.enter)="enter()"
                (click)="$event.target.select()">
