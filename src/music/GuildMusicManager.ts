@@ -38,11 +38,19 @@ export class GuildMusicManager {
     }
 
     public playNext(url: string): Promise<void> {
-        return YoutubeService.getInstance().getInfo(url).then(trackInfo => this.trackScheduler.next(trackInfo));
+        if (this.musicPlayer.isCurrentlyPlaying()) {
+            return YoutubeService.getInstance().getInfo(url).then(trackInfo => this.trackScheduler.next(trackInfo));
+        } else {
+            return this.playNow(url);
+        }
     }
 
     public queue(url: string) {
-        return YoutubeService.getInstance().getInfo(url).then(trackInfo => this.trackScheduler.append(trackInfo));
+        if (this.musicPlayer.isCurrentlyPlaying()) {
+            return YoutubeService.getInstance().getInfo(url).then(trackInfo => this.trackScheduler.append(trackInfo));
+        } else {
+            return this.playNow(url);
+        }
     }
 
     public skip() {
