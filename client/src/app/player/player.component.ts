@@ -16,11 +16,7 @@ import {JoinChannelComponent} from '../join-channel/join-channel.component';
 })
 export class PlayerComponent implements OnInit {
 
-  guild: GuildInfo = {
-    id: '',
-    name: '',
-    icon: undefined
-  };
+  guild: GuildInfo;
   userId: string;
   queueInfo: QueueInfo;
   url = '';

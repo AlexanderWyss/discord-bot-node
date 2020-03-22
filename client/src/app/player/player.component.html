@@ -1,6 +1,6 @@
 <div id="title-container">
-  <img mat-card-avatar *ngIf="guild.icon" [src]="guild.icon">
-  <h1 id="title">{{guild.name}}</h1>
+  <img mat-card-avatar *ngIf="guild?.icon" [src]="guild?.icon">
+  <h1 id="title">{{guild?.name}}</h1>
   <button mat-stroked-button class="end" (click)="channels()">Channels</button>
   <button mat-stroked-button (click)="leave()">Leave</button>
   <button mat-stroked-button (click)="bookmarkTools()">Bookmark Tools</button>
