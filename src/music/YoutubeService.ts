@@ -19,9 +19,10 @@ export class YoutubeService {
     private static getInSeconds(duration: string): number {
         if (duration) {
             const split = duration.split(":");
-            const minutes = split[0];
-            const seconds = split[1];
-            return parseInt(minutes) * 60 + parseInt(seconds);
+            const hours = split.length === 3 ? split[0] : "0";
+            const minutes = split.length === 3 ? split[1] : split[0];
+            const seconds = split.length === 3 ? split[2] : split[1];
+            return parseInt(hours) * 60 * 60 + parseInt(minutes) * 60 + parseInt(seconds);
         } else {
             return 0;
         }
