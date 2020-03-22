@@ -9,4 +9,5 @@ export interface TrackInfo {
 
 export interface CurrentTrackInfo extends TrackInfo {
   readonly paused: boolean;
+  readonly position: number;
 }

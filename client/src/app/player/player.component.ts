@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MusicService} from '../music.service';
 import {GuildInfo, QueueInfo, TrackInfo} from '../models';
 import {TrackInfoEvent} from '../track-info/track-info.component';
@@ -12,7 +12,7 @@ import {CdkDragDrop, moveItemInArray, copyArrayItem} from '@angular/cdk/drag-dro
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss']
 })
-export class PlayerComponent implements OnInit {
+export class PlayerComponent implements OnInit, OnDestroy {
 
   guild: GuildInfo;
   userId: string;
@@ -25,9 +25,21 @@ export class PlayerComponent implements OnInit {
               private dialog: MatDialog) {
   }
 
+  private counter;
+
   ngOnInit() {
     this.musicService.onTracks().subscribe(queueInfo => this.queueInfo = queueInfo);
     this.musicService.onGuild().subscribe(guild => this.guild = guild);
+    this.counter = setInterval(() => {
+      if (this.queueInfo && this.queueInfo.currentTrack && !this.queueInfo.currentTrack.paused
+        && this.queueInfo.currentTrack.position !== null) {
+        this.queueInfo.currentTrack.position++;
+      }
+    }, 1000);
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.counter);
   }
 
   skipBack() {
@@ -59,6 +71,10 @@ export class PlayerComponent implements OnInit {
   }
 
   search() {
+    if (!this.url || this.url.trim() === '') {
+      this.searchResult = [];
+      return;
+    }
     this.loading = true;
     this.musicService.search(this.url).subscribe(result => {
       this.searchResult = result;

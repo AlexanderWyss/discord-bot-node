@@ -136,6 +136,7 @@ export class TrackScheduler implements PlayerObserver {
     public getCurrentlyPlaying(): CurrentTrackInfo {
         return {
             paused: this.musicPlayer.isCurrentlyPlaying() ? this.isPaused() : false,
+            position: this.musicPlayer.isCurrentlyPlaying() ? this.musicPlayer.getPosition() : NaN,
             ...this.currentlyPlaying
         };
     }

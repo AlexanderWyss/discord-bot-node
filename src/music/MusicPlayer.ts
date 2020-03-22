@@ -63,6 +63,10 @@ export class MusicPlayer {
         return this.guild && this.guild.voice && this.guild.voice.connection;
     }
 
+    public getPosition(): number {
+        return Math.floor(this.dispatcher.streamTime / 1000);
+    }
+
     private forObservers(func: (observer: PlayerObserver) => void) {
         for (const observer of this.observers) {
             func(observer);

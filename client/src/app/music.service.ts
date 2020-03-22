@@ -131,7 +131,7 @@ export class MusicService {
   }
 
   getGuilds(): Observable<GuildInfo[]> {
-    return this.http.get(this.baseUrl + '/guilds').pipe(this.handleError()) as Observable<GuildInfo[]>;
+    return this.http.get(this.baseUrl + '/guilds/get').pipe(this.handleError()) as Observable<GuildInfo[]>;
   }
 
   private handleError() {

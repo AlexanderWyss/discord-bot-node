@@ -16,6 +16,7 @@ export interface QueueInfo {
 
 export interface CurrentTrackInfo extends TrackInfo {
   readonly paused: boolean;
+  position: number;
 }
 
 export interface JoinGuild {

@@ -14,7 +14,7 @@
         </div>
         <h3>{{queueInfo?.currentTrack?.title}}</h3>
         <small>{{queueInfo?.currentTrack?.artist}}</small>
-        <small>{{queueInfo?.currentTrack?.duration | minuteSeconds}}</small>
+        <small>{{queueInfo?.currentTrack?.position | minuteSeconds}}/{{queueInfo?.currentTrack?.duration | minuteSeconds}}</small>
         <div class="buttons">
           <button mat-icon-button class="dummy">
           </button>
