@@ -70,4 +70,8 @@ export class MusicService {
   join(guildId: string, id: string) {
     this.http.get(this.baseUrl + '/' + guildId + '/join/' + id).subscribe();
   }
+
+  leave(guildId: string) {
+    this.http.get(this.baseUrl + '/' + guildId + '/leave/').subscribe();
+  }
 }

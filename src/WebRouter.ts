@@ -49,6 +49,9 @@ export class WebRouter {
         this.router.get("/:guildId/join/:id", (req: any, res: any, next: any) => {
             this.handleResponse(this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).joinByChannelId(req.params.id), res);
         });
+        this.router.get("/:guildId/leave", (req: any, res: any, next: any) => {
+            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).leave(), res);
+        });
         return this.router;
     }
 

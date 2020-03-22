@@ -143,4 +143,8 @@ export class PlayerComponent implements OnInit {
       }
     });
   }
+
+  leave() {
+    this.musicService.leave(this.guildId);
+  }
 }
