@@ -1,6 +1,6 @@
 import {Readable} from "stream";
-import ytdl from "ytdl-core";
-import ytsr from "ytsr";
+import ytdl, {videoInfo} from "ytdl-core";
+import ytsr, {SearchItem} from "ytsr";
 import {TrackInfo} from "./TrackInfo";
 
 export class YoutubeService {
@@ -15,6 +15,21 @@ export class YoutubeService {
     }
 
     private static instance: YoutubeService;
+
+    private static getInSeconds(duration: string): number {
+        if (duration) {
+            const split = duration.split(":");
+            const minutes = split[0];
+            const seconds = split[1];
+            return parseInt(minutes) * 60 + parseInt(seconds);
+        } else {
+            return 0;
+        }
+    }
+
+    private static flatten(array: any[]): any[] {
+        return array.reduce((acc, val) => Array.isArray(val) ? acc.concat(YoutubeService.flatten(val)) : acc.concat(val), []);
+    }
 
     private constructor() {
     }
@@ -41,29 +56,24 @@ export class YoutubeService {
             return ytsr(null, {
                 limit,
                 nextpageRef: videoFilter.ref
-            }).then(res => res.items.map(video => {
-                    return {
-                        id: YoutubeService.currentId++,
-                        url: video.link,
-                        title: video.title,
-                        artist: video.author.name,
-                        thumbnailUrl: video.thumbnail,
-                        duration: this.getInSeconds(video.duration)
-                    };
-                }
-            ));
+            }).then(res => res.items.map(video => this.map(video))).then(YoutubeService.flatten);
         });
     }
 
-    private getInSeconds(duration: string): number {
-        if (duration) {
-            const split = duration.split(":");
-            const minutes = split[0];
-            const seconds = split[1];
-            return parseInt(minutes) * 60 + parseInt(seconds);
-        } else {
-            return 0;
+    private map(video: SearchItem): TrackInfo | TrackInfo[] {
+        if (video.type === "video") {
+            return {
+                id: YoutubeService.currentId++,
+                url: video.link,
+                title: video.title,
+                artist: video.author.name,
+                thumbnailUrl: video.thumbnail,
+                duration: YoutubeService.getInSeconds(video.duration)
+            };
+        } else if ((video as any).items) {
+            return (video as any).items.map(this.map);
         }
+        return [];
     }
 
     private searchVideoInfo(query: string): Promise<TrackInfo> {
