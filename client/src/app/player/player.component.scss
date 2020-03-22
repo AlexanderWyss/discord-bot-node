@@ -1,5 +1,12 @@
-#title {
-  margin: 1.5rem 0 0 1.5rem;
+#title-container {
+  margin: 1.5rem 1.5rem 0 1.5rem;
+  display: flex;
+  #title {
+    margin: 0;
+  }
+  button {
+    margin-left: auto;
+  }
 }
 
 #container {
@@ -37,12 +44,15 @@
         display: flex;
         flex-wrap: nowrap;
         justify-content: center;
+
         > * {
           flex: 0 0 auto;
         }
+
         .filler {
           flex-grow: 1;
         }
+
         .dummy {
           visibility: hidden;
         }

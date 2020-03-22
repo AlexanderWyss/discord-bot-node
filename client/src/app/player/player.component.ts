@@ -5,6 +5,8 @@ import {MusicService} from '../music.service';
 import {JoinGuild, QueueInfo, TrackInfo} from '../models';
 import {Title} from '@angular/platform-browser';
 import {TrackInfoEvent} from '../track-info/track-info.component';
+import {MatDialog} from '@angular/material/dialog';
+import {BookmarkCreatorComponent} from '../bookmark-creator/bookmark-creator.component';
 
 @Component({
   selector: 'app-player',
@@ -21,7 +23,11 @@ export class PlayerComponent implements OnInit {
   searchResult: TrackInfo[] = [];
   loading: boolean;
 
-  constructor(private socket: Socket, private route: ActivatedRoute, private musicService: MusicService, private titleService: Title) {
+  constructor(private socket: Socket,
+              private route: ActivatedRoute,
+              private musicService: MusicService,
+              private titleService: Title,
+              private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -112,5 +118,13 @@ export class PlayerComponent implements OnInit {
         this.queue(event.params);
         break;
     }
+  }
+
+  bookmarkTools() {
+    this.dialog.open(BookmarkCreatorComponent, {
+      data: {
+        guildId: this.guildId
+      }
+    });
   }
 }

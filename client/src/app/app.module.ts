@@ -17,6 +17,10 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {MatCardModule} from '@angular/material/card';
+import { BookmarkCreatorComponent } from './bookmark-creator/bookmark-creator.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {ClipboardModule} from '@angular/cdk/clipboard';
 
 const config: SocketIoConfig = {url: getUrl(), options: {}};
 
@@ -25,7 +29,8 @@ const config: SocketIoConfig = {url: getUrl(), options: {}};
     AppComponent,
     PlayerComponent,
     TrackInfoComponent,
-    MinuteSecondsPipe
+    MinuteSecondsPipe,
+    BookmarkCreatorComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +44,10 @@ const config: SocketIoConfig = {url: getUrl(), options: {}};
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    MatCardModule
+    MatCardModule,
+    MatDialogModule,
+    MatButtonToggleModule,
+    ClipboardModule
   ],
   providers: [],
   bootstrap: [AppComponent]

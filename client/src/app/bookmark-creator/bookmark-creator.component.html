@@ -1,0 +1,23 @@
+<h1 mat-dialog-title>Bookmark Creator</h1>
+<div mat-dialog-content>
+  <p>
+    With a Bookmark you can browse YouTube and add Songs via the Bookmark.<br/>
+    In YouTube Music you must have the Player in Fullscreen.<br/>
+    Bookmarks are per Guild and can Play a song directly, next or append it to the Queue.<br/>
+    Create a Bookmark with the following code in the Url field.<br/>
+  </p>
+  <mat-button-toggle-group [(ngModel)]="action" (change)="createCode()">
+    <mat-button-toggle value="now">Now</mat-button-toggle>
+    <mat-button-toggle value="next">Next</mat-button-toggle>
+    <mat-button-toggle value="queue">Queue</mat-button-toggle>
+  </mat-button-toggle-group>
+  <p>
+    {{this.code}}
+    <button mat-icon-button [cdkCopyToClipboard]="code">
+      <mat-icon>file_copy</mat-icon>
+    </button>
+  </p>
+</div>
+<div mat-dialog-actions>
+  <button mat-stroked-button id="done-button" (click)="this.dialogRef.close()">Done</button>
+</div>
