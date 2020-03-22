@@ -56,7 +56,11 @@ export class MusicPlayer {
     }
 
     public isCurrentlyPlaying() {
-        return this.guild && this.guild.voice && this.guild.voice.connection && this.guild.voice.connection.dispatcher;
+        return this.isConnected() && this.guild.voice.connection.dispatcher;
+    }
+
+    public isConnected() {
+        return this.guild && this.guild.voice && this.guild.voice.connection;
     }
 
     private forObservers(func: (observer: PlayerObserver) => void) {

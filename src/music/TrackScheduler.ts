@@ -20,15 +20,19 @@ export class TrackScheduler implements PlayerObserver {
     }
 
     public playNext() {
-        const trackInfo = this.tracks.shift();
-        if (trackInfo) {
-            if (this.currentlyPlaying) {
-                this.previousTracks.unshift(this.currentlyPlaying);
+        if (this.musicPlayer.isConnected()) {
+            const trackInfo = this.tracks.shift();
+            if (trackInfo) {
+                if (this.currentlyPlaying) {
+                    this.previousTracks.unshift(this.currentlyPlaying);
+                }
+                this.currentlyPlaying = trackInfo;
+                this.musicPlayer.play(trackInfo.url);
+            } else {
+                throw new Error("No track in queue");
             }
-            this.currentlyPlaying = trackInfo;
-            this.musicPlayer.play(trackInfo.url);
         } else {
-            throw new Error("No track in queue");
+            throw new Error("Voice not connected");
         }
     }
 
