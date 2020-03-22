@@ -8,6 +8,11 @@ import {TrackInfoEvent} from '../track-info/track-info.component';
 import {MatDialog} from '@angular/material/dialog';
 import {BookmarkCreatorComponent} from '../bookmark-creator/bookmark-creator.component';
 
+interface GuildInfo {
+  name: string;
+  icon: string;
+}
+
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
@@ -16,7 +21,10 @@ import {BookmarkCreatorComponent} from '../bookmark-creator/bookmark-creator.com
 export class PlayerComponent implements OnInit {
 
   guildId: string;
-  guild = '';
+  guild: GuildInfo = {
+    name: '',
+    icon: undefined
+  };
   userId: string;
   queueInfo: QueueInfo;
   url = '';
@@ -38,9 +46,9 @@ export class PlayerComponent implements OnInit {
         this.socket.fromEvent('tracks').subscribe((queueInfo: QueueInfo) => {
           this.queueInfo = queueInfo;
         });
-        this.socket.fromEvent('guild').subscribe((guild: string) => {
+        this.socket.fromEvent('guild').subscribe((guild: GuildInfo) => {
           this.guild = guild;
-          this.titleService.setTitle(this.guild);
+          this.titleService.setTitle(this.guild.name);
         });
         this.socket.emit('joinGuild', {guildId: this.guildId, userId: this.userId} as JoinGuild);
       });

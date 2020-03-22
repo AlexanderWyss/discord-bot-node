@@ -1,6 +1,6 @@
 <div id="title-container">
-  <!-- TODO Discord Guild Avatar-->
-  <h1 id="title">Player {{guild}}</h1>
+  <img mat-card-avatar *ngIf="guild.icon" [src]="guild.icon">
+  <h1 id="title">{{guild.name}}</h1>
   <button mat-stroked-button (click)="bookmarkTools()">Bookmark Tools</button>
 </div>
 <div id="container">
