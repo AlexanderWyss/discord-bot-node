@@ -1,6 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Channel, GuildInfo, JoinGuild, QueueInfo, TrackInfo} from './models';
+import {Channel, GuildInfo, JoinGuild, QueueInfo, ShelfInfo, TrackInfo} from './models';
 import {Observable, of} from 'rxjs';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Socket} from 'ngx-socket-io';
@@ -73,16 +73,31 @@ export class MusicService {
     return this.guildEmitter;
   }
 
-  queue(url: string) {
-    this.http.get(this.baseUrl + '/' + this.guildId + '/queue/' + encodeURIComponent(url)).pipe(this.handleError()).subscribe();
+  queue(url: string | TrackInfo | ShelfInfo) {
+    this.play(url, 'queue');
   }
 
-  next(url: string) {
-    this.http.get(this.baseUrl + '/' + this.guildId + '/next/' + encodeURIComponent(url)).pipe(this.handleError()).subscribe();
+  next(url: string | TrackInfo | ShelfInfo) {
+    this.play(url, 'next');
   }
 
-  now(url: string) {
-    this.http.get(this.baseUrl + '/' + this.guildId + '/now/' + encodeURIComponent(url)).pipe(this.handleError()).subscribe();
+  now(url: string | TrackInfo | ShelfInfo) {
+    this.play(url, 'now');
+  }
+
+  private play(value: string | TrackInfo | ShelfInfo, command: string) {
+    if (typeof value === 'string' || value.type === 'video') {
+      let url: string;
+      if (typeof value === 'string') {
+        url = value;
+      } else {
+        url = value.url;
+      }
+      this.http.get(this.baseUrl + '/' + this.guildId + '/' + command + '/' + encodeURIComponent(url))
+        .pipe(this.handleError()).subscribe();
+    } else {
+      this.http.post(this.baseUrl + '/' + this.guildId + '/' + command, {tracks: value.items}).pipe(this.handleError()).subscribe();
+    }
   }
 
 
@@ -106,8 +121,9 @@ export class MusicService {
     this.http.get(this.baseUrl + '/' + this.guildId + '/remove/' + id).pipe(this.handleError()).subscribe();
   }
 
-  search(query: string): Observable<TrackInfo[]> {
-    return this.http.get(this.baseUrl + '/search/' + encodeURIComponent(query)).pipe(this.handleError()) as Observable<TrackInfo[]>;
+  search(query: string): Observable<Array<TrackInfo | ShelfInfo>> {
+    return this.http.get(this.baseUrl + '/search/' + encodeURIComponent(query))
+      .pipe(this.handleError()) as Observable<Array<TrackInfo | ShelfInfo>>;
   }
 
   getChannels(): Observable<Channel[]> {
@@ -122,8 +138,14 @@ export class MusicService {
     this.http.get(this.baseUrl + '/' + this.guildId + '/leave/').pipe(this.handleError()).subscribe();
   }
 
-  add(track: TrackInfo, index: number) {
-    this.http.post(this.baseUrl + '/' + this.guildId + '/add/' + index, {track}).pipe(this.handleError()).subscribe();
+  add(track: TrackInfo | ShelfInfo, index: number) {
+    let body: any;
+    if (track.type === 'video') {
+      body = track;
+    } else {
+      body = track.items;
+    }
+    this.http.post(this.baseUrl + '/' + this.guildId + '/add/' + index, {value: body}).pipe(this.handleError()).subscribe();
   }
 
   move(id: number, index: number) {

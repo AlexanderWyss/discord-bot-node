@@ -8,6 +8,7 @@
     "build": "tsc",
     "prestart": "npm run build",
     "start": "node ./bin/www",
+    "serve": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
@@ -30,7 +31,7 @@
     "morgan": "~1.9.1",
     "socket.io": "^2.3.0",
     "sqlite": "^3.0.3",
-    "ytdl-core": "^2.0.0",
+    "ytdl-core": "^2.0.1",
     "ytsr": "^0.1.11",
     "zucc": "^0.1.2"
   },
@@ -39,5 +40,21 @@
     "@types/node": "^12.12.30",
     "tslint": "^5.20.1",
     "typescript": "^3.8.3"
+  },
+  "nodemonConfig": {
+    "delay": "2500",
+    "ignore": [
+      "**/*.test.ts",
+      "**/*.spec.ts",
+      ".git",
+      "node_modules",
+      "dist",
+      "client"
+    ],
+    "watch": [
+      "src"
+    ],
+    "exec": "npm start",
+    "ext": "ts"
   }
 }

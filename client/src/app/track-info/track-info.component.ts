@@ -1,11 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {TrackInfo} from '../models';
+import {ShelfInfo, TrackInfo} from '../models';
 
 export type Events = 'NOW' | 'NEXT' | 'QUEUE' | 'REMOVE';
 
 export interface TrackInfoEvent {
   type: Events;
-  params: any;
+  params: TrackInfo|ShelfInfo;
 }
 
 @Component({
@@ -15,7 +15,7 @@ export interface TrackInfoEvent {
 })
 export class TrackInfoComponent implements OnInit {
 
-  @Input() track: TrackInfo;
+  @Input() track: any;
   @Input() events: Events[];
   @Output() event = new EventEmitter<TrackInfoEvent>();
 

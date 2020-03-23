@@ -156,11 +156,23 @@ export class GuildMusicManager {
         return this.trackScheduler.getRepeat();
     }
 
-    public add(track: TrackInfo, index: number) {
+    public add(track: TrackInfo | TrackInfo[], index: number) {
         this.trackScheduler.add(track, index);
     }
 
     public move(id: string, index: number) {
-         this.trackScheduler.move(id, index);
+        this.trackScheduler.move(id, index);
+    }
+
+    public playListNow(tracks: TrackInfo[]) {
+        this.trackScheduler.playListNow(tracks);
+    }
+
+    public playListNext(tracks: TrackInfo[]) {
+            this.trackScheduler.playListNext(tracks);
+    }
+
+    public queueList(tracks: TrackInfo[]) {
+        this.trackScheduler.queueList(tracks);
     }
 }

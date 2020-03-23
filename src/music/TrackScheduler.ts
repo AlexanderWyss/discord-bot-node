@@ -178,9 +178,15 @@ export class TrackScheduler implements PlayerObserver {
         return this.repeat;
     }
 
-    public add(trackInfo: TrackInfo, index: number) {
+    public add(trackInfo: TrackInfo | TrackInfo[], index: number) {
         try {
-            this.tracks.splice(index, 0, trackInfo);
+            if (Array.isArray(trackInfo)) {
+                for (let i = 0; i < trackInfo.length; i++) {
+                    this.tracks.splice(index + i, 0, trackInfo[i]);
+                }
+            } else {
+                this.tracks.splice(index, 0, trackInfo as TrackInfo);
+            }
         } finally {
             this.updateObservers();
         }
@@ -197,6 +203,31 @@ export class TrackScheduler implements PlayerObserver {
         } finally {
             this.updateObservers();
         }
+    }
+
+    public playListNow(tracks: TrackInfo[]) {
+        if (tracks && tracks.length > 0) {
+            this.now(tracks.shift());
+            this.playListNext(tracks);
+        }
+    }
+
+    public playListNext(tracks: TrackInfo[]) {
+        if (tracks) {
+            for (const track of tracks.reverse()) {
+                this.tracks.unshift(track);
+            }
+        }
+        this.updateObservers();
+    }
+
+    public queueList(tracks: TrackInfo[]) {
+        if (tracks) {
+            for (const track of tracks) {
+                this.tracks.push(track);
+            }
+        }
+        this.updateObservers();
     }
 
     private updateObservers() {

@@ -1,7 +1,7 @@
 import {Readable} from "stream";
 import ytdl, {videoInfo} from "ytdl-core";
-import ytsr, {SearchItem} from "ytsr";
-import {TrackInfo} from "./TrackInfo";
+import ytsr, {SearchItem, ShelfVertical, Video} from "ytsr";
+import {ShelfInfo, TrackInfo} from "./TrackInfo";
 
 export class YoutubeService {
 
@@ -38,6 +38,7 @@ export class YoutubeService {
     public getInfo(param: string): Promise<TrackInfo> {
         try {
             if (ytdl.validateURL(param)) {
+                console.log(param);
                 return this.getVideoInfo(param);
             } else {
                 return this.searchVideoInfo(param);
@@ -51,34 +52,51 @@ export class YoutubeService {
         return ytdl(url, {filter: "audioonly", quality: "highestaudio", highWaterMark: 1 << 25});
     }
 
-    public search(query: string, limit: number): Promise<TrackInfo[]> {
-        return ytsr.getFilters(query).then(filters => {
-            const videoFilter = filters.get("Type").find(filter => filter.name === "Video");
-            return ytsr(null, {
-                limit,
-                nextpageRef: videoFilter.ref
-            }).then(res => res.items.map(video => this.map(video))).then(YoutubeService.flatten);
-        });
+    public search(query: string): Promise<Array<TrackInfo|ShelfInfo>> {
+        return ytsr(query, {
+            limit: 20
+        }).then(res => res.items.map(video => this.map(video)).filter(video => video));
     }
 
-    private map(video: SearchItem): TrackInfo | TrackInfo[] {
-        if (video.type === "video") {
-            return {
-                id: YoutubeService.currentId++,
-                url: video.link,
-                title: video.title,
-                artist: video.author.name,
-                thumbnailUrl: video.thumbnail,
-                duration: YoutubeService.getInSeconds(video.duration)
-            };
-        } else if ((video as any).items) {
-            return (video as any).items.map(this.map);
+    private map(item: SearchItem): TrackInfo | ShelfInfo {
+        if (item.type === "shelf-vertical") {
+            return this.parseShelfVertical(item as ShelfVertical);
+        } else if (item.type === "video") {
+            return this.parseVideo(item as Video);
         }
-        return [];
+        return undefined;
+    }
+
+    private parseShelfVertical(shelf: ShelfVertical): ShelfInfo {
+        return {
+            type: "shelf",
+            title: shelf.title,
+            items: shelf.items.map(item => this.parseVideo(item)),
+            thumbnailUrl: shelf.items.length > 0 ? shelf.items[0].thumbnail : ""
+        };
+    }
+
+    private parseVideo(video: Video): TrackInfo {
+        return {
+            type: "video",
+            id: YoutubeService.currentId++,
+            url: video.link,
+            title: video.title,
+            artist: video.author.name,
+            thumbnailUrl: video.thumbnail,
+            duration: YoutubeService.getInSeconds(video.duration)
+        };
     }
 
     private searchVideoInfo(query: string): Promise<TrackInfo> {
-        return this.search(query, 1).then(res => res[0]);
+        return ytsr.getFilters(query).then(filters => {
+            const videoFilter = filters.get("Type").find(filter => filter.name === "Video");
+            return ytsr(null, {
+                limit: 4,
+                nextpageRef: videoFilter.ref
+            }).then(res => res.items.find(item => item.type === "video"))
+                .then(item => this.parseVideo(item as Video));
+        });
     }
 
     private getVideoInfo(url: string): Promise<TrackInfo> {
@@ -86,6 +104,7 @@ export class YoutubeService {
             if (video) {
                 const thumbnails = video.player_response.videoDetails.thumbnail.thumbnails;
                 return {
+                    type: "video",
                     id: YoutubeService.currentId++,
                     url: video.video_url,
                     title: video.title,
