@@ -7,12 +7,13 @@ mat-card {
     display: flex;
 
     .thumbnail {
-      flex: 0 0 40%;
+      flex: 0 0 30%;
       position: relative;
 
       img {
-        max-height: 100%;
-        max-width: 100%;
+        width: 100%;
+        object-fit: cover;
+        object-position: center;
       }
 
       div {
@@ -22,7 +23,7 @@ mat-card {
         top: 0;
         position: absolute;
         color: white;
-        background: rgba(0,0,0,0.5);
+        background: rgba(0,0,0,0.7);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -31,7 +32,7 @@ mat-card {
     }
 
     .track-info {
-      flex: 0 0 60%;
+      flex: 0 0 70%;
       padding: 0.4rem;
       display: flex;
       flex-direction: column;
