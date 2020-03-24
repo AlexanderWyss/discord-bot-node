@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MusicService} from '../music.service';
-import {GuildInfo, QueueInfo, ShelfInfo, TrackInfo} from '../models';
+import {GuildInfo, PlaylistInfo, QueueInfo, ShelfInfo, TrackInfo} from '../models';
 import {TrackInfoEvent} from '../track-info/track-info.component';
 import {MatDialog} from '@angular/material/dialog';
 import {BookmarkCreatorComponent} from '../bookmark-creator/bookmark-creator.component';
@@ -19,7 +19,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   userId: string;
   queueInfo: QueueInfo;
   url = '';
-  searchResult: Array<TrackInfo | ShelfInfo> = [];
+  searchResult: Array<TrackInfo | ShelfInfo | PlaylistInfo> = [];
   loading: boolean;
 
   constructor(private musicService: MusicService,

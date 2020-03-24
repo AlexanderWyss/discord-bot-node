@@ -1,7 +1,8 @@
 import {Readable} from "stream";
 import ytdl, {videoInfo} from "ytdl-core";
-import ytsr, {SearchItem, ShelfVertical, Video} from "ytsr";
-import {ShelfInfo, TrackInfo} from "./TrackInfo";
+import ytsr, {Playlist, SearchItem, ShelfVertical, Video} from "ytsr";
+import {PlaylistInfo, PlaylistItem, ShelfInfo, TrackInfo} from "./TrackInfo";
+import ytpl from "./ytpl";
 
 export class YoutubeService {
 
@@ -39,9 +40,11 @@ export class YoutubeService {
     private constructor() {
     }
 
-    public getInfo(param: string): Promise<TrackInfo> {
+    public getInfo(param: string): Promise<TrackInfo | TrackInfo[]> {
         try {
-            if (ytdl.validateURL(param)) {
+            if (ytpl.validateURL(param)) {
+                return ytpl(param).then(playlist => playlist.items.map(item => this.parsePlaylistItem(item)));
+            } else if (ytdl.validateURL(param)) {
                 return this.getVideoInfo(param);
             } else {
                 return this.searchVideoInfo(param);
@@ -55,17 +58,19 @@ export class YoutubeService {
         return ytdl(url, {filter: "audioonly", quality: "highestaudio", highWaterMark: 1 << 25});
     }
 
-    public search(query: string): Promise<Array<TrackInfo|ShelfInfo>> {
+    public search(query: string): Promise<Array<TrackInfo | ShelfInfo | PlaylistInfo>> {
         return ytsr(query, {
             limit: 20
-        }).then(res => res.items.map(video => this.map(video)).filter(video => video));
+        }).then(res => res.items.map(item => this.parse(item)).filter(video => video));
     }
 
-    private map(item: SearchItem): TrackInfo | ShelfInfo {
+    private parse(item: SearchItem): TrackInfo | ShelfInfo | PlaylistInfo {
         if (item.type === "shelf-vertical") {
             return this.parseShelfVertical(item as ShelfVertical);
         } else if (item.type === "video") {
             return this.parseVideo(item as Video);
+        } else if (item.type === "playlist") {
+            return this.parsePlaylist(item as Playlist);
         }
         return undefined;
     }
@@ -88,6 +93,17 @@ export class YoutubeService {
             artist: video.author.name,
             thumbnailUrl: video.thumbnail,
             duration: YoutubeService.getInSeconds(video.duration)
+        };
+    }
+
+    private parsePlaylist(playlist: Playlist): PlaylistInfo {
+        return {
+            type: "playlist",
+            title: playlist.title,
+            thumbnailUrl: playlist.thumbnail,
+            artist: playlist.author.name,
+            url: playlist.link,
+            length: playlist.length
         };
     }
 
@@ -119,5 +135,17 @@ export class YoutubeService {
                 throw new Error("Video not found");
             }
         });
+    }
+
+    private parsePlaylistItem(item: PlaylistItem): TrackInfo {
+        return {
+            type: "video",
+            id: YoutubeService.currentId++,
+            url: item.url_simple,
+            title: item.title,
+            artist: item.author.name,
+            thumbnailUrl: item.thumbnail,
+            duration: YoutubeService.getInSeconds(item.duration)
+        };
     }
 }

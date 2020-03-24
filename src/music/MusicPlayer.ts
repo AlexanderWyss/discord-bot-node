@@ -39,12 +39,16 @@ export class MusicPlayer {
     }
 
     public pause() {
-        this.dispatcher.pause();
+        if (this.isCurrentlyPlaying()) {
+            this.dispatcher.pause();
+        }
         this.forObservers(observer => observer.onTogglePause(this.isPaused()));
     }
 
     public resume() {
-        this.dispatcher.resume();
+        if (this.isCurrentlyPlaying()) {
+            this.dispatcher.resume();
+        }
         this.forObservers(observer => observer.onTogglePause(this.isPaused()));
     }
 
@@ -65,7 +69,7 @@ export class MusicPlayer {
     }
 
     public stop() {
-        if (this.voiceConnection.dispatcher) {
+        if (this.isCurrentlyPlaying()) {
             this.dispatcher.end();
             this.dispatcher.removeAllListeners();
         }

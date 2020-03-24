@@ -1,4 +1,4 @@
-import {Video} from "ytsr";
+import {Author, Video} from "ytsr";
 
 export interface TrackInfo {
     readonly type: "video";
@@ -17,7 +17,32 @@ export interface ShelfInfo {
     items: TrackInfo[];
 }
 
+export interface PlaylistInfo {
+    type: "playlist";
+    title: string;
+    url: string;
+    thumbnailUrl: string;
+    artist: string;
+    length: string;
+}
+
 export interface CurrentTrackInfo extends TrackInfo {
   readonly paused: boolean;
   readonly position: number;
+}
+
+export interface PlaylistItem {
+    id: string;
+    url: string;
+    url_simple: string;
+    title: string;
+    thumbnail: string;
+    duration: string;
+    author: {
+        id: string;
+        name: string;
+        user: string;
+        channel_url: string;
+        user_url: string;
+    };
 }

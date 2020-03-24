@@ -15,6 +15,15 @@ export interface ShelfInfo {
   items: TrackInfo[];
 }
 
+export interface PlaylistInfo {
+  type: 'playlist';
+  title: string;
+  url: string;
+  thumbnailUrl: string;
+  artist: string;
+  length: string;
+}
+
 export interface QueueInfo {
   currentTrack: CurrentTrackInfo;
   tracks: TrackInfo[];

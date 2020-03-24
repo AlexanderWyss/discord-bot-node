@@ -47,7 +47,7 @@ export class GuildMusicManager {
 
     public queue(url: string) {
         if (this.musicPlayer.isCurrentlyPlaying()) {
-            return YoutubeService.getInstance().getInfo(url).then(trackInfo => this.trackScheduler.append(trackInfo));
+            return YoutubeService.getInstance().getInfo(url).then(trackInfo => this.trackScheduler.queue(trackInfo));
         } else {
             return this.playNow(url);
         }
@@ -161,23 +161,27 @@ export class GuildMusicManager {
         this.trackScheduler.add(track, index);
     }
 
-    public move(id: string, index: number) {
+    public addByUrl(url: string, index: number) {
+        YoutubeService.getInstance().getInfo(url).then(res => this.trackScheduler.add(res, index));
+    }
+
+    public move(id: number, index: number) {
         this.trackScheduler.move(id, index);
     }
 
     public playListNow(tracks: TrackInfo[]) {
         this.resolveIds(tracks);
-        this.trackScheduler.playListNow(tracks);
+        this.trackScheduler.now(tracks);
     }
 
     public playListNext(tracks: TrackInfo[]) {
         this.resolveIds(tracks);
-        this.trackScheduler.playListNext(tracks);
+        this.trackScheduler.next(tracks);
     }
 
     public queueList(tracks: TrackInfo[]) {
-       this.resolveIds(tracks);
-       this.trackScheduler.queueList(tracks);
+        this.resolveIds(tracks);
+        this.trackScheduler.queue(tracks);
     }
 
     public clearPlaylist() {

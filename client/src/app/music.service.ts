@@ -1,6 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Channel, GuildInfo, JoinGuild, QueueInfo, ShelfInfo, TrackInfo} from './models';
+import {Channel, GuildInfo, JoinGuild, PlaylistInfo, QueueInfo, ShelfInfo, TrackInfo} from './models';
 import {Observable, of} from 'rxjs';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Socket} from 'ngx-socket-io';
@@ -85,8 +85,8 @@ export class MusicService {
     this.play(url, 'now');
   }
 
-  private play(value: string | TrackInfo | ShelfInfo, command: string) {
-    if (typeof value === 'string' || value.type === 'video') {
+  private play(value: string | TrackInfo | ShelfInfo | PlaylistInfo, command: string) {
+    if (typeof value === 'string' || value.type === 'video' || value.type === 'playlist') {
       let url: string;
       if (typeof value === 'string') {
         url = value;
@@ -121,7 +121,7 @@ export class MusicService {
     this.http.get(this.baseUrl + '/' + this.guildId + '/remove/' + id).pipe(this.handleError()).subscribe();
   }
 
-  search(query: string): Observable<Array<TrackInfo | ShelfInfo>> {
+  search(query: string): Observable<Array<TrackInfo | ShelfInfo | PlaylistInfo>> {
     return this.http.get(this.baseUrl + '/search/' + encodeURIComponent(query))
       .pipe(this.handleError()) as Observable<Array<TrackInfo | ShelfInfo>>;
   }
@@ -138,9 +138,13 @@ export class MusicService {
     this.http.get(this.baseUrl + '/' + this.guildId + '/leave/').pipe(this.handleError()).subscribe();
   }
 
-  add(track: TrackInfo | ShelfInfo, index: number) {
+  add(track: TrackInfo | ShelfInfo | PlaylistInfo, index: number) {
     let body: any;
-    if (track.type === 'video') {
+    if (track.type === 'playlist') {
+      this.http.get(this.baseUrl + '/' + this.guildId + '/add/' + index + '/' + encodeURIComponent(track.url))
+        .pipe(this.handleError()).subscribe();
+      return;
+    } else if (track.type === 'video') {
       body = track;
     } else {
       body = track.items;

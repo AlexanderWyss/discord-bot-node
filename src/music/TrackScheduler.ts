@@ -82,19 +82,39 @@ export class TrackScheduler implements PlayerObserver {
         }
     }
 
-    public append(track: TrackInfo) {
-        this.tracks.push(track);
+    public queue(tracks: TrackInfo | TrackInfo[]) {
+        if (Array.isArray(tracks)) {
+            for (const track of tracks) {
+                this.tracks.push(track);
+            }
+        } else {
+            this.tracks.push(tracks);
+        }
         this.updateObservers();
     }
 
-    public next(track: TrackInfo) {
-        this.tracks.unshift(track);
+    public next(tracks: TrackInfo | TrackInfo[]) {
+        if (Array.isArray(tracks)) {
+            for (const track of tracks.reverse()) {
+                this.tracks.unshift(track);
+            }
+        } else {
+            this.tracks.unshift(tracks);
+        }
         this.updateObservers();
     }
 
-    public now(track: TrackInfo) {
-        this.next(track);
-        this.playNext();
+    public now(tracks: TrackInfo | TrackInfo[]) {
+        if (Array.isArray(tracks)) {
+            if (tracks.length > 0) {
+                this.now(tracks.shift());
+                this.next(tracks);
+            }
+        } else {
+            this.next(tracks);
+            this.playNext();
+        }
+        this.updateObservers();
     }
 
     public pause() {
@@ -162,10 +182,8 @@ export class TrackScheduler implements PlayerObserver {
     }
 
     public removeById(id: number) {
-        this.tracks = this.tracks.filter(track => {
-            return "" + track.id !== id + "";
-        });
-        this.previousTracks = this.previousTracks.filter(track => track.id.valueOf() !== id.valueOf());
+        this.tracks = this.tracks.filter(track => track.id !== id);
+        this.previousTracks = this.previousTracks.filter(track => track.id !== id);
         this.updateObservers();
     }
 
@@ -192,9 +210,9 @@ export class TrackScheduler implements PlayerObserver {
         }
     }
 
-    public move(id: string, newIndex: number) {
+    public move(id: number, newIndex: number) {
         try {
-            const currentIndex = this.tracks.findIndex(track => track.id === parseInt(id));
+            const currentIndex = this.tracks.findIndex(track => track.id === id);
             if (currentIndex >= 0 && newIndex >= 0 && newIndex < this.tracks.length) {
                 this.tracks.splice(newIndex, 0, this.tracks.splice(currentIndex, 1)[0]);
             } else {
@@ -203,31 +221,6 @@ export class TrackScheduler implements PlayerObserver {
         } finally {
             this.updateObservers();
         }
-    }
-
-    public playListNow(tracks: TrackInfo[]) {
-        if (tracks && tracks.length > 0) {
-            this.now(tracks.shift());
-            this.playListNext(tracks);
-        }
-    }
-
-    public playListNext(tracks: TrackInfo[]) {
-        if (tracks) {
-            for (const track of tracks.reverse()) {
-                this.tracks.unshift(track);
-            }
-        }
-        this.updateObservers();
-    }
-
-    public queueList(tracks: TrackInfo[]) {
-        if (tracks) {
-            for (const track of tracks) {
-                this.tracks.push(track);
-            }
-        }
-        this.updateObservers();
     }
 
     public clear() {
