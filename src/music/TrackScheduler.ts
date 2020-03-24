@@ -230,6 +230,14 @@ export class TrackScheduler implements PlayerObserver {
         this.updateObservers();
     }
 
+    public clear() {
+        this.currentlyPlaying = null;
+        this.tracks = [];
+        this.previousTracks = [];
+        this.musicPlayer.stop();
+        this.updateObservers();
+    }
+
     private updateObservers() {
         for (const observer of this.observers) {
             observer.onChange(this);

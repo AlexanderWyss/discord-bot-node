@@ -6,6 +6,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {BookmarkCreatorComponent} from '../bookmark-creator/bookmark-creator.component';
 import {JoinChannelComponent} from '../join-channel/join-channel.component';
 import {CdkDragDrop, moveItemInArray, copyArrayItem} from '@angular/cdk/drag-drop';
+import {ClearPlaylistComponent} from '../clear-playlist/clear-playlist.component';
 
 @Component({
   selector: 'app-player',
@@ -138,5 +139,13 @@ export class PlayerComponent implements OnInit, OnDestroy {
       this.musicService.move(this.queueInfo.tracks[event.previousIndex].id, event.currentIndex);
       moveItemInArray(this.queueInfo.tracks, event.previousIndex, event.currentIndex);
     }
+  }
+
+  clear() {
+    this.dialog.open(ClearPlaylistComponent).afterClosed().subscribe(res => {
+      if (res) {
+        this.musicService.clearPlaylist();
+      }
+    });
   }
 }

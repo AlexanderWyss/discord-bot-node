@@ -28,10 +28,7 @@ export class MusicPlayer {
     }
 
     public play(url: string) {
-        if (this.voiceConnection.dispatcher) {
-            this.dispatcher.end();
-            this.dispatcher.removeAllListeners();
-        }
+        this.stop();
         const stream = YoutubeService.getInstance().getStream(url);
         const dispatcher = this.voiceConnection.play(stream, {highWaterMark: 1});
         dispatcher.on("debug", (information: string) => this.forObservers(observer => observer.onDebug(information)));
@@ -56,7 +53,7 @@ export class MusicPlayer {
     }
 
     public isCurrentlyPlaying() {
-        return this.isConnected() && this.guild.voice.connection.dispatcher;
+        return this.isConnected() && this.guild.voice.connection.dispatcher && !this.dispatcher.writableEnded;
     }
 
     public isConnected() {
@@ -65,6 +62,13 @@ export class MusicPlayer {
 
     public getPosition(): number {
         return Math.floor(this.dispatcher.streamTime / 1000);
+    }
+
+    public stop() {
+        if (this.voiceConnection.dispatcher) {
+            this.dispatcher.end();
+            this.dispatcher.removeAllListeners();
+        }
     }
 
     private forObservers(func: (observer: PlayerObserver) => void) {

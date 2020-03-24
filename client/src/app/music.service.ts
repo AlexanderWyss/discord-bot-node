@@ -152,6 +152,10 @@ export class MusicService {
     this.http.get(this.baseUrl + '/' + this.guildId + '/move/' + id + '/' + index).pipe(this.handleError()).subscribe();
   }
 
+  clearPlaylist() {
+    this.http.get(this.baseUrl + '/' + this.guildId + '/clear').pipe(this.handleError()).subscribe();
+  }
+
   getGuilds(): Observable<GuildInfo[]> {
     return this.http.get(this.baseUrl + '/guilds/get').pipe(this.handleError()) as Observable<GuildInfo[]>;
   }

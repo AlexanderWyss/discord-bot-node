@@ -180,6 +180,10 @@ export class GuildMusicManager {
        this.trackScheduler.queueList(tracks);
     }
 
+    public clearPlaylist() {
+        this.trackScheduler.clear();
+    }
+
     private resolveIds(value: TrackInfo | TrackInfo[]) {
         if (Array.isArray(value)) {
             for (const track of value) {

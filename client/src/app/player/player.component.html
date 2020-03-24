@@ -18,6 +18,8 @@
       <div class="buttons">
         <button mat-icon-button class="dummy">
         </button>
+        <button mat-icon-button class="dummy">
+        </button>
         <div class="filler"></div>
         <button mat-icon-button (click)="skipBack()">
           <mat-icon>skip_previous</mat-icon>
@@ -31,6 +33,9 @@
         <div class="filler"></div>
         <button mat-icon-button (click)="toggleRepeat()">
           <mat-icon [class]="queueInfo?.repeat ? '' : 'disabled'">repeat</mat-icon>
+        </button>
+        <button mat-icon-button (click)="clear()">
+          <mat-icon>delete_sweep</mat-icon>
         </button>
       </div>
     </div>

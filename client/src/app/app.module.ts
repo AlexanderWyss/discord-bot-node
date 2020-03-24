@@ -26,6 +26,7 @@ import {MatListModule} from '@angular/material/list';
 import { GuildSelectComponent } from './guild-select/guild-select.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import { ClearPlaylistComponent } from './clear-playlist/clear-playlist.component';
 
 const config: SocketIoConfig = {url: getUrl(), options: {}};
 
@@ -37,7 +38,8 @@ const config: SocketIoConfig = {url: getUrl(), options: {}};
     MinuteSecondsPipe,
     BookmarkCreatorComponent,
     JoinChannelComponent,
-    GuildSelectComponent
+    GuildSelectComponent,
+    ClearPlaylistComponent
   ],
   imports: [
     BrowserModule,
