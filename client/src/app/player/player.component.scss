@@ -3,6 +3,14 @@
   flex-wrap: wrap;
   padding-bottom: 1rem;
 
+  img {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    object-fit: cover;
+  }
+
   #title {
     margin: 0.3rem 0 0 0.2rem;
   }
