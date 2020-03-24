@@ -2,7 +2,7 @@ import {Video} from "ytsr";
 
 export interface TrackInfo {
     readonly type: "video";
-    readonly id: number;
+    id: number;
     readonly url: string;
     readonly title: string;
     readonly artist: string;

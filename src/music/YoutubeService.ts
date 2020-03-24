@@ -14,6 +14,10 @@ export class YoutubeService {
         return this.instance;
     }
 
+    public static resolveId(): number {
+        return YoutubeService.currentId++;
+    }
+
     private static instance: YoutubeService;
 
     private static getInSeconds(duration: string): number {
@@ -38,7 +42,6 @@ export class YoutubeService {
     public getInfo(param: string): Promise<TrackInfo> {
         try {
             if (ytdl.validateURL(param)) {
-                console.log(param);
                 return this.getVideoInfo(param);
             } else {
                 return this.searchVideoInfo(param);

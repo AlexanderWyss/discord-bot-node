@@ -157,6 +157,7 @@ export class GuildMusicManager {
     }
 
     public add(track: TrackInfo | TrackInfo[], index: number) {
+        this.resolveIds(track);
         this.trackScheduler.add(track, index);
     }
 
@@ -165,14 +166,27 @@ export class GuildMusicManager {
     }
 
     public playListNow(tracks: TrackInfo[]) {
+        this.resolveIds(tracks);
         this.trackScheduler.playListNow(tracks);
     }
 
     public playListNext(tracks: TrackInfo[]) {
-            this.trackScheduler.playListNext(tracks);
+        this.resolveIds(tracks);
+        this.trackScheduler.playListNext(tracks);
     }
 
     public queueList(tracks: TrackInfo[]) {
-        this.trackScheduler.queueList(tracks);
+       this.resolveIds(tracks);
+       this.trackScheduler.queueList(tracks);
+    }
+
+    private resolveIds(value: TrackInfo | TrackInfo[]) {
+        if (Array.isArray(value)) {
+            for (const track of value) {
+                track.id = YoutubeService.resolveId();
+            }
+        } else {
+            value.id = YoutubeService.resolveId();
+        }
     }
 }
