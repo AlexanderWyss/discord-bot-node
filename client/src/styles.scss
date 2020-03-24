@@ -14,3 +14,30 @@ snack-bar-container {
     color: white;
   }
 }
+
+::-webkit-scrollbar {
+  width: 0.1rem;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.shadow-bottom {
+  box-shadow: 0 0.4rem 0.2rem -0.05rem rgba(0, 0, 0, 0.1);
+}
+
+.sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: white;
+}

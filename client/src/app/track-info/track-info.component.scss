@@ -1,6 +1,7 @@
 mat-card {
   padding: 0;
-  margin: 0.3rem;
+  margin: 0.3rem 0;
+  max-width: 97%;
 
   mat-card-content {
     display: flex;
@@ -22,7 +23,6 @@ mat-card {
         position: absolute;
         color: white;
         background: rgba(0,0,0,0.5);
-        z-index: 10000;
         display: flex;
         justify-content: center;
         align-items: center;
