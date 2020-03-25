@@ -43,7 +43,7 @@ export class YoutubeService {
     public getInfo(param: string): Promise<TrackInfo | TrackInfo[]> {
         try {
             if (ytpl.validateURL(param)) {
-                return ytpl(param).then(playlist => playlist.items.map(item => this.parsePlaylistItem(item)));
+                return this.getPlaylistTracks(param);
             } else if (ytdl.validateURL(param)) {
                 return this.getVideoInfo(param);
             } else {
@@ -52,6 +52,10 @@ export class YoutubeService {
         } catch (e) {
             throw new Error("No Video found.");
         }
+    }
+
+    public getPlaylistTracks(param: string): Promise<TrackInfo[]> {
+        return ytpl(param).then(playlist => playlist.items.map(item => this.parsePlaylistItem(item)));
     }
 
     public getStream(url: string): Readable {

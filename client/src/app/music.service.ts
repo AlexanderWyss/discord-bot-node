@@ -73,15 +73,15 @@ export class MusicService {
     return this.guildEmitter;
   }
 
-  queue(url: string | TrackInfo | ShelfInfo) {
+  queue(url: string | TrackInfo | ShelfInfo | PlaylistInfo) {
     this.play(url, 'queue');
   }
 
-  next(url: string | TrackInfo | ShelfInfo) {
+  next(url: string | TrackInfo | ShelfInfo | PlaylistInfo) {
     this.play(url, 'next');
   }
 
-  now(url: string | TrackInfo | ShelfInfo) {
+  now(url: string | TrackInfo | ShelfInfo | PlaylistInfo) {
     this.play(url, 'now');
   }
 
@@ -162,6 +162,11 @@ export class MusicService {
 
   getGuilds(): Observable<GuildInfo[]> {
     return this.http.get(this.baseUrl + '/guilds/get').pipe(this.handleError()) as Observable<GuildInfo[]>;
+  }
+
+  getPlaylistTracks(url: string): Observable<TrackInfo[]> {
+    return this.http.get(this.baseUrl + '/playlist/' + encodeURIComponent(url) + '/items')
+      .pipe(this.handleError()) as Observable<TrackInfo[]>;
   }
 
   private handleError() {

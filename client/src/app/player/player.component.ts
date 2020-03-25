@@ -21,12 +21,14 @@ export class PlayerComponent implements OnInit, OnDestroy {
   url = '';
   searchResult: Array<TrackInfo | ShelfInfo | PlaylistInfo> = [];
   loading: boolean;
+  counter;
+  isBrowsing: boolean;
+  cache: Array<TrackInfo | ShelfInfo | PlaylistInfo> = [];
 
   constructor(private musicService: MusicService,
               private dialog: MatDialog) {
   }
 
-  private counter;
 
   ngOnInit() {
     this.musicService.onTracks().subscribe(queueInfo => this.queueInfo = queueInfo);
@@ -77,6 +79,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
       return;
     }
     this.loading = true;
+    this.isBrowsing = false;
     this.musicService.search(this.url).subscribe(result => {
       this.searchResult = result;
       this.loading = false;
@@ -108,7 +111,27 @@ export class PlayerComponent implements OnInit, OnDestroy {
       case 'QUEUE':
         this.musicService.queue(event.params);
         break;
+      case 'BROWSE':
+        if (event.params.type === 'shelf') {
+          this.browse(event.params.items);
+        } else if (event.params.type === 'playlist') {
+          this.loading = true;
+          this.musicService.getPlaylistTracks(event.params.url).subscribe(res => {
+            this.browse(res);
+            this.loading = false;
+          }, err => {
+            console.error(err);
+            this.loading = false;
+          });
+        }
+        break;
     }
+  }
+
+  private browse(tracks: TrackInfo[]) {
+    this.isBrowsing = true;
+    this.cache = this.searchResult;
+    this.searchResult = tracks;
   }
 
   bookmarkTools() {
@@ -147,5 +170,11 @@ export class PlayerComponent implements OnInit, OnDestroy {
         this.musicService.clearPlaylist();
       }
     });
+  }
+
+  back() {
+    this.isBrowsing = false;
+    this.searchResult = this.cache;
+    this.cache = [];
   }
 }

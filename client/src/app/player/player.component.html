@@ -47,6 +47,7 @@
   </div>
   <div class="component">
     <div id="url-bar-container" class="shadow-bottom sticky-top">
+      <button mat-icon-button *ngIf="isBrowsing" (click)="back()"><mat-icon>arrow_back_ios</mat-icon></button>
       <mat-form-field id="urlInput">
         <mat-label>Search / Url</mat-label>
         <input matInput [(ngModel)]="url" (keyup.enter)="enter()"
@@ -62,7 +63,7 @@
     </div>
     <div *ngIf="!loading" id="searchList" cdkDropList [cdkDropListConnectedTo]="queueList"
          [cdkDropListSortingDisabled]="true" [cdkDropListData]="searchResult">
-      <app-track-info *ngFor="let track of searchResult" [track]="track" [events]="['NOW', 'NEXT', 'QUEUE']"
+      <app-track-info *ngFor="let track of searchResult" [track]="track" [events]="['NOW', 'NEXT', 'QUEUE', 'BROWSE']"
                       (event)="trackInfoEvent($event)"></app-track-info>
     </div>
   </div>

@@ -14,22 +14,28 @@ export class WebRouter {
 
     public setup(): Router {
         this.router.get("/:guildId/queue/:url", (req: any, res: any, next: any) => {
-            this.handleResponse(this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).queue(req.params.url), res);
+            this.handleResponse(this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
+                .queue(req.params.url), res);
         });
         this.router.get("/:guildId/next/:url", (req: any, res: any, next: any) => {
-            this.handleResponse(this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).playNext(req.params.url), res);
+            this.handleResponse(this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
+                .playNext(req.params.url), res);
         });
         this.router.get("/:guildId/now/:url", (req: any, res: any, next: any) => {
-            this.handleResponse(this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).playNow(req.params.url), res);
+            this.handleResponse(this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
+                .playNow(req.params.url), res);
         });
         this.router.post("/:guildId/queue", (req: any, res: any, next: any) => {
-            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).queueList(req.body.tracks), res);
+            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
+                .queueList(req.body.tracks), res);
         });
         this.router.post("/:guildId/next", (req: any, res: any, next: any) => {
-            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).playListNext(req.body.tracks), res);
+            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
+                .playListNext(req.body.tracks), res);
         });
         this.router.post("/:guildId/now", (req: any, res: any, next: any) => {
-            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).playListNow(req.body.tracks), res);
+            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
+                .playListNow(req.body.tracks), res);
         });
         this.router.get("/:guildId/skip", (req: any, res: any, next: any) => {
             this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).skip(), res);
@@ -41,10 +47,16 @@ export class WebRouter {
             this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).togglePause(), res);
         });
         this.router.get("/:guildId/remove/:id", (req: any, res: any, next: any) => {
-            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).removeTrackById(parseInt(req.params.id, 10)), res);
+            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
+                .removeTrackById(parseInt(req.params.id, 10)), res);
         });
         this.router.get("/search/:query", (req: any, res: any, next: any) => {
-            YoutubeService.getInstance().search(req.params.query).then(result => res.send(result)).catch(err => this.error(err, res));
+            YoutubeService.getInstance().search(req.params.query).then(result => res.send(result))
+                .catch(err => this.error(err, res));
+        });
+        this.router.get("/playlist/:url/items", (req: any, res: any, next: any) => {
+            YoutubeService.getInstance().getPlaylistTracks(req.params.url).then(result => res.send(result))
+                .catch(err => this.error(err, res));
         });
         this.router.get("/guilds/get", (req: any, res: any, next: any) => {
             res.send(this.bot.getGuilds());
@@ -53,25 +65,31 @@ export class WebRouter {
             res.send(this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).getVoiceChannels());
         });
         this.router.get("/:guildId/join/:id", (req: any, res: any, next: any) => {
-            this.handleResponse(this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).joinByChannelId(req.params.id), res);
+            this.handleResponse(this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
+                .joinByChannelId(req.params.id), res);
         });
         this.router.get("/:guildId/leave", (req: any, res: any, next: any) => {
             this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).leave(), res);
         });
         this.router.get("/:guildId/toggleRepeat", (req: any, res: any, next: any) => {
-            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).toggleRepeat(), res);
+            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
+                .toggleRepeat(), res);
         });
         this.router.post("/:guildId/add/:index", (req: any, res: any, next: any) => {
-            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).add(req.body.value, parseInt(req.params.index, 10)), res);
+            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
+                .add(req.body.value, parseInt(req.params.index, 10)), res);
         });
         this.router.get("/:guildId/add/:index/:url", (req: any, res: any, next: any) => {
-            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).addByUrl(req.params.url, parseInt(req.params.index)), res);
+            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
+                .addByUrl(req.params.url, parseInt(req.params.index, 10)), res);
         });
         this.router.get("/:guildId/move/:id/:index", (req: any, res: any, next: any) => {
-            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).move(parseInt(req.params.id, 10), parseInt(req.params.index, 10)), res);
+            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
+                .move(parseInt(req.params.id, 10), parseInt(req.params.index, 10)), res);
         });
         this.router.get("/:guildId/clear", (req: any, res: any, next: any) => {
-            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).clearPlaylist(), res);
+            this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
+                .clearPlaylist(), res);
         });
         return this.router;
     }
