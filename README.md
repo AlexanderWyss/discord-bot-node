@@ -1,4 +1,4 @@
-# Discord Bot with Webinterface
+# Discord Music Bot with Webinterface
 
 Build the server first then the client. View Dockerfile.
 
