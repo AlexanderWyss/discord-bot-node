@@ -8,7 +8,7 @@ Build the server first then the client.
 > npm run build --prod
 client> npm install
 client> npm run build --prod
-> node ./bin/wwww
+> node ./bin/www
 ```
 
 Create .env file or set environment variables in commandline and add NODE_ENV=production to disable .env file.
