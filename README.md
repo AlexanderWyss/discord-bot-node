@@ -2,6 +2,15 @@
 
 Node.js 12.0.0 or newer is required.
 
+Create .env file or set environment variables in commandline and add NODE_ENV=production to disable .env file.
+```
+TOKEN=<discord token>
+OWNER=<Discord owner User Id>
+URL=<url of this server in format http(s)://foo.bar>
+PORT=<port to start server on>
+PREFIX=<Discord bot command prefix>
+```
+
 Build the server first then the client.
 ```
 > npm install
@@ -10,8 +19,6 @@ client> npm install
 client> npm run build --prod
 > node ./bin/www
 ```
-
-Create .env file or set environment variables in commandline and add NODE_ENV=production to disable .env file.
 
 If you access the WebUI via localhost it will try to access the server on localhost:3000, for development.
 
