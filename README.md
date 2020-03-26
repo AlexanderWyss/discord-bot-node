@@ -1,7 +1,8 @@
 # Discord Music Bot with Webinterface
 
-Build the server first then the client.
+Node.js 12.0.0 or newer is required.
 
+Build the server first then the client.
 ```
 > npm install
 > npm run build --prod
