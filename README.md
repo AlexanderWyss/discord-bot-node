@@ -31,3 +31,4 @@ docker run -d -p 80:80 --restart unless-stopped --name discord-bot-node -e NODE_
 ## Web UI
 The Web UI can be used by multiple Users concurrently.
 ![Web UI](https://raw.githubusercontent.com/AlexanderWyss/README-assets/master/discord-bot-node-web-ui.png)
+Tested with Firefox & Chrome.
