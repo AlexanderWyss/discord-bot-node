@@ -129,9 +129,9 @@ export class YoutubeService {
                 return {
                     type: "video",
                     id: YoutubeService.currentId++,
-                    url: video.video_url,
-                    title: video.title,
-                    artist: video.author.name,
+                    url: video.videoDetails.video_url,
+                    title: video.videoDetails.title,
+                    artist: video.videoDetails.author.name,
                     thumbnailUrl: thumbnails[thumbnails.length - 2].url,
                     duration: parseInt(video.player_response.videoDetails.lengthSeconds)
                 };
