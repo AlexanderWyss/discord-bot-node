@@ -12,7 +12,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@discordjs/opus": "^0.1.0",
+    "@discordjs/opus": "^0.3.2",
     "@types/cors": "^2.8.7",
     "@types/he": "^1.1.1",
     "@types/socket.io": "^2.1.11",
@@ -31,9 +31,9 @@
     "morgan": "~1.9.1",
     "socket.io": "^2.3.0",
     "sqlite": "^3.0.6",
-    "ytdl-core": "^2.1.7",
-    "ytpl": "^0.1.22",
-    "ytsr": "^0.1.21",
+    "ytdl-core": "^3.2.2",
+    "ytpl": "^1.0.0",
+    "ytsr": "^1.0.1",
     "zucc": "^0.1.2"
   },
   "devDependencies": {

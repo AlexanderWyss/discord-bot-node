@@ -1,4 +1,4 @@
-import {Author, Video} from "ytsr";
+import {Video} from "ytsr";
 
 export interface TrackInfo {
     readonly type: "video";
@@ -39,10 +39,10 @@ export interface PlaylistItem {
     thumbnail: string;
     duration: string;
     author: {
-        id: string;
+        id?: string;
         name: string;
-        user: string;
-        channel_url: string;
-        user_url: string;
+        user?: string;
+        channel_url?: string;
+        user_url?: string;
     };
 }

@@ -1,8 +1,8 @@
 import {Readable} from "stream";
-import ytdl, {videoInfo} from "ytdl-core";
-import ytsr, {Playlist, SearchItem, ShelfVertical, Video} from "ytsr";
+import ytdl from "ytdl-core";
+import ytpl from "ytpl";
+import ytsr, {Playlist, ShelfVertical, Video} from "ytsr";
 import {PlaylistInfo, PlaylistItem, ShelfInfo, TrackInfo} from "./TrackInfo";
-import ytpl from "./ytpl";
 
 export class YoutubeService {
 
@@ -42,7 +42,7 @@ export class YoutubeService {
 
     public getInfo(param: string): Promise<TrackInfo | TrackInfo[]> {
         try {
-            if (ytpl.validateURL(param)) {
+            if (ytpl.validateID(param)) {
                 return this.getPlaylistTracks(param);
             } else if (ytdl.validateURL(param)) {
                 return this.getVideoInfo(param);
@@ -113,7 +113,7 @@ export class YoutubeService {
 
     private searchVideoInfo(query: string): Promise<TrackInfo> {
         return ytsr.getFilters(query).then(filters => {
-            const videoFilter = filters.get("Type").find(filter => filter.name === "Video");
+            const videoFilter = filters.get("Video");
             return ytsr(null, {
                 limit: 4,
                 nextpageRef: videoFilter.ref
@@ -133,7 +133,7 @@ export class YoutubeService {
                     title: video.title,
                     artist: video.author.name,
                     thumbnailUrl: thumbnails[thumbnails.length - 2].url,
-                    duration: video.player_response.videoDetails.lengthSeconds
+                    duration: parseInt(video.player_response.videoDetails.lengthSeconds)
                 };
             } else {
                 throw new Error("Video not found");
@@ -152,4 +152,7 @@ export class YoutubeService {
             duration: YoutubeService.getInSeconds(item.duration)
         };
     }
+}
+interface SearchItem {
+    type: string;
 }
