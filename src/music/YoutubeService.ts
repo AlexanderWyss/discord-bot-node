@@ -1,7 +1,7 @@
 import {Readable} from "stream";
 import ytdl from "ytdl-core";
 import ytpl from "ytpl";
-import ytsr, {Playlist, ShelfVertical, Video} from "ytsr";
+import ytsr, {Filter, Playlist, ShelfVertical, Video} from "ytsr";
 import {PlaylistInfo, PlaylistItem, ShelfInfo, TrackInfo} from "./TrackInfo";
 
 export class YoutubeService {
@@ -119,7 +119,7 @@ export class YoutubeService {
 
   private searchVideoInfo(query: string): Promise<TrackInfo> {
     return ytsr.getFilters(query).then(filters => {
-      const videoFilter = filters.get("Video");
+      const videoFilter = (filters.get("Type") as any as Filter[]).find(value => value.name === "Video");
       return ytsr(null, {
         limit: 4,
         nextpageRef: videoFilter.ref
