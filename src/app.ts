@@ -4,6 +4,7 @@ import {Bot} from "./Bot";
 import {WebRouter} from "./WebRouter";
 
 if (process.env.NODE_ENV !== "production") {
+  // tslint:disable-next-line:no-var-requires
   require("dotenv").config();
 }
 const app = express();

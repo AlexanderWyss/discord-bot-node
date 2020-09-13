@@ -140,9 +140,11 @@ export class TrackScheduler implements PlayerObserver {
     }
 
     public onDebug(information: string): void {
+        // NOOP
     }
 
     public onSpeaking(value: boolean): void {
+        // NOOP
     }
 
     public onStart(): void {

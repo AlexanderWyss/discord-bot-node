@@ -27,14 +27,17 @@ export class YoutubeService {
       const hours = split.length === 3 ? split[0] : "0";
       const minutes = split.length === 3 ? split[1] : split[0];
       const seconds = split.length === 3 ? split[2] : split[1];
-      return parseInt(hours) * 60 * 60 + parseInt(minutes) * 60 + parseInt(seconds);
+      return parseInt(hours, 10) * 60 * 60 + parseInt(minutes, 10) * 60 + parseInt(seconds, 10);
     } else {
       return 0;
     }
   }
 
   private static flatten(array: any[]): any[] {
-    return array.reduce((acc, val) => Array.isArray(val) ? acc.concat(YoutubeService.flatten(val)) : acc.concat(val), []);
+    return array.reduce((acc, val) =>
+      Array.isArray(val) ?
+        acc.concat(YoutubeService.flatten(val)) :
+        acc.concat(val), []);
   }
 
   private constructor() {
@@ -61,6 +64,7 @@ export class YoutubeService {
   }
 
   public getStream(url: string): Readable {
+    // tslint:disable-next-line:no-bitwise
     return ytdl(url, {filter: "audioonly", quality: "highestaudio", highWaterMark: 1 << 25});
   }
 
@@ -135,7 +139,7 @@ export class YoutubeService {
           title: video.videoDetails.title,
           artist: video.videoDetails.author.name,
           thumbnailUrl: thumbnails[thumbnails.length - 2].url,
-          duration: parseInt(video.player_response.videoDetails.lengthSeconds)
+          duration: parseInt(video.player_response.videoDetails.lengthSeconds, 10)
         };
       } else {
         throw new Error("Video not found");

@@ -24,9 +24,9 @@ export class SkipCommand extends SafeCommand {
   }
 
   public runSafe(message: CommandoMessage, args: any, fromPattern: boolean): Promise<any> | void {
-    if (args.backOrStart == "back") {
+    if (args.backOrStart === "back") {
       this.bot.getGuildMusicManager(message.guild).skipBack();
-    } else if (args.backOrStart == "start") {
+    } else if (args.backOrStart === "start") {
       this.bot.getGuildMusicManager(message.guild).restart();
     } else {
       this.bot.getGuildMusicManager(message.guild).skip();
