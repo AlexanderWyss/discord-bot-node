@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {PlaylistInfo, ShelfInfo, TrackInfo} from '../models';
 
-export type Events = 'NOW' | 'NEXT' | 'QUEUE' | 'REMOVE' | 'BROWSE';
+export type Events = 'NOW' | 'NEXT' | 'QUEUE' | 'REMOVE' | 'BROWSE' | 'RADIO';
 
 export interface TrackInfoEvent {
   type: Events;

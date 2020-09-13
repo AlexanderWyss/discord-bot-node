@@ -1,7 +1,7 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Channel, GuildInfo, JoinGuild, PlaylistInfo, QueueInfo, ShelfInfo, TrackInfo} from './models';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Socket} from 'ngx-socket-io';
 import {Title} from '@angular/platform-browser';
@@ -83,6 +83,10 @@ export class MusicService {
 
   now(url: string | TrackInfo | ShelfInfo | PlaylistInfo) {
     this.play(url, 'now');
+  }
+
+  radio(url: TrackInfo | ShelfInfo | PlaylistInfo) {
+    this.play(url, 'radio');
   }
 
   private play(value: string | TrackInfo | ShelfInfo | PlaylistInfo, command: string) {

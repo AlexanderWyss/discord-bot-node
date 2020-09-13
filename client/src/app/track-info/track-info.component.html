@@ -14,6 +14,7 @@
           <mat-icon>delete</mat-icon>
         </button>
         <button mat-stroked-button *ngIf="events.includes('BROWSE') && (track.type === 'shelf' || track.type === 'playlist')" (click)="emit('BROWSE', track)">Browse</button>
+        <button mat-stroked-button *ngIf="events.includes('RADIO') && (track.type === 'video')" (click)="emit('RADIO', track)">Radio</button>
         <button mat-stroked-button *ngIf="events.includes('NOW')" (click)="emit('NOW', track)">Now</button>
         <button mat-stroked-button *ngIf="events.includes('NEXT')" (click)="emit('NEXT', track)">Next</button>
         <button mat-stroked-button *ngIf="events.includes('QUEUE')" (click)="emit('QUEUE', track)">Queue</button>

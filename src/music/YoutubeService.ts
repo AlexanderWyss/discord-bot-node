@@ -1,5 +1,5 @@
 import {Readable} from "stream";
-import ytdl from "ytdl-core";
+import ytdl, {relatedVideo, videoInfo} from "ytdl-core";
 import ytpl from "ytpl";
 import ytsr, {Filter, Playlist, ShelfVertical, Video} from "ytsr";
 import {PlaylistInfo, PlaylistItem, ShelfInfo, TrackInfo} from "./TrackInfo";
@@ -54,6 +54,18 @@ export class YoutubeService {
       }
     } catch (e) {
       throw new Error("No Video found.");
+    }
+  }
+
+  public radio(url: string): Promise<TrackInfo[]> {
+    if (ytdl.validateURL(url)) {
+      return ytdl.getBasicInfo(url).then(info => {
+        const tracks = info.related_videos.map(related => this.parseReleatedVideo(related));
+        tracks.unshift(this.parseVideoInfo(info));
+        return tracks;
+      });
+    } else {
+      throw new Error("not a video");
     }
   }
 
@@ -131,20 +143,36 @@ export class YoutubeService {
   private getVideoInfo(url: string): Promise<TrackInfo> {
     return ytdl.getBasicInfo(url).then(video => {
       if (video) {
-        const thumbnails = video.player_response.videoDetails.thumbnail.thumbnails;
-        return {
-          type: "video",
-          id: YoutubeService.currentId++,
-          url: video.videoDetails.video_url,
-          title: video.videoDetails.title,
-          artist: video.videoDetails.author.name,
-          thumbnailUrl: thumbnails[thumbnails.length - 2].url,
-          duration: parseInt(video.player_response.videoDetails.lengthSeconds, 10)
-        };
+        return this.parseVideoInfo(video);
       } else {
         throw new Error("Video not found");
       }
     });
+  }
+
+  private parseReleatedVideo(related: relatedVideo): TrackInfo {
+    return {
+      type: "video",
+      id: YoutubeService.currentId++,
+      url: "https://www.youtube.com/watch?v=" + related.id,
+      title: related.title,
+      artist: related.author,
+      thumbnailUrl: (related as any).video_thumbnail,
+      duration: parseInt(related.length_seconds, 10)
+    } as TrackInfo;
+  }
+
+  private parseVideoInfo(video: videoInfo): TrackInfo {
+    const thumbnails = video.player_response.videoDetails.thumbnail.thumbnails;
+    return {
+      type: "video",
+      id: YoutubeService.currentId++,
+      url: video.videoDetails.video_url,
+      title: video.videoDetails.title,
+      artist: video.videoDetails.author.name,
+      thumbnailUrl: thumbnails[thumbnails.length - 2].url,
+      duration: parseInt(video.player_response.videoDetails.lengthSeconds, 10)
+    };
   }
 
   private parsePlaylistItem(item: PlaylistItem): TrackInfo {

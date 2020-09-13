@@ -111,6 +111,9 @@ export class PlayerComponent implements OnInit, OnDestroy {
       case 'QUEUE':
         this.musicService.queue(event.params);
         break;
+      case 'RADIO':
+        this.musicService.radio(event.params);
+        break;
       case 'BROWSE':
         if (event.params.type === 'shelf') {
           this.browse(event.params.items);
@@ -176,5 +179,9 @@ export class PlayerComponent implements OnInit, OnDestroy {
     this.isBrowsing = false;
     this.searchResult = this.cache;
     this.cache = [];
+  }
+
+  selectInput(event: MouseEvent) {
+    (event.target as any).select();
   }
 }
