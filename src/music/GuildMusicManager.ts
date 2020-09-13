@@ -37,8 +37,8 @@ export class GuildMusicManager {
     return YoutubeService.getInstance().getInfo(url).then(trackInfo => this.trackScheduler.now(trackInfo));
   }
 
-  public radio(url: string): Promise<void> {
-    return YoutubeService.getInstance().radio(url).then(tracks => this.queueList(tracks));
+  public radio(url: string, includeCurrent = true): Promise<void> {
+    return YoutubeService.getInstance().radio(url, includeCurrent).then(tracks => this.queueList(tracks));
   }
 
   public playNext(url: string): Promise<void> {
@@ -57,7 +57,7 @@ export class GuildMusicManager {
     }
   }
 
-  public skip() {
+  public skip(): Promise<void> {
     return this.trackScheduler.playNext();
   }
 
@@ -160,6 +160,14 @@ export class GuildMusicManager {
     return this.trackScheduler.getRepeat();
   }
 
+  public toggleRadio() {
+    this.trackScheduler.setAutoRadio(!this.trackScheduler.getAutoRadio());
+  }
+
+  public getAutoRadio(): boolean {
+    return this.trackScheduler.getAutoRadio();
+  }
+
   public add(track: TrackInfo | TrackInfo[], index: number) {
     this.resolveIds(track);
     this.trackScheduler.add(track, index);
@@ -173,9 +181,9 @@ export class GuildMusicManager {
     this.trackScheduler.move(id, index);
   }
 
-  public playListNow(tracks: TrackInfo[]) {
+  public playListNow(tracks: TrackInfo[]): Promise<void> {
     this.resolveIds(tracks);
-    this.trackScheduler.now(tracks);
+    return this.trackScheduler.now(tracks);
   }
 
   public playListNext(tracks: TrackInfo[]) {

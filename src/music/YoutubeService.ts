@@ -57,11 +57,13 @@ export class YoutubeService {
     }
   }
 
-  public radio(url: string): Promise<TrackInfo[]> {
+  public radio(url: string, includeCurrent: boolean): Promise<TrackInfo[]> {
     if (ytdl.validateURL(url)) {
       return ytdl.getBasicInfo(url).then(info => {
         const tracks = info.related_videos.map(related => this.parseReleatedVideo(related));
-        tracks.unshift(this.parseVideoInfo(info));
+        if (includeCurrent) {
+          tracks.unshift(this.parseVideoInfo(info));
+        }
         return tracks;
       });
     } else {

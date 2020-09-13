@@ -10,6 +10,7 @@ export interface QueueInfo {
   tracks: TrackInfo[];
   previousTracks: TrackInfo[];
   repeat: boolean;
+  autoRadio: boolean;
 }
 
 export interface JoinGuild {
@@ -71,7 +72,8 @@ export class WebSocket implements TrackSchedulerObserver {
       currentTrack: musicManager.getCurrentTrack(),
       tracks: musicManager.getTracks(),
       previousTracks: musicManager.getPreviousTracks(),
-      repeat: musicManager.getRepeat()
+      repeat: musicManager.getRepeat(),
+      autoRadio: musicManager.getAutoRadio()
     };
   }
 }

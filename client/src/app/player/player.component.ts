@@ -157,6 +157,10 @@ export class PlayerComponent implements OnInit, OnDestroy {
     this.musicService.toggleRepeat();
   }
 
+  toggleAutoRadio() {
+    this.musicService.toggleAutoRadio();
+  }
+
   drop(event: CdkDragDrop<TrackInfo[], any>) {
     if (event.previousContainer.id === 'searchList') {
       this.musicService.add(this.searchResult[event.previousIndex], event.currentIndex);

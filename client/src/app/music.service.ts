@@ -121,6 +121,10 @@ export class MusicService {
     this.http.get(this.baseUrl + '/' + this.guildId + '/toggleRepeat').pipe(this.handleError()).subscribe();
   }
 
+  toggleAutoRadio() {
+    this.http.get(this.baseUrl + '/' + this.guildId + '/toggleRadio').pipe(this.handleError()).subscribe();
+  }
+
   remove(id: number) {
     this.http.get(this.baseUrl + '/' + this.guildId + '/remove/' + id).pipe(this.handleError()).subscribe();
   }

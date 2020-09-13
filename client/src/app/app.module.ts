@@ -39,7 +39,7 @@ const config: SocketIoConfig = {url: getUrl(), options: {}};
     BookmarkCreatorComponent,
     JoinChannelComponent,
     GuildSelectComponent,
-    ClearPlaylistComponent
+    ClearPlaylistComponent,
   ],
   imports: [
     BrowserModule,

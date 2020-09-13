@@ -29,6 +29,7 @@ export interface QueueInfo {
   tracks: TrackInfo[];
   previousTracks: TrackInfo[];
   repeat: boolean;
+  autoRadio: boolean;
 }
 
 export interface CurrentTrackInfo extends TrackInfo {
