@@ -3,11 +3,12 @@ import path from "path";
 import {Bot} from "./Bot";
 import {WebRouter} from "./WebRouter";
 
+const app = express();
 if (process.env.NODE_ENV !== "production") {
   // tslint:disable-next-line:no-var-requires
   require("dotenv").config();
+  app.use(require("cors")());
 }
-const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: false})); app.use("/", new WebRouter().setup());
 app.use(express.static(path.join(__dirname, "/public/")));
