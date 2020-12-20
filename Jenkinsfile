@@ -1,10 +1,25 @@
 node {
-    def dockerImage
     stage('Clone repository') {
         checkout scm
     }
+    stage('Dependencies Server') {
+        sh 'npm i'
+    }
+    stage('Build Server') {
+        sh 'npm run build --prod'
+    }
+    stage('Dependencies Client') {
+        dir('client') {
+            sh 'npm i'
+        }
+    }
+    stage('Build Client') {
+        dir('client') {
+            sh 'npm run build --prod'
+        }
+    }
     stage('Build image') {
-        dockerImage = docker.build("alexanderwyss/discord-bot-node")
+        docker.build("alexanderwyss/discord-bot-node")
     }
     stage('Deploy') {
         sh 'docker stop discord-bot-node || true && docker rm -f discord-bot-node || true'
