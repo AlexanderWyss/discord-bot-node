@@ -19,7 +19,7 @@ node {
         }
     }
     stage('Build image') {
-        docker.build("alexanderwyss/discord-bot-node", "-f DockerfileJenkins")
+        docker.build("alexanderwyss/discord-bot-node", "-f DockerfileJenkins .")
     }
     stage('Deploy') {
         sh 'docker stop discord-bot-node || true && docker rm -f discord-bot-node || true'
