@@ -1,5 +1,4 @@
 node {
-    def dockerImage
     stage('Clone repository') {
         checkout scm
     }
@@ -20,14 +19,7 @@ node {
         }
     }
     stage('Build image') {
-        dockerImage = docker.build("alexanderwyss/discord-bot-node")
-    }
-    stage('Push image') {
-        String version = "1";
-        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-            dockerImage.push(version)
-            dockerImage.push("latest")
-        }
+        docker.build("alexanderwyss/discord-bot-node", "DockerfileJenkins")
     }
     stage('Deploy') {
         sh 'docker stop discord-bot-node || true && docker rm -f discord-bot-node || true'
