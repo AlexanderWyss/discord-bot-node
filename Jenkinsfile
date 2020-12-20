@@ -3,6 +3,7 @@ node {
         checkout scm
     }
     stage('Dependencies Server') {
+        args '-u root'
         sh 'npm i'
     }
     stage('Build Server') {
