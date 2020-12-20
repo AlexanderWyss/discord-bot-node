@@ -21,7 +21,7 @@ export interface PlaylistInfo {
   url: string;
   thumbnailUrl: string;
   artist: string;
-  length: string;
+  length: number;
 }
 
 export interface QueueInfo {

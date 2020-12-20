@@ -7,6 +7,7 @@ const app = express();
 if (process.env.NODE_ENV !== "production") {
   // tslint:disable-next-line:no-var-requires
   require("dotenv").config();
+  // tslint:disable-next-line:no-var-requires
   app.use(require("cors")());
 }
 app.use(express.json());

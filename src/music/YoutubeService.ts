@@ -1,8 +1,8 @@
 import {Readable} from "stream";
-import ytdl, {relatedVideo, videoInfo} from "ytdl-core";
-import ytpl from "ytpl";
-import ytsr, {Filter, Playlist, ShelfVertical, Video} from "ytsr";
-import {PlaylistInfo, PlaylistItem, ShelfInfo, TrackInfo} from "./TrackInfo";
+import ytdl, {Author, relatedVideo, videoInfo} from "ytdl-core";
+import ytpl, {Item as ytplItem} from "ytpl";
+import ytsr, {Playlist, Shelf, Video, Item as ytsrItem} from "ytsr";
+import {PlaylistInfo, ShelfInfo, TrackInfo} from "./TrackInfo";
 
 export class YoutubeService {
 
@@ -33,13 +33,6 @@ export class YoutubeService {
     }
   }
 
-  private static flatten(array: any[]): any[] {
-    return array.reduce((acc, val) =>
-      Array.isArray(val) ?
-        acc.concat(YoutubeService.flatten(val)) :
-        acc.concat(val), []);
-  }
-
   private constructor() {
   }
 
@@ -50,7 +43,7 @@ export class YoutubeService {
       } else if (ytdl.validateURL(param)) {
         return this.getVideoInfo(param);
       } else {
-        return this.searchVideoInfo(param);
+        return this.search(param).then(items => items.find(item => item.type === 'video') as TrackInfo);
       }
     } catch (e) {
       throw new Error("No Video found.");
@@ -74,7 +67,7 @@ export class YoutubeService {
   public getPlaylistTracks(param: string): Promise<TrackInfo[]> {
     return ytpl(param)
       .then(playlist => playlist.items.filter(item => item.author !== null && item.duration !== null))
-      .then(items => items.map(item => this.parsePlaylistItem(item)));
+      .then(items => items.map(item => this.parsePlaylistItem(item as ytplItem)));
   }
 
   public getStream(url: string): Readable {
@@ -82,15 +75,15 @@ export class YoutubeService {
     return ytdl(url, {filter: "audioonly", quality: "highestaudio", highWaterMark: 1 << 25});
   }
 
-  public search(query: string): Promise<Array<TrackInfo | ShelfInfo | PlaylistInfo>> {
+  public search(query: string): Promise<(TrackInfo | ShelfInfo | PlaylistInfo)[]> {
     return ytsr(query, {
       limit: 20
     }).then(res => res.items.map(item => this.parse(item)).filter(video => video));
   }
 
-  private parse(item: SearchItem): TrackInfo | ShelfInfo | PlaylistInfo {
-    if (item.type === "shelf-vertical") {
-      return this.parseShelfVertical(item as ShelfVertical);
+  private parse(item: ytsrItem): TrackInfo | ShelfInfo | PlaylistInfo {
+    if (item.type === "shelf") {
+      return this.parseShelfVertical(item);
     } else if (item.type === "video") {
       return this.parseVideo(item as Video);
     } else if (item.type === "playlist") {
@@ -99,12 +92,13 @@ export class YoutubeService {
     return undefined;
   }
 
-  private parseShelfVertical(shelf: ShelfVertical): ShelfInfo {
+  private parseShelfVertical(shelf: Shelf): ShelfInfo {
+    const firstVideo = shelf.items.find(item => item.type === 'video') as Video
     return {
       type: "shelf",
       title: shelf.title,
-      items: shelf.items.map(item => this.parseVideo(item)),
-      thumbnailUrl: shelf.items.length > 0 ? shelf.items[0].thumbnail : ""
+      items: shelf.items.filter(item => item.type === 'video').map(item => this.parseVideo(item as Video)),
+      thumbnailUrl: firstVideo ? firstVideo.bestThumbnail.url : ''
     };
   }
 
@@ -112,10 +106,10 @@ export class YoutubeService {
     return {
       type: "video",
       id: YoutubeService.currentId++,
-      url: video.link,
+      url: video.url,
       title: video.title,
       artist: video.author.name,
-      thumbnailUrl: video.thumbnail,
+      thumbnailUrl: video.bestThumbnail.url,
       duration: YoutubeService.getInSeconds(video.duration)
     };
   }
@@ -124,22 +118,11 @@ export class YoutubeService {
     return {
       type: "playlist",
       title: playlist.title,
-      thumbnailUrl: playlist.thumbnail,
-      artist: playlist.author.name,
-      url: playlist.link,
+      thumbnailUrl: playlist.firstVideo.bestThumbnail.url,
+      artist: playlist.owner.name,
+      url: playlist.url,
       length: playlist.length
     };
-  }
-
-  private searchVideoInfo(query: string): Promise<TrackInfo> {
-    return ytsr.getFilters(query).then(filters => {
-      const videoFilter = (filters.get("Type") as any as Filter[]).find(value => value.name === "Video");
-      return ytsr(null, {
-        limit: 4,
-        nextpageRef: videoFilter.ref
-      }).then(res => res.items.find(item => item.type === "video"))
-        .then(item => this.parseVideo(item as Video));
-    });
   }
 
   private getVideoInfo(url: string): Promise<TrackInfo> {
@@ -158,38 +141,33 @@ export class YoutubeService {
       id: YoutubeService.currentId++,
       url: "https://www.youtube.com/watch?v=" + related.id,
       title: related.title,
-      artist: related.author,
-      thumbnailUrl: (related as any).video_thumbnail,
-      duration: parseInt(related.length_seconds, 10)
-    } as TrackInfo;
+      artist: (related.author as Author).name,
+      thumbnailUrl: related.thumbnails[0].url,
+      duration: related.length_seconds
+    };
   }
 
   private parseVideoInfo(video: videoInfo): TrackInfo {
-    const thumbnails = video.player_response.videoDetails.thumbnail.thumbnails;
     return {
       type: "video",
       id: YoutubeService.currentId++,
       url: video.videoDetails.video_url,
       title: video.videoDetails.title,
       artist: video.videoDetails.author.name,
-      thumbnailUrl: thumbnails[thumbnails.length - 2].url,
+      thumbnailUrl: video.videoDetails.thumbnails[0].url,
       duration: parseInt(video.player_response.videoDetails.lengthSeconds, 10)
     };
   }
 
-  private parsePlaylistItem(item: PlaylistItem): TrackInfo {
+  private parsePlaylistItem(item: ytplItem): TrackInfo {
     return {
       type: "video",
       id: YoutubeService.currentId++,
-      url: item.url_simple,
+      url: item.shortUrl,
       title: item.title,
       artist: item.author.name,
-      thumbnailUrl: item.thumbnail,
-      duration: YoutubeService.getInSeconds(item.duration)
+      thumbnailUrl: item.bestThumbnail.url,
+      duration: item.durationSec
     };
   }
-}
-
-interface SearchItem {
-  type: string;
 }
