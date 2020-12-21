@@ -3,14 +3,14 @@ node {
         checkout scm
     }
     stage('Dependencies Server') {
-        sh 'npm i --unsafe-perm'
+        sh 'npm ci --production --unsafe-perm'
     }
     stage('Build Server') {
         sh 'npm run build'
     }
     stage('Dependencies Client') {
         dir('client') {
-            sh 'npm i'
+            sh 'npm ci --production'
         }
     }
     stage('Build Client') {
