@@ -1,3 +1,7 @@
+![Jenkins](https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fjenkins.wyss.tech%2Fjob%2FDiscordBotNode%2F&label=jenkins%20build)
+![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/alexanderwyss/discord-bot-node)
+![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/alexanderwyss/discord-bot-node)
+
 # Discord Music Bot with Webinterface
 [Create bot, get token and add to Discord server](https://github.com/AlexanderWyss/discord-bot-node/blob/master/DiscordBotREADME.md)
 
