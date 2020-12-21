@@ -83,4 +83,8 @@ export class MusicPlayer {
       func(observer);
     }
   }
+
+  public validateCurrentlyPlaying() {
+    return !!!this.dispatcher;
+  }
 }
