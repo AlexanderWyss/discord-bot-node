@@ -53,10 +53,8 @@ export class MusicPlayer {
   }
 
   public isPaused(): boolean {
-    try {
+    if (this.isCurrentlyPlaying()) {
       return this.dispatcher.paused;
-    } catch (e) {
-      return true;
     }
   }
 
