@@ -55,7 +55,7 @@
       </button>
       <mat-form-field id="urlInput">
         <mat-label>Search / Url</mat-label>
-        <input matInput [(ngModel)]="url" (keyup.enter)="enter()" (keyup.control.enter)="now()"
+        <input matInput #searchElement [(ngModel)]="url" (keyup.enter)="enter()" (keyup.control.enter)="now()"
                (keyup.control.shift.enter)="next()" (keyup.shift.enter)="queue()"
                (click)="selectInput($event)">
       </mat-form-field>

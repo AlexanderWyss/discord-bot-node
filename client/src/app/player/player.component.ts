@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MusicService} from '../music.service';
 import {GuildInfo, PlaylistInfo, QueueInfo, ShelfInfo, TrackInfo} from '../models';
 import {TrackInfoEvent} from '../track-info/track-info.component';
@@ -15,6 +15,7 @@ import {ClearPlaylistComponent} from '../clear-playlist/clear-playlist.component
 })
 export class PlayerComponent implements OnInit, OnDestroy {
 
+  @ViewChild('searchElement') searchElement: ElementRef;
   guild: GuildInfo;
   userId: string;
   queueInfo: QueueInfo;
@@ -39,10 +40,19 @@ export class PlayerComponent implements OnInit, OnDestroy {
         this.queueInfo.currentTrack.position++;
       }
     }, 1000);
+    window.addEventListener('keydown', (event) => this.searchEvent(event));
+  }
+
+  private searchEvent(event: KeyboardEvent) {
+    if (event.key === 'f' && event.ctrlKey) {
+      this.searchElement.nativeElement.focus();
+      event.preventDefault();
+    }
   }
 
   ngOnDestroy(): void {
     clearInterval(this.counter);
+    window.removeEventListener('keydown', event => this.searchEvent(event));
   }
 
   skipBack() {
@@ -55,14 +65,23 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   now(url?: string) {
     this.musicService.now(url ? url : this.url);
+    this.clearUrlIfNull(url);
   }
 
   next(url?: string) {
     this.musicService.next(url ? url : this.url);
+    this.clearUrlIfNull(url);
   }
 
   queue(url?: string) {
     this.musicService.queue(url ? url : this.url);
+    this.clearUrlIfNull(url);
+  }
+
+  clearUrlIfNull(url: string) {
+    if (!url) {
+      this.url = '';
+    }
   }
 
   togglePause() {
