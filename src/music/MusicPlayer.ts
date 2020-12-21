@@ -8,7 +8,7 @@ export class MusicPlayer {
         if (this.guild.voice && this.guild.voice.connection) {
             return this.guild.voice.connection;
         }
-        throw new Error("Voice not connected");
+        throw new Error("Voice not connected. Add the Bot to a voice channel.");
     }
 
     private get dispatcher() {

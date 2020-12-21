@@ -48,7 +48,7 @@ export class TrackScheduler implements PlayerObserver {
         throw new Error("No track in queue");
       }
     } else {
-      throw new Error("Voice not connected");
+      throw new Error("Voice not connected. Add the Bot to a voice channel.");
     }
   }
 
@@ -75,7 +75,7 @@ export class TrackScheduler implements PlayerObserver {
         throw new Error("No track in queue");
       }
     } else {
-      throw new Error("Voice not connected");
+      throw new Error("Voice not connected. Add the Bot to a voice channel.");
     }
   }
 
