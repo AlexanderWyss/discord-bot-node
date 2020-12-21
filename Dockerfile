@@ -1,11 +1,11 @@
 FROM node:12
 WORKDIR /usr/src/app
 COPY package*.json ./
-RUN npm ci --production
+RUN npm ci
 
 WORKDIR client
 COPY client/package*.json ./
-RUN npm ci --production
+RUN npm ci
 
 WORKDIR ..
 COPY . .
