@@ -21,11 +21,17 @@ export class GuildMusicManager {
     if (channel == null) {
       throw new Error("You must be in a channel.");
     }
-    return channel.join();
+    return channel.join().then(val => {
+      if (this.trackScheduler.getCurrentlyPlaying() && this.trackScheduler.getCurrentlyPlaying().url) {
+        this.restart();
+      }
+      return val;
+    });
   }
 
   public leave() {
     if (this.isVoiceConnected()) {
+      this.pause();
       this.guild.me.voice.channel.leave();
     }
   }
