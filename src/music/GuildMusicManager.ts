@@ -29,7 +29,7 @@ export class GuildMusicManager {
     });
   }
 
-  public leave() {
+  public leave(): void {
     if (this.isVoiceConnected()) {
       this.pause();
       this.guild.me.voice.channel.leave();
@@ -55,7 +55,7 @@ export class GuildMusicManager {
     }
   }
 
-  public queue(url: string) {
+  public queue(url: string): Promise<void> {
     if (this.musicPlayer.isCurrentlyPlaying()) {
       return YoutubeService.getInstance().getInfo(url).then(trackInfo => this.trackScheduler.queue(trackInfo));
     } else {
@@ -67,19 +67,19 @@ export class GuildMusicManager {
     return this.trackScheduler.playNext();
   }
 
-  public skipBack() {
-    return this.trackScheduler.playPrevious();
+  public skipBack(): void {
+    this.trackScheduler.playPrevious();
   }
 
-  public pause() {
+  public pause(): void {
     this.trackScheduler.pause();
   }
 
-  public resume() {
+  public resume(): void {
     this.trackScheduler.resume();
   }
 
-  public togglePause() {
+  public togglePause(): void {
     if (this.trackScheduler.isPaused()) {
       this.resume();
     } else {
@@ -87,11 +87,11 @@ export class GuildMusicManager {
     }
   }
 
-  public restart() {
+  public restart(): void {
     this.trackScheduler.restart();
   }
 
-  public displayMusicPanel(channel: TextChannel | DMChannel) {
+  public displayMusicPanel(channel: TextChannel | DMChannel): void {
     if (this.musicpanel) {
       this.musicpanel.destroy();
     }
@@ -99,7 +99,7 @@ export class GuildMusicManager {
     this.musicpanel.start(channel);
   }
 
-  public close() {
+  public close(): void {
     this.leave();
     if (this.musicpanel) {
       this.musicpanel.destroy();
@@ -156,6 +156,7 @@ export class GuildMusicManager {
     if (channel.type === "voice") {
       return this.join(channel as VoiceChannel);
     }
+    return Promise.reject('not a voice channel');
   }
 
   public toggleRepeat() {
@@ -180,7 +181,7 @@ export class GuildMusicManager {
   }
 
   public addByUrl(url: string, index: number) {
-    YoutubeService.getInstance().getInfo(url).then(res => this.trackScheduler.add(res, index));
+    return YoutubeService.getInstance().getInfo(url).then(res => this.trackScheduler.add(res, index));
   }
 
   public move(id: number, index: number) {

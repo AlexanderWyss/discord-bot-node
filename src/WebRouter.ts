@@ -38,7 +38,7 @@ export class WebRouter {
         .playListNext(req.body.tracks), res);
     });
     this.router.post("/:guildId/now", (req: any, res: any, next: any) => {
-      this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
+      this.handleResponse(this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
         .playListNow(req.body.tracks), res);
     });
     this.router.post("/:guildId/radio", (req: any, res: any, next: any) => {
@@ -46,7 +46,7 @@ export class WebRouter {
         .radio(req.body.tracks), res);
     });
     this.router.get("/:guildId/skip", (req: any, res: any, next: any) => {
-      this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).skip(), res);
+      this.handleResponse(this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).skip(), res);
     });
     this.router.get("/:guildId/skipBack", (req: any, res: any, next: any) => {
       this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).skipBack(), res);
@@ -92,7 +92,7 @@ export class WebRouter {
         .add(req.body.value, parseInt(req.params.index, 10)), res);
     });
     this.router.get("/:guildId/add/:index/:url", (req: any, res: any, next: any) => {
-      this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
+      this.handleResponse(this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
         .addByUrl(req.params.url, parseInt(req.params.index, 10)), res);
     });
     this.router.get("/:guildId/move/:id/:index", (req: any, res: any, next: any) => {
