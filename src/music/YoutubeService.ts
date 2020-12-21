@@ -53,7 +53,7 @@ export class YoutubeService {
         return value;
       });
     } catch (e) {
-      throw new Error("No Video found.");
+      return Promise.reject("No Video found.");
     }
   }
 
