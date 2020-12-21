@@ -38,13 +38,20 @@ export class YoutubeService {
 
   public getInfo(param: string): Promise<TrackInfo | TrackInfo[]> {
     try {
+      let promise: Promise<TrackInfo | TrackInfo[]>;
       if (ytpl.validateID(param)) {
-        return this.getPlaylistTracks(param);
+        promise = this.getPlaylistTracks(param);
       } else if (ytdl.validateURL(param)) {
-        return this.getVideoInfo(param);
+        promise = this.getVideoInfo(param);
       } else {
-        return this.search(param).then(items => items.find(item => item.type === 'video') as TrackInfo);
+        promise = this.search(param).then(items => items.find(item => item.type === 'video') as TrackInfo);
       }
+      return promise.then(value => {
+        if (!value || (value instanceof Array && value.length === 0)) {
+          throw new Error("No Video found.");
+        }
+        return value;
+      });
     } catch (e) {
       throw new Error("No Video found.");
     }
