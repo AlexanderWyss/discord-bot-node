@@ -7,12 +7,14 @@ import {Socket} from 'ngx-socket-io';
 import {Title} from '@angular/platform-browser';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {catchError} from 'rxjs/operators';
+import {environment} from '../environments/environment';
 
 export function getUrl() {
-  if (window.location.hostname === 'localhost') {
+  if (environment.production) {
+    return window.location.hostname + ':' + window.location.port;
+  } else {
     return 'localhost:3000';
   }
-  return window.location.hostname + ':' + window.location.port;
 }
 
 export function getProtocol() {

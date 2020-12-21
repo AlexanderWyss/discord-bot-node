@@ -9,8 +9,8 @@ RUN npm install
 
 WORKDIR ..
 COPY . .
-RUN npm run build --prod
+RUN npm run build
 WORKDIR client
-RUN npm run build --prod
+RUN npm run build:prod
 WORKDIR ..
 CMD [ "node", "./bin/www" ]

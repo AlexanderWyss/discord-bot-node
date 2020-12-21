@@ -6,7 +6,7 @@ node {
         sh 'npm i --unsafe-perm'
     }
     stage('Build Server') {
-        sh 'npm run build --prod'
+        sh 'npm run build'
     }
     stage('Dependencies Client') {
         dir('client') {
@@ -15,7 +15,7 @@ node {
     }
     stage('Build Client') {
         dir('client') {
-            sh 'npm run build --prod'
+            sh 'npm run build:prod'
         }
     }
     stage('Build image') {
