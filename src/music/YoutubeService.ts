@@ -67,7 +67,7 @@ export class YoutubeService {
         return tracks;
       });
     } else {
-      throw new Error("not a video");
+      return Promise.reject("not a video");
     }
   }
 
