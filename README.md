@@ -3,6 +3,14 @@
 ![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/alexanderwyss/discord-bot-node)
 
 # Discord Music Bot with Webinterface
+
+## Demo
+[Discord Server](https://discord.gg/7v9jSsukYw)
+
+[Web UI](https://discord-demo.wyss.tech/player/790550663280459786)
+
+## Build & Run
+
 [Create bot, get token and add to Discord server](https://github.com/AlexanderWyss/discord-bot-node/blob/master/DiscordBotREADME.md)
 
 Node.js 12.0.0 or newer is required.
