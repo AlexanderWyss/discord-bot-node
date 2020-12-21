@@ -56,6 +56,7 @@ export class MusicPlayer {
     if (this.isCurrentlyPlaying()) {
       return this.dispatcher.paused;
     }
+    return true;
   }
 
   public isCurrentlyPlaying() {
