@@ -97,6 +97,10 @@ export class PlayerComponent implements OnInit, OnDestroy {
     }
   }
 
+  ctrlEnter() {
+    this.now();
+  }
+
   trackInfoEvent(event: TrackInfoEvent) {
     switch (event.type) {
       case 'REMOVE':
