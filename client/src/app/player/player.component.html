@@ -13,7 +13,8 @@
     <div id="currentTrackInfo" class="shadow-bottom sticky-top">
       <h3>{{queueInfo?.currentTrack?.title}}</h3>
       <small>{{queueInfo?.currentTrack?.artist}}</small>
-      <small>{{queueInfo?.currentTrack?.position | minuteSeconds}}/{{queueInfo?.currentTrack?.duration | minuteSeconds}}</small>
+      <small>{{queueInfo?.currentTrack?.position | minuteSeconds}}
+        /{{queueInfo?.currentTrack?.duration | minuteSeconds}}</small>
       <div class="buttons">
         <button mat-icon-button class="dummy">
         </button>
@@ -49,10 +50,13 @@
   </div>
   <div class="component">
     <div id="url-bar-container" class="shadow-bottom sticky-top">
-      <button mat-icon-button *ngIf="isBrowsing" (click)="back()"><mat-icon>arrow_back_ios</mat-icon></button>
+      <button mat-icon-button *ngIf="isBrowsing" (click)="back()">
+        <mat-icon>arrow_back_ios</mat-icon>
+      </button>
       <mat-form-field id="urlInput">
         <mat-label>Search / Url</mat-label>
-        <input matInput [(ngModel)]="url" (keyup.enter)="enter()" (keyup.control.enter)="ctrlEnter()"
+        <input matInput [(ngModel)]="url" (keyup.enter)="enter()" (keyup.control.enter)="now()"
+               (keyup.control.shift.enter)="next()" (keyup.shift.enter)="queue()"
                (click)="selectInput($event)">
       </mat-form-field>
       <button mat-stroked-button (click)="search()">Search</button>
@@ -65,7 +69,8 @@
     </div>
     <div *ngIf="!loading" id="searchList" cdkDropList [cdkDropListConnectedTo]="queueList"
          [cdkDropListSortingDisabled]="true" [cdkDropListData]="searchResult">
-      <app-track-info *ngFor="let track of searchResult" [track]="track" [events]="['NOW', 'NEXT', 'QUEUE', 'BROWSE', 'RADIO']"
+      <app-track-info *ngFor="let track of searchResult" [track]="track"
+                      [events]="['NOW', 'NEXT', 'QUEUE', 'BROWSE', 'RADIO']"
                       (event)="trackInfoEvent($event)"></app-track-info>
     </div>
   </div>
