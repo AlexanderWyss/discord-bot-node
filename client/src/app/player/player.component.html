@@ -6,16 +6,16 @@
   <button mat-stroked-button (click)="bookmarkTools()">Bookmark Tools</button>
 </div>
 <div class="container desktop">
-  <app-queue class="component" [searchResult]="searchResult"></app-queue>
-  <app-search class="component" (searchResultChange)="searchResult = $event"></app-search>
+  <app-queue cdkScrollable class="component" [searchResult]="searchResult"></app-queue>
+  <app-search cdkScrollable class="component" (searchResultChange)="searchResult = $event"></app-search>
 </div>
 <div class="container mobile">
   <mat-tab-group>
     <mat-tab label="Player">
-      <app-queue class="component" [searchResult]="searchResult"></app-queue>
+      <app-queue cdkScrollable class="component" [searchResult]="searchResult"></app-queue>
     </mat-tab>
     <mat-tab label="Search">
-      <app-search class="component" (searchResultChange)="searchResult = $event"></app-search>
+      <app-search cdkScrollable class="component" (searchResultChange)="searchResult = $event"></app-search>
     </mat-tab>
   </mat-tab-group>
 </div>

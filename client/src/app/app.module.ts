@@ -30,6 +30,7 @@ import { ClearPlaylistComponent } from './clear-playlist/clear-playlist.componen
 import { SearchComponent } from './search/search.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import { QueueComponent } from './queue/queue.component';
+import {ScrollingModule} from '@angular/cdk/scrolling';
 
 const config: SocketIoConfig = {url: getUrl(), options: {}};
 
@@ -65,7 +66,8 @@ const config: SocketIoConfig = {url: getUrl(), options: {}};
     MatListModule,
     MatSnackBarModule,
     DragDropModule,
-    MatTabsModule
+    MatTabsModule,
+    ScrollingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
