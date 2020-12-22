@@ -2,3 +2,9 @@ div {
   padding: 1.5rem;
   height: calc(100% - 3rem);
 }
+@media screen and (max-width: 700px) {
+  div {
+    padding: 0.5rem;
+    height: calc(100% - 1rem);
+  }
+}

@@ -53,3 +53,10 @@ snack-bar-container {
   z-index: 1000;
   background: white;
 }
+
+.mat-tab-body-wrapper, .mat-tab-body-content, mat-tab-body, mat-tab-header, mat-tab-group {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
