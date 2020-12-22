@@ -27,6 +27,9 @@ import { GuildSelectComponent } from './guild-select/guild-select.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { ClearPlaylistComponent } from './clear-playlist/clear-playlist.component';
+import { SearchComponent } from './search/search.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import { QueueComponent } from './queue/queue.component';
 
 const config: SocketIoConfig = {url: getUrl(), options: {}};
 
@@ -40,6 +43,8 @@ const config: SocketIoConfig = {url: getUrl(), options: {}};
     JoinChannelComponent,
     GuildSelectComponent,
     ClearPlaylistComponent,
+    SearchComponent,
+    QueueComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,7 +64,8 @@ const config: SocketIoConfig = {url: getUrl(), options: {}};
     ClipboardModule,
     MatListModule,
     MatSnackBarModule,
-    DragDropModule
+    DragDropModule,
+    MatTabsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

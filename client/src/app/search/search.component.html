@@ -1,0 +1,24 @@
+<div id="url-bar-container" class="shadow-bottom sticky-top">
+  <button mat-icon-button *ngIf="isBrowsing" (click)="back()">
+    <mat-icon>arrow_back_ios</mat-icon>
+  </button>
+  <mat-form-field id="urlInput">
+    <mat-label>Search / Url</mat-label>
+    <input matInput #searchElement [(ngModel)]="url" (keyup.enter)="enter()" (keyup.control.enter)="now()"
+           (keyup.control.shift.enter)="next()" (keyup.shift.enter)="queue()"
+           (click)="selectInput($event)">
+  </mat-form-field>
+  <button mat-stroked-button (click)="search()">Search</button>
+  <button mat-stroked-button (click)="now()">Now</button>
+  <button mat-stroked-button (click)="next()">Next</button>
+  <button mat-stroked-button (click)="queue()">Queue</button>
+</div>
+<div *ngIf="loading" class="spinner-container">
+  <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="!loading" id="searchList" cdkDropList [cdkDropListConnectedTo]="'queueList'"
+     [cdkDropListSortingDisabled]="true" [cdkDropListData]="searchResult">
+  <app-track-info *ngFor="let track of searchResult" [track]="track"
+                  [events]="['NOW', 'NEXT', 'QUEUE', 'BROWSE', 'RADIO']"
+                  (event)="trackInfoEvent($event)"></app-track-info>
+</div>

@@ -1,0 +1,42 @@
+<div id="imageContainer">
+  <img [src]="queueInfo?.currentTrack?.thumbnailUrl">
+</div>
+<div id="currentTrackInfo" class="shadow-bottom sticky-top">
+  <h3>{{queueInfo?.currentTrack?.title}}</h3>
+  <small>{{queueInfo?.currentTrack?.artist}}</small>
+  <small>{{queueInfo?.currentTrack?.position | minuteSeconds}}
+    /{{queueInfo?.currentTrack?.duration | minuteSeconds}}</small>
+  <div class="buttons">
+    <button mat-icon-button class="dummy">
+    </button>
+    <button mat-icon-button class="dummy">
+    </button>
+    <button mat-icon-button class="dummy">
+    </button>
+    <div class="filler"></div>
+    <button mat-icon-button (click)="skipBack()">
+      <mat-icon>skip_previous</mat-icon>
+    </button>
+    <button mat-icon-button (click)="togglePause()">
+      <mat-icon>{{queueInfo?.currentTrack?.paused ? 'play_arrow' : 'pause'}}</mat-icon>
+    </button>
+    <button mat-icon-button (click)="skip()">
+      <mat-icon>skip_next</mat-icon>
+    </button>
+    <div class="filler"></div>
+    <button mat-icon-button (click)="toggleRepeat()">
+      <mat-icon [class]="queueInfo?.repeat ? '' : 'disabled'">repeat</mat-icon>
+    </button>
+    <button mat-icon-button (click)="toggleAutoRadio()">
+      <mat-icon [class]="queueInfo?.autoRadio ? '' : 'disabled'">radio-outline</mat-icon>
+    </button>
+    <button mat-icon-button (click)="clear()">
+      <mat-icon>delete_sweep</mat-icon>
+    </button>
+  </div>
+</div>
+<div cdkDropList id="queueList" #queueList="cdkDropList" [cdkDropListData]="queueInfo?.tracks"
+     (cdkDropListDropped)="drop($event)">
+  <app-track-info *ngFor="let track of queueInfo?.tracks" [track]="track" [events]="['REMOVE']"
+                  (event)="trackInfoEvent($event)"></app-track-info>
+</div>

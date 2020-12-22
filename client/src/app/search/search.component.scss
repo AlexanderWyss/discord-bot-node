@@ -1,0 +1,27 @@
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+#url-bar-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  > * {
+    margin: 0.2rem;
+  }
+
+  mat-form-field {
+    height: 2.7rem;
+  }
+
+  #urlInput {
+    flex: 1 1 auto;
+  }
+
+  button {
+    flex: 0 0 auto;
+    margin-bottom: auto;
+  }
+}
