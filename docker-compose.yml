@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  discord-bot-node:
+    build: .
+    ports:
+      - "80:${PORT}"
+    restart: unless-stopped
+    env_file:
+      - ./.env
