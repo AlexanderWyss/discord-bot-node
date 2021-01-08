@@ -11,6 +11,7 @@ export class GuildMusicManager {
   private readonly trackScheduler: TrackScheduler;
   private readonly musicPlayer: MusicPlayer;
   private musicpanel: MusicPanel;
+  private autoLeaveTimeout: NodeJS.Timeout = null;
 
   constructor(private guild: Guild) {
     this.musicPlayer = new MusicPlayer(this.guild);
@@ -105,6 +106,7 @@ export class GuildMusicManager {
     if (this.musicpanel) {
       this.musicpanel.destroy();
     }
+    this.clearAutoLeaveTimeout();
   }
 
   public getTracks(): TrackInfo[] {
@@ -216,5 +218,29 @@ export class GuildMusicManager {
     } else {
       value.id = YoutubeService.resolveId();
     }
+  }
+
+  onUserChangeVoiceState() {
+    if (this.isBotOnlyMemberInVoiceChannel()) {
+      this.autoLeaveTimeout = setTimeout(() => {
+        this.autoLeaveTimeout = null;
+        if (this.isBotOnlyMemberInVoiceChannel()) {
+          this.leave();
+        }
+      }, 60000);
+    } else {
+      this.clearAutoLeaveTimeout();
+    }
+  }
+
+  clearAutoLeaveTimeout() {
+    if (this.autoLeaveTimeout) {
+      clearTimeout(this.autoLeaveTimeout);
+      this.autoLeaveTimeout = null;
+    }
+  }
+
+  isBotOnlyMemberInVoiceChannel(): boolean {
+    return this.musicPlayer.isConnected() && this.guild.voice.channel.members.size === 1;
   }
 }
