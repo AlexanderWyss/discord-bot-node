@@ -226,6 +226,7 @@ export class GuildMusicManager {
         this.autoLeaveTimeout = null;
         if (this.isBotOnlyMemberInVoiceChannel()) {
           this.leave();
+          console.log('auto leave guild: ' + this.guild.name);
         }
       }, 60000);
     } else {
