@@ -1,4 +1,4 @@
-import {DMChannel, Guild, Snowflake, TextChannel, VoiceChannel, VoiceConnection} from "discord.js";
+import {DMChannel, Guild, NewsChannel, Snowflake, TextChannel, VoiceChannel, VoiceConnection} from "discord.js";
 import {ChannelInfo} from "./ChannelInfo";
 import {MusicPanel} from "./MusicPanel";
 import {MusicPlayer} from "./MusicPlayer";
@@ -93,7 +93,7 @@ export class GuildMusicManager {
     this.trackScheduler.restart();
   }
 
-  public displayMusicPanel(channel: TextChannel | DMChannel): void {
+  public displayMusicPanel(channel: TextChannel | DMChannel | NewsChannel): void {
     if (this.musicpanel) {
       this.musicpanel.destroy();
     }

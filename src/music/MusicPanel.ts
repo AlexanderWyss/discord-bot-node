@@ -1,4 +1,4 @@
-import {DMChannel, Message, MessageEmbed, ReactionCollector, TextChannel} from "discord.js";
+import {DMChannel, Message, MessageEmbed, NewsChannel, ReactionCollector, TextChannel} from "discord.js";
 import he from "he";
 import {ReactionManager} from "./ReactionManager";
 import {TrackInfo} from "./TrackInfo";
@@ -12,7 +12,7 @@ export class MusicPanel implements TrackSchedulerObserver {
   constructor(private trackScheduler: TrackScheduler, private reactionManager: ReactionManager) {
   }
 
-  public start(channel: TextChannel | DMChannel) {
+  public start(channel: TextChannel | DMChannel | NewsChannel) {
     this.trackScheduler.register(this);
     this.message = channel.send({embed: this.buildMessage(this.trackScheduler.getCurrentlyPlaying())});
     this.message.then(message => message.createReactionCollector((reaction, user) =>
