@@ -18,6 +18,7 @@ export abstract class SafeCommand extends Command {
         });
       }
     } catch (e) {
+      console.error(e);
       return message.reply(e.toString());
     }
     return;

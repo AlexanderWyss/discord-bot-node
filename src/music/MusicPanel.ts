@@ -41,7 +41,7 @@ export class MusicPanel implements TrackSchedulerObserver {
     const embed = new MessageEmbed()
       .setTitle("Music Panel")
       .setColor("#0099ff");
-    if (currentlyPlaying) {
+    if (currentlyPlaying && currentlyPlaying.type) {
       embed.addField("Title", he.decode(currentlyPlaying.title))
         .addField("Artist", he.decode(currentlyPlaying.artist))
         .addField("Url", currentlyPlaying.url)
