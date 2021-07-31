@@ -23,7 +23,6 @@ node {
         dockerImage = docker.build("alexanderwyss/discord-bot-node", "-f DockerfileJenkins .")
     }
     stage('Push image') {
-        String version = "1";
         docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
             dockerImage.push(BUILD_NUMBER)
             dockerImage.push("latest")
