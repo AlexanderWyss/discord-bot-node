@@ -27,6 +27,7 @@ node {
         docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
             dockerImage.push(BUILD_NUMBER)
             dockerImage.push("latest")
+        }
     }
     stage('Deploy') {
         sh 'docker stop discord-bot-node || true && docker rm -f discord-bot-node || true'
