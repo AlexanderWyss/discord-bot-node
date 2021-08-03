@@ -180,15 +180,15 @@ export class GuildMusicManager {
 
   public add(track: TrackInfo | TrackInfo[], index: number) {
     this.resolveIds(track);
-    this.trackScheduler.addRelativeToCurrentIndex(track, index);
+    this.trackScheduler.add(track, index);
   }
 
   public addByUrl(url: string, index: number) {
-    return YoutubeService.getInstance().getInfo(url).then(res => this.trackScheduler.addRelativeToCurrentIndex(res, index));
+    return YoutubeService.getInstance().getInfo(url).then(res => this.trackScheduler.add(res, index));
   }
 
   public move(id: number, index: number) {
-    this.trackScheduler.moveRelativeToCurrentIndex(id, index);
+    this.trackScheduler.move(id, index);
   }
 
   public playListNow(tracks: TrackInfo[]): Promise<void> {

@@ -5,8 +5,10 @@ import {CurrentTrackInfo, TrackInfo} from "./TrackInfo";
 import {TrackSchedulerObserver} from "./TrackSchedulerObserver";
 
 export class TrackScheduler implements PlayerObserver {
-  private index = -1;
+
   private tracks: TrackInfo[] = [];
+  private previousTracks: TrackInfo[] = [];
+  private currentlyPlaying: TrackInfo;
   private observers: TrackSchedulerObserver[] = [];
   private repeat = true;
   private autoRadio = false;
@@ -15,28 +17,34 @@ export class TrackScheduler implements PlayerObserver {
     this.musicPlayer.register(this);
   }
 
-  private get currentlyPlaying(): TrackInfo {
-    return this.tracks[this.index];
-  }
-
   public onTogglePause(value: boolean): void {
     this.updateObservers();
   }
 
   public async playNext() {
     if (this.musicPlayer.isConnected()) {
-      let index = this.index + 1;
-      if (!this.tracks[index] && this.autoRadio) {
+      let trackInfo = this.tracks.shift();
+      if (!trackInfo && this.autoRadio) {
         await this.musicManager.radio(this.currentlyPlaying.url, false);
+        trackInfo = this.tracks.shift();
       }
-      if (!this.tracks[index] && this.repeat && this.tracks.length > 0) {
-        index = 0;
+      if (!trackInfo && this.repeat && this.previousTracks.length > 0) {
+        if (this.currentlyPlaying) {
+          this.previousTracks.unshift(this.currentlyPlaying);
+          this.currentlyPlaying = null;
+        }
+        this.tracks = this.previousTracks.reverse();
+        this.previousTracks = [];
+        trackInfo = this.tracks.shift();
       }
-      if (this.tracks[index]) {
-        this.index = index;
-        this.musicPlayer.play(this.tracks[this.index].url);
+      if (trackInfo) {
+        if (this.currentlyPlaying) {
+          this.previousTracks.unshift(this.currentlyPlaying);
+          this.currentlyPlaying = null;
+        }
+        this.currentlyPlaying = trackInfo;
+        this.musicPlayer.play(trackInfo.url);
       } else {
-        this.index = this.tracks.length - 1;
         throw new Error("No track in queue");
       }
     } else {
@@ -46,13 +54,23 @@ export class TrackScheduler implements PlayerObserver {
 
   public playPrevious() {
     if (this.musicPlayer.isConnected()) {
-      let index = this.index - 1;
-      if (!this.tracks[index] && this.repeat && this.tracks.length > 0) {
-        index = this.tracks.length - 1;
+      let trackInfo = this.previousTracks.shift();
+      if (!trackInfo && this.repeat && this.tracks.length > 0) {
+        if (this.currentlyPlaying) {
+          this.tracks.unshift(this.currentlyPlaying);
+          this.currentlyPlaying = null;
+        }
+        this.previousTracks = this.tracks.reverse();
+        this.tracks = [];
+        trackInfo = this.previousTracks.shift();
       }
-      if (this.tracks[index]) {
-        this.index = index;
-        this.musicPlayer.play(this.tracks[this.index].url);
+      if (trackInfo) {
+        if (this.currentlyPlaying) {
+          this.tracks.unshift(this.currentlyPlaying);
+          this.currentlyPlaying = null;
+        }
+        this.currentlyPlaying = trackInfo;
+        this.musicPlayer.play(trackInfo.url);
       } else {
         throw new Error("No track in queue");
       }
@@ -83,10 +101,10 @@ export class TrackScheduler implements PlayerObserver {
   public next(tracks: TrackInfo | TrackInfo[]) {
     if (Array.isArray(tracks)) {
       for (const track of tracks.reverse()) {
-        this.addRelativeToCurrentIndex(track, 0);
+        this.tracks.unshift(track);
       }
     } else {
-      this.addRelativeToCurrentIndex(tracks, 0);
+      this.tracks.unshift(tracks);
     }
     this.updateObservers();
   }
@@ -159,11 +177,11 @@ export class TrackScheduler implements PlayerObserver {
   }
 
   public getTracks(): TrackInfo[] {
-    return this.tracks.slice(this.index + 1, this.tracks.length);
+    return this.tracks;
   }
 
   public getPreviousTracks(): TrackInfo[] {
-    return this.tracks.slice(0, this.index);
+    return this.previousTracks;
   }
 
   public getMusicManager(): GuildMusicManager {
@@ -172,6 +190,7 @@ export class TrackScheduler implements PlayerObserver {
 
   public removeById(id: number) {
     this.tracks = this.tracks.filter(track => track.id !== id);
+    this.previousTracks = this.previousTracks.filter(track => track.id !== id);
     this.updateObservers();
   }
 
@@ -193,9 +212,8 @@ export class TrackScheduler implements PlayerObserver {
     return this.autoRadio;
   }
 
-  public addRelativeToCurrentIndex(trackInfo: TrackInfo | TrackInfo[], offset: number) {
+  public add(trackInfo: TrackInfo | TrackInfo[], index: number) {
     try {
-      const index = this.index + offset + 1;
       if (Array.isArray(trackInfo)) {
         for (let i = 0; i < trackInfo.length; i++) {
           this.tracks.splice(index + i, 0, trackInfo[i]);
@@ -208,9 +226,8 @@ export class TrackScheduler implements PlayerObserver {
     }
   }
 
-  public moveRelativeToCurrentIndex(id: number, offset: number) {
+  public move(id: number, newIndex: number) {
     try {
-      const newIndex = this.index + offset + 1;
       const currentIndex = this.tracks.findIndex(track => track.id === id);
       if (currentIndex >= 0 && newIndex >= 0 && newIndex < this.tracks.length) {
         this.tracks.splice(newIndex, 0, this.tracks.splice(currentIndex, 1)[0]);
@@ -223,8 +240,9 @@ export class TrackScheduler implements PlayerObserver {
   }
 
   public clear() {
-    this.index = -1;
+    this.currentlyPlaying = null;
     this.tracks = [];
+    this.previousTracks = [];
     this.musicPlayer.stop();
     this.updateObservers();
   }
