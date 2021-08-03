@@ -54,3 +54,5 @@ export interface GuildInfo {
   name: string;
   icon: string;
 }
+
+export type QueueType = 'queue' | 'previous';

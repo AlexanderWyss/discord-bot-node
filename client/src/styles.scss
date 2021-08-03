@@ -20,6 +20,10 @@ div {
   scrollbar-width: thin;
 }
 
+.mat-expansion-panel-body {
+  padding: 5px 0 5px 5px !important;
+}
+
 snack-bar-container {
   &.error {
     background: red;

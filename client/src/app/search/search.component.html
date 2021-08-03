@@ -16,7 +16,7 @@
 <div *ngIf="loading" class="spinner-container">
   <mat-spinner></mat-spinner>
 </div>
-<div *ngIf="!loading" id="searchList" cdkDropList [cdkDropListConnectedTo]="'queueList'"
+<div *ngIf="!loading" id="searchList" cdkDropList [cdkDropListConnectedTo]="['queueList', 'previousList']"
      [cdkDropListSortingDisabled]="true" [cdkDropListData]="searchResult">
   <app-track-info *ngFor="let track of searchResult" [track]="track"
                   [events]="['NOW', 'NEXT', 'QUEUE', 'BROWSE', 'RADIO']"

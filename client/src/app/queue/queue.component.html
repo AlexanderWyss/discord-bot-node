@@ -35,9 +35,19 @@
       <mat-icon>delete_sweep</mat-icon>
     </button>
   </div>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>Previous</mat-panel-title>
+    </mat-expansion-panel-header>
+    <div cdkDropList id="previousList" #previousList="cdkDropList" [cdkDropListData]="queueInfo?.previousTracks"
+         [cdkDropListConnectedTo]="'queueList'" (cdkDropListDropped)="drop($event)">
+      <app-track-info *ngFor="let track of queueInfo?.previousTracks" [track]="track" [events]="['REMOVE']"
+                      (event)="trackInfoEvent($event)"></app-track-info>
+    </div>
+  </mat-expansion-panel>
 </div>
 <div cdkDropList id="queueList" #queueList="cdkDropList" [cdkDropListData]="queueInfo?.tracks"
-     (cdkDropListDropped)="drop($event)">
+     [cdkDropListConnectedTo]="'previousList'" (cdkDropListDropped)="drop($event)">
   <app-track-info *ngFor="let track of queueInfo?.tracks" [track]="track" [events]="['REMOVE']"
                   (event)="trackInfoEvent($event)"></app-track-info>
 </div>

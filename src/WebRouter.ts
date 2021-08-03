@@ -90,17 +90,17 @@ export class WebRouter {
       this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
         .toggleRadio(), res);
     });
-    this.router.post("/:guildId/add/:index", (req: any, res: any, next: any) => {
+    this.router.post("/:guildId/add/:queue/:index", (req: any, res: any, next: any) => {
       this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
-        .add(req.body.value, parseInt(req.params.index, 10)), res);
+        .add(req.params.queue, req.body.value, parseInt(req.params.index, 10)), res);
     });
-    this.router.get("/:guildId/add/:index/:url", (req: any, res: any, next: any) => {
+    this.router.get("/:guildId/add/:queue/:index/:url", (req: any, res: any, next: any) => {
       this.handleResponse(this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
-        .addByUrl(req.params.url, parseInt(req.params.index, 10)), res);
+        .addByUrl(req.params.queue, req.params.url, parseInt(req.params.index, 10)), res);
     });
-    this.router.get("/:guildId/move/:id/:index", (req: any, res: any, next: any) => {
+    this.router.get("/:guildId/move/:queue/:id/:index", (req: any, res: any, next: any) => {
       this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
-        .move(parseInt(req.params.id, 10), parseInt(req.params.index, 10)), res);
+        .move(req.params.queue, parseInt(req.params.id, 10), parseInt(req.params.index, 10)), res);
     });
     this.router.get("/:guildId/clear", (req: any, res: any, next: any) => {
       this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)

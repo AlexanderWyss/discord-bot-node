@@ -1,7 +1,7 @@
 import {GuildMusicManager} from "./GuildMusicManager";
 import {MusicPlayer} from "./MusicPlayer";
 import {PlayerObserver} from "./PlayerObserver";
-import {CurrentTrackInfo, TrackInfo} from "./TrackInfo";
+import {CurrentTrackInfo, QueueType, TrackInfo} from "./TrackInfo";
 import {TrackSchedulerObserver} from "./TrackSchedulerObserver";
 
 export class TrackScheduler implements PlayerObserver {
@@ -212,31 +212,48 @@ export class TrackScheduler implements PlayerObserver {
     return this.autoRadio;
   }
 
-  public add(trackInfo: TrackInfo | TrackInfo[], index: number) {
+  public add(queueType: QueueType, trackInfo: TrackInfo | TrackInfo[], index: number) {
     try {
+      const queue = this.getQueue(queueType);
       if (Array.isArray(trackInfo)) {
         for (let i = 0; i < trackInfo.length; i++) {
-          this.tracks.splice(index + i, 0, trackInfo[i]);
+          queue.splice(index + i, 0, trackInfo[i]);
         }
       } else {
-        this.tracks.splice(index, 0, trackInfo as TrackInfo);
+        queue.splice(index, 0, trackInfo as TrackInfo);
       }
     } finally {
       this.updateObservers();
     }
   }
 
-  public move(id: number, newIndex: number) {
+  public move(queueType: QueueType, id: number, newIndex: number) {
     try {
-      const currentIndex = this.tracks.findIndex(track => track.id === id);
-      if (currentIndex >= 0 && newIndex >= 0 && newIndex < this.tracks.length) {
-        this.tracks.splice(newIndex, 0, this.tracks.splice(currentIndex, 1)[0]);
+      let currentIndex = this.tracks.findIndex(track => track.id === id);
+      let fromQueue = this.tracks;
+      if (currentIndex < 0) {
+        currentIndex = this.previousTracks.findIndex(track => track.id === id);
+        fromQueue = this.previousTracks;
+      }
+      const targetQueue = this.getQueue(queueType);
+      if (currentIndex >= 0 && newIndex >= 0 && newIndex < targetQueue.length) {
+        targetQueue.splice(newIndex, 0, fromQueue.splice(currentIndex, 1)[0]);
       } else {
         throw new Error("Move failed");
       }
     } finally {
       this.updateObservers();
     }
+  }
+
+  private getQueue(queueType: QueueType): TrackInfo[] {
+    if (queueType === 'queue') {
+      return this.tracks;
+    }
+    if (queueType === 'previous') {
+      return this.previousTracks;
+    }
+    throw new Error("Queue not known: " + queueType);
   }
 
   public clear() {

@@ -48,4 +48,8 @@
       color: darkgray;
     }
   }
+  #previousList {
+    overflow-y: scroll;
+    max-height: 30vh;
+  }
 }

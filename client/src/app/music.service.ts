@@ -1,6 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Channel, GuildInfo, JoinGuild, PlaylistInfo, QueueInfo, ShelfInfo, TrackInfo} from './models';
+import {Channel, GuildInfo, JoinGuild, PlaylistInfo, QueueInfo, QueueType, ShelfInfo, TrackInfo} from './models';
 import {Observable} from 'rxjs';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Socket} from 'ngx-socket-io';
@@ -158,10 +158,10 @@ export class MusicService {
     this.http.get(this.baseUrl + '/' + this.guildId + '/leave/').pipe(this.handleError()).subscribe();
   }
 
-  add(track: TrackInfo | ShelfInfo | PlaylistInfo, index: number) {
+  add(queue: QueueType, track: TrackInfo | ShelfInfo | PlaylistInfo, index: number) {
     let body: any;
     if (track.type === 'playlist') {
-      this.http.get(this.baseUrl + '/' + this.guildId + '/add/' + index + '/' + encodeURIComponent(track.url))
+      this.http.get(this.baseUrl + '/' + this.guildId + '/add/' + queue + '/' + index + '/' + encodeURIComponent(track.url))
         .pipe(this.handleError()).subscribe();
       return;
     } else if (track.type === 'video') {
@@ -169,11 +169,11 @@ export class MusicService {
     } else {
       body = track.items;
     }
-    this.http.post(this.baseUrl + '/' + this.guildId + '/add/' + index, {value: body}).pipe(this.handleError()).subscribe();
+    this.http.post(this.baseUrl + '/' + this.guildId + '/add/' + queue + '/' + index, {value: body}).pipe(this.handleError()).subscribe();
   }
 
-  move(id: number, index: number) {
-    this.http.get(this.baseUrl + '/' + this.guildId + '/move/' + id + '/' + index).pipe(this.handleError()).subscribe();
+  move(queue: QueueType, id: number, index: number) {
+    this.http.get(this.baseUrl + '/' + this.guildId + '/move/' + queue + '/' + id + '/' + index).pipe(this.handleError()).subscribe();
   }
 
   clearPlaylist() {

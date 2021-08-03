@@ -3,7 +3,7 @@ import {ChannelInfo} from "./ChannelInfo";
 import {MusicPanel} from "./MusicPanel";
 import {MusicPlayer} from "./MusicPlayer";
 import {ReactionManager} from "./ReactionManager";
-import {CurrentTrackInfo, TrackInfo} from "./TrackInfo";
+import {CurrentTrackInfo, QueueType, TrackInfo} from "./TrackInfo";
 import {TrackScheduler} from "./TrackScheduler";
 import {YoutubeService} from "./YoutubeService";
 
@@ -178,17 +178,17 @@ export class GuildMusicManager {
     return this.trackScheduler.getAutoRadio();
   }
 
-  public add(track: TrackInfo | TrackInfo[], index: number) {
+  public add(queue: QueueType, track: TrackInfo | TrackInfo[], index: number) {
     this.resolveIds(track);
-    this.trackScheduler.add(track, index);
+    this.trackScheduler.add(queue, track, index);
   }
 
-  public addByUrl(url: string, index: number) {
-    return YoutubeService.getInstance().getInfo(url).then(res => this.trackScheduler.add(res, index));
+  public addByUrl(queue: QueueType, url: string, index: number) {
+    return YoutubeService.getInstance().getInfo(url).then(res => this.trackScheduler.add(queue, res, index));
   }
 
-  public move(id: number, index: number) {
-    this.trackScheduler.move(id, index);
+  public move(queue: QueueType, id: number, index: number) {
+    this.trackScheduler.move(queue, id, index);
   }
 
   public playListNow(tracks: TrackInfo[]): Promise<void> {
