@@ -38,4 +38,8 @@ export class PlayerComponent implements OnInit {
   leave() {
     this.musicService.leave();
   }
+
+  isMobile(): boolean {
+    return window.screen.width <= 700;
+  }
 }

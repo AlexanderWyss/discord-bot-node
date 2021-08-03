@@ -30,6 +30,7 @@ export class QueueComponent implements OnInit, OnDestroy {
         this.queueInfo.currentTrack.position++;
       }
     }, 1000);
+    this.musicService.refresh();
   }
 
   ngOnDestroy(): void {

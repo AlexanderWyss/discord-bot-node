@@ -43,10 +43,6 @@ mat-tab-group {
 }
 
 @media screen and (max-width: 700px) {
-  .desktop {
-    display: none;
-  }
-
   .container {
     height: calc(100% - 5.5rem);
     max-height: calc(100% - 5.5rem);
@@ -54,9 +50,6 @@ mat-tab-group {
 }
 
 @media screen and (min-width: 701px) {
-  .mobile {
-    display: none !important;
-  }
   .container {
     display: flex;
     flex-wrap: wrap;

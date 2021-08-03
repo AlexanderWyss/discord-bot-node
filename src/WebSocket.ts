@@ -59,6 +59,13 @@ export class WebSocket implements TrackSchedulerObserver {
           console.error(e);
         }
       });
+      socket.on("refresh", (guildId: string) => {
+        try {
+          socket.emit("tracks", this.getQueueInfo(this.bot.getGuildMusicManagerById(guildId)));
+        } catch (e) {
+          console.error(e);
+        }
+      });
     });
   }
 

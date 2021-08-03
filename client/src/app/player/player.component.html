@@ -5,11 +5,11 @@
   <button mat-stroked-button (click)="leave()">Leave</button>
   <button mat-stroked-button (click)="bookmarkTools()">Bookmark Tools</button>
 </div>
-<div class="container desktop">
+<div *ngIf="!isMobile()" class="container desktop">
   <app-queue cdkScrollable class="component" [searchResult]="searchResult"></app-queue>
   <app-search cdkScrollable class="component" (searchResultChange)="searchResult = $event"></app-search>
 </div>
-<div class="container mobile">
+<div *ngIf="isMobile()" class="container mobile">
   <mat-tab-group>
     <mat-tab label="Player">
       <app-queue cdkScrollable class="component" [searchResult]="searchResult"></app-queue>

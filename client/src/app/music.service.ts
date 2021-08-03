@@ -67,6 +67,10 @@ export class MusicService {
     });
   }
 
+  refresh() {
+    this.socket.emit('refresh', this.guildId);
+  }
+
   onTracks() {
     return this.tracksEmitter;
   }
