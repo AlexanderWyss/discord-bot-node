@@ -68,7 +68,9 @@ export class MusicService {
   }
 
   refresh() {
-    this.socket.emit('refresh', this.guildId);
+    if (this.guildId) {
+      this.socket.emit('refresh', this.guildId);
+    }
   }
 
   onTracks() {

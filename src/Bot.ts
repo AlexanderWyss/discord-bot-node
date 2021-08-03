@@ -96,7 +96,7 @@ export class Bot {
     if (guild) {
       return this.getGuildMusicManager(guild);
     } else {
-      throw new Error("Guild not available.");
+      throw new Error(`Guild with id: '${guildId}' not available.`);
     }
   }
 
@@ -104,7 +104,7 @@ export class Bot {
     if (this.musicManagers.has(guildId)) {
       return this.musicManagers.get(guildId);
     } else {
-      throw new Error("Guild not available.");
+      throw new Error(`Guild with id: '${guildId}' not available.`);
     }
   }
 
