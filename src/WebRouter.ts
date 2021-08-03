@@ -51,6 +51,9 @@ export class WebRouter {
     this.router.get("/:guildId/skipBack", (req: any, res: any, next: any) => {
       this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).skipBack(), res);
     });
+    this.router.get("/:guildId/restart", (req: any, res: any, next: any) => {
+      this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).restart(), res);
+    });
     this.router.get("/:guildId/togglePause", (req: any, res: any, next: any) => {
       this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).togglePause(), res);
     });

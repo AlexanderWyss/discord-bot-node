@@ -44,6 +44,10 @@ export class QueueComponent implements OnInit, OnDestroy {
     this.musicService.skip();
   }
 
+  restart() {
+    this.musicService.restart();
+  }
+
   togglePause() {
     this.musicService.togglePause();
   }
