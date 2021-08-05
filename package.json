@@ -32,9 +32,9 @@
     "morgan": "~1.10.0",
     "socket.io": "^2.3.0",
     "sqlite": "^4.0.18",
-    "ytdl-core": "^4.9.0",
-    "ytpl": "^2.2.1",
-    "ytsr": "^3.5.0",
+    "ytdl-core": "^4.9.1",
+    "ytpl": "^2.2.3",
+    "ytsr": "^3.5.2",
     "zucc": "^0.1.2"
   },
   "devDependencies": {
