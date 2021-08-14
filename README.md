@@ -1,6 +1,3 @@
-![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/alexanderwyss/discord-bot-node)
-![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/alexanderwyss/discord-bot-node)
-
 # Discord Music Bot with Webinterface
 
 ## Demo
