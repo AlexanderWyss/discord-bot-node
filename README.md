@@ -39,6 +39,7 @@ Or run with Docker:
 ```
 docker run -d -p 80:80 --restart unless-stopped --name discord-bot-node -e NODE_ENV=production -e PORT=80 -e TOKEN=<discord token> -e OWNER=<discord owner id> -e URL=<url/ip e.g http(s)://foo.bar:port> -e PREFIX=<prefix e.g !> alexanderwyss/discord-bot-node:latest
 ```
+[Docker Hub](https://hub.docker.com/r/alexanderwyss/discord-bot-node)
 
 ## Web UI
 The Web UI can be used by multiple Users concurrently.
