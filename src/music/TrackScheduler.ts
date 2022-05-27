@@ -21,6 +21,10 @@ export class TrackScheduler implements PlayerObserver {
     this.updateObservers();
   }
 
+  public onSeek(): void {
+    this.updateObservers();
+  }
+
   public async playNext() {
     if (this.musicPlayer.isConnected()) {
       let trackInfo = this.tracks.shift();

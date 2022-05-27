@@ -10,4 +10,6 @@ export interface PlayerObserver {
     onStart(): void;
 
     onTogglePause(value: boolean): void;
+
+    onSeek(): void;
 }

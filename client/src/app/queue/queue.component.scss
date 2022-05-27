@@ -48,6 +48,12 @@
       color: darkgray;
     }
   }
+
+  mat-slider {
+    width: 20rem;
+    max-width: 90%;
+  }
+
   #previousList {
     overflow-y: scroll;
     max-height: 30vh;

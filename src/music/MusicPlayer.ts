@@ -20,6 +20,9 @@ export class MusicPlayer {
 
   private observers: PlayerObserver[] = [];
 
+  private url: string = null;
+  private startingSeconds: number = 0;
+
   constructor(private guild: Guild) {
   }
 
@@ -28,9 +31,27 @@ export class MusicPlayer {
   }
 
   public play(url: string) {
-    this.stop();
+    this.url = url;
     const stream = YoutubeService.getInstance().getStream(url);
+    this.startingSeconds = 0;
     const dispatcher = this.voiceConnection.play(stream, {highWaterMark: 1});
+    this.registerListeners(dispatcher);
+  }
+
+  public seek(seconds: number): void {
+    if (this.url != null) {
+      this.startingSeconds = seconds;
+      const stream = YoutubeService.getInstance().getStream(this.url + '&start=' + seconds);
+      if (this.isCurrentlyPlaying()) {
+        this.dispatcher.removeAllListeners();
+      }
+      const dispatcher = this.voiceConnection.play(stream, {highWaterMark: 1, seek: seconds});
+      this.forObservers(observer => observer.onSeek())
+      this.registerListeners(dispatcher);
+    }
+  }
+
+  private registerListeners(dispatcher: StreamDispatcher): void {
     dispatcher.on("debug", (information: string) => this.forObservers(observer => observer.onDebug(information)));
     dispatcher.on("start", () => this.forObservers(observer => observer.onStart()));
     dispatcher.on("finish", () => this.forObservers(observer => observer.onEnd()));
@@ -68,10 +89,11 @@ export class MusicPlayer {
   }
 
   public getPosition(): number {
-    return Math.floor(this.dispatcher.streamTime / 1000);
+    return Math.floor(this.dispatcher.streamTime / 1000) + this.startingSeconds;
   }
 
   public stop() {
+    this.url = null;
     if (this.isCurrentlyPlaying()) {
       this.dispatcher.end();
       this.dispatcher.removeAllListeners();

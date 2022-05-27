@@ -31,7 +31,8 @@ import { SearchComponent } from './search/search.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import { QueueComponent } from './queue/queue.component';
 import {ScrollingModule} from '@angular/cdk/scrolling';
-import {MatExpansionModule} from "@angular/material/expansion";
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatSliderModule} from '@angular/material/slider';
 
 const config: SocketIoConfig = {url: getUrl(), options: {}};
 
@@ -69,7 +70,8 @@ const config: SocketIoConfig = {url: getUrl(), options: {}};
     DragDropModule,
     MatTabsModule,
     ScrollingModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatSliderModule
   ],
   providers: [],
   bootstrap: [AppComponent]

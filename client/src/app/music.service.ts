@@ -121,6 +121,10 @@ export class MusicService {
     this.http.get(this.baseUrl + '/' + this.guildId + '/skipBack').pipe(this.handleError()).subscribe();
   }
 
+  seek(seconds: number) {
+    this.http.get(this.baseUrl + '/' + this.guildId + '/seek/' + encodeURIComponent(seconds)).pipe(this.handleError()).subscribe();
+  }
+
   restart() {
     this.http.get(this.baseUrl + '/' + this.guildId + '/restart').pipe(this.handleError()).subscribe();
   }

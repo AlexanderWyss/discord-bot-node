@@ -5,6 +5,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {TrackInfoEvent} from '../track-info/track-info.component';
 import {CdkDragDrop, copyArrayItem, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {ClearPlaylistComponent} from '../clear-playlist/clear-playlist.component';
+import {MatSliderChange} from '@angular/material/slider';
 
 @Component({
   selector: 'app-queue',
@@ -16,6 +17,8 @@ export class QueueComponent implements OnInit, OnDestroy {
   @Input() searchResult: Array<TrackInfo | ShelfInfo | PlaylistInfo> = [];
   queueInfo: QueueInfo;
   counter;
+  isSeeking = false;
+  private seekTimeout: number;
 
   constructor(private musicService: MusicService,
               private dialog: MatDialog) {
@@ -25,8 +28,8 @@ export class QueueComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.musicService.onTracks().subscribe(queueInfo => this.queueInfo = queueInfo);
     this.counter = setInterval(() => {
-      if (this.queueInfo && this.queueInfo.currentTrack && !this.queueInfo.currentTrack.paused
-        && this.queueInfo.currentTrack.position !== null) {
+      if (this.queueInfo && this.queueInfo.currentTrack && this.queueInfo.currentTrack.id != null && !this.queueInfo.currentTrack.paused
+        && this.queueInfo.currentTrack.position !== null && !this.isSeeking) {
         this.queueInfo.currentTrack.position++;
       }
     }, 1000);
@@ -117,5 +120,25 @@ export class QueueComponent implements OnInit, OnDestroy {
         this.musicService.clearPlaylist();
       }
     });
+  }
+
+  seek(event: MatSliderChange) {
+    this.clearSeekTimeout();
+    this.seekTimeout = setTimeout(() =>
+      this.musicService.seek(event.value), 250);
+    this.isSeeking = false;
+  }
+
+  whileSeeking(value: number) {
+    this.clearSeekTimeout();
+    this.isSeeking = true;
+    this.queueInfo.currentTrack.position = value;
+  }
+
+  private clearSeekTimeout() {
+    if (this.seekTimeout != null) {
+      clearTimeout(this.seekTimeout);
+      this.seekTimeout = null;
+    }
   }
 }

@@ -72,6 +72,10 @@ export class GuildMusicManager {
     this.trackScheduler.playPrevious();
   }
 
+  public seek(seconds: number): void {
+    this.musicPlayer.seek(seconds);
+  }
+
   public pause(): void {
     this.trackScheduler.pause();
   }
