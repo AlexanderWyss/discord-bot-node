@@ -7,12 +7,18 @@
   <small>{{queueInfo?.currentTrack?.position | minuteSeconds}}
     /{{queueInfo?.currentTrack?.duration | minuteSeconds}}</small>
   <div>
-    <mat-slider min="0" [max]="queueInfo?.currentTrack?.duration != null ? queueInfo.currentTrack.duration : 0"
+    <mat-slider class="seekSlider" min="0"
+                [max]="queueInfo?.currentTrack?.duration != null ? queueInfo.currentTrack.duration : 0"
                 [(ngModel)]="queueInfo.currentTrack.position"
                 (change)="seek($event)" (input)="whileSeeking($event.value)" color="primary"></mat-slider>
   </div>
   <div class="buttons">
-    <button mat-icon-button class="dummy">
+    <button mat-icon-button matRipple #volumeButtonRipple="matRipple" (click)="toggleVolumeDisplay()" (mouseover)="volumeHover()" (mouseout)="volumeHoverEnd()"
+            [disableRipple]="true"
+            [matRippleDisabled]="true"
+            cdkOverlayOrigin
+            #volumeButton="cdkOverlayOrigin">
+      <mat-icon>volume_up</mat-icon>
     </button>
     <button mat-icon-button class="dummy">
     </button>
@@ -56,3 +62,20 @@
   <app-track-info *ngFor="let track of queueInfo?.tracks" [track]="track" [events]="['REMOVE']"
                   (event)="trackInfoEvent($event)"></app-track-info>
 </div>
+
+<ng-template cdkConnectedOverlay
+             [cdkConnectedOverlayOrigin]="volumeButton"
+             [cdkConnectedOverlayOpen]="volumeOpenHover || volumeOpenToggled"
+             [cdkConnectedOverlayPositions]="[{
+                 originX: 'center',
+                 originY: 'top',
+                 overlayX: 'center',
+                 overlayY: 'bottom'
+                 }]">
+  <mat-card class="volumeSlider" (mouseover)="volumeHover()" (mouseout)="volumeHoverEnd()">
+    <mat-slider vertical min="0" max="150" thumbLabel
+                [(ngModel)]="queueInfo.currentTrack.volume"
+                (change)="setVolume($event.value)" (input)="whileVolumeChange($event.value)"
+                color="primary"></mat-slider>
+  </mat-card>
+</ng-template>

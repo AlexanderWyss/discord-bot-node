@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {PlaylistInfo, QueueInfo, QueueType, ShelfInfo, TrackInfo} from '../models';
 import {MusicService} from '../music.service';
 import {MatDialog} from '@angular/material/dialog';
@@ -6,6 +6,7 @@ import {TrackInfoEvent} from '../track-info/track-info.component';
 import {CdkDragDrop, copyArrayItem, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {ClearPlaylistComponent} from '../clear-playlist/clear-playlist.component';
 import {MatSliderChange} from '@angular/material/slider';
+import {MatRipple, RippleRef} from '@angular/material/core';
 
 @Component({
   selector: 'app-queue',
@@ -19,6 +20,12 @@ export class QueueComponent implements OnInit, OnDestroy {
   counter;
   isSeeking = false;
   private seekTimeout: number;
+  private volumeTimeout: number;
+  volumeOpenHover = false;
+  volumeOpenToggled = false;
+  private volumeHoverTimeout: number;
+  @ViewChild('volumeButtonRipple') volumeButtonRipple: MatRipple;
+  private volumeButtonRippleRef: RippleRef;
 
   constructor(private musicService: MusicService,
               private dialog: MatDialog) {
@@ -139,6 +146,51 @@ export class QueueComponent implements OnInit, OnDestroy {
     if (this.seekTimeout != null) {
       clearTimeout(this.seekTimeout);
       this.seekTimeout = null;
+    }
+  }
+
+  setVolume(volume: number) {
+    this.clearVolumeTimeout();
+    this.volumeTimeout = setTimeout(() =>
+      this.musicService.setVolume(volume), 250);
+  }
+
+  whileVolumeChange(value: number) {
+    this.clearSeekTimeout();
+  }
+
+  private clearVolumeTimeout() {
+    if (this.volumeTimeout != null) {
+      clearTimeout(this.volumeTimeout);
+      this.volumeTimeout = null;
+    }
+  }
+
+  toggleVolumeDisplay() {
+    this.volumeOpenToggled = !this.volumeOpenToggled;
+    if (this.volumeOpenToggled) {
+      this.volumeButtonRippleRef = this.volumeButtonRipple.launch({persistent: true, centered: true, radius: 20});
+    } else if (this.volumeButtonRippleRef) {
+      this.volumeButtonRippleRef.fadeOut();
+    }
+  }
+
+  volumeHover() {
+    this.volumeOpenHover = true;
+    this.clearVolumeHoverTimeout();
+  }
+
+  volumeHoverEnd() {
+    this.clearVolumeHoverTimeout();
+    this.volumeHoverTimeout = setTimeout(() =>
+      this.volumeOpenHover = false, 250);
+  }
+
+
+  private clearVolumeHoverTimeout() {
+    if (this.volumeHoverTimeout != null) {
+      clearTimeout(this.volumeHoverTimeout);
+      this.volumeHoverTimeout = null;
     }
   }
 }

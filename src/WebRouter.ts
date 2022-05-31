@@ -54,6 +54,9 @@ export class WebRouter {
     this.router.get("/:guildId/seek/:seconds", (req: any, res: any, next: any) => {
       this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).seek(parseInt(req.params.seconds, 10)), res);
     });
+    this.router.get("/:guildId/volume/:volume", (req: any, res: any, next: any) => {
+      this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).setVolume(parseInt(req.params.volume, 10)), res);
+    });
     this.router.get("/:guildId/restart", (req: any, res: any, next: any) => {
       this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).restart(), res);
     });

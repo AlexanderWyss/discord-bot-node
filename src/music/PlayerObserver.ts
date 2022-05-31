@@ -1,15 +1,17 @@
 export interface PlayerObserver {
-    onDebug(information: string): void;
+  onDebug(information: string): void;
 
-    onEnd(): void;
+  onEnd(): void;
 
-    onError(err: Error): void;
+  onError(err: Error): void;
 
-    onSpeaking(value: boolean): void;
+  onSpeaking(value: boolean): void;
 
-    onStart(): void;
+  onStart(): void;
 
-    onTogglePause(value: boolean): void;
+  onTogglePause(value: boolean): void;
 
-    onSeek(): void;
+  onSeek(): void;
+
+  onVolumeChange(): void;
 }

@@ -25,6 +25,10 @@ export class TrackScheduler implements PlayerObserver {
     this.updateObservers();
   }
 
+  public onVolumeChange(): void {
+    this.updateObservers();
+  }
+
   public async playNext(fromEvent = false) {
     if (this.musicPlayer.isConnected()) {
       let trackInfo = this.tracks.shift();
@@ -182,6 +186,7 @@ export class TrackScheduler implements PlayerObserver {
     return {
       paused: this.musicPlayer.isCurrentlyPlaying() ? this.isPaused() : true,
       position: this.musicPlayer.isCurrentlyPlaying() ? this.musicPlayer.getPosition() : NaN,
+      volume: this.musicPlayer.getVolume(),
       ...this.currentlyPlaying
     };
   }

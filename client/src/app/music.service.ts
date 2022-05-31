@@ -125,6 +125,10 @@ export class MusicService {
     this.http.get(this.baseUrl + '/' + this.guildId + '/seek/' + encodeURIComponent(seconds)).pipe(this.handleError()).subscribe();
   }
 
+  setVolume(volume: number) {
+    this.http.get(this.baseUrl + '/' + this.guildId + '/volume/' + encodeURIComponent(volume)).pipe(this.handleError()).subscribe();
+  }
+
   restart() {
     this.http.get(this.baseUrl + '/' + this.guildId + '/restart').pipe(this.handleError()).subscribe();
   }

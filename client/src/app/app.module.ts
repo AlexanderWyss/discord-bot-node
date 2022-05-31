@@ -8,31 +8,34 @@ import {PlayerComponent} from './player/player.component';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {getUrl} from './music.service';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TrackInfoComponent } from './track-info/track-info.component';
-import { MinuteSecondsPipe } from './minute-seconds.pipe';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {TrackInfoComponent} from './track-info/track-info.component';
+import {MinuteSecondsPipe} from './minute-seconds.pipe';
 import {MatButtonModule} from '@angular/material/button';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {MatCardModule} from '@angular/material/card';
-import { BookmarkCreatorComponent } from './bookmark-creator/bookmark-creator.component';
+import {BookmarkCreatorComponent} from './bookmark-creator/bookmark-creator.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {ClipboardModule} from '@angular/cdk/clipboard';
-import { JoinChannelComponent } from './join-channel/join-channel.component';
+import {JoinChannelComponent} from './join-channel/join-channel.component';
 import {MatListModule} from '@angular/material/list';
-import { GuildSelectComponent } from './guild-select/guild-select.component';
+import {GuildSelectComponent} from './guild-select/guild-select.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import { ClearPlaylistComponent } from './clear-playlist/clear-playlist.component';
-import { SearchComponent } from './search/search.component';
+import {ClearPlaylistComponent} from './clear-playlist/clear-playlist.component';
+import {SearchComponent} from './search/search.component';
 import {MatTabsModule} from '@angular/material/tabs';
-import { QueueComponent } from './queue/queue.component';
+import {QueueComponent} from './queue/queue.component';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatSliderModule} from '@angular/material/slider';
+import {PortalModule} from '@angular/cdk/portal';
+import {OverlayModule} from '@angular/cdk/overlay';
+import {MatRippleModule} from '@angular/material/core';
 
 const config: SocketIoConfig = {url: getUrl(), options: {}};
 
@@ -71,7 +74,10 @@ const config: SocketIoConfig = {url: getUrl(), options: {}};
     MatTabsModule,
     ScrollingModule,
     MatExpansionModule,
-    MatSliderModule
+    MatSliderModule,
+    PortalModule,
+    OverlayModule,
+    MatRippleModule
   ],
   providers: [],
   bootstrap: [AppComponent]

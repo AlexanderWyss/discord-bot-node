@@ -22,6 +22,7 @@ export class MusicPlayer {
 
   private url: string = null;
   private startingSeconds: number = 0;
+  private volume: number = 20;
 
   constructor(private guild: Guild) {
   }
@@ -35,7 +36,7 @@ export class MusicPlayer {
     this.url = url;
     const stream = YoutubeService.getInstance().getStream(url);
     this.startingSeconds = 0;
-    const dispatcher = this.voiceConnection.play(stream, {highWaterMark: 1});
+    const dispatcher = this.voiceConnection.play(stream, {highWaterMark: 1, volume: this.getVolumeInternal()});
     this.registerListeners(dispatcher);
   }
 
@@ -47,7 +48,11 @@ export class MusicPlayer {
         this.dispatcher.removeAllListeners();
         this.dispatcher.end();
       }
-      const dispatcher = this.voiceConnection.play(stream, {highWaterMark: 1, seek: seconds});
+      const dispatcher = this.voiceConnection.play(stream, {
+        highWaterMark: 1,
+        seek: seconds,
+        volume: this.getVolumeInternal()
+      });
       this.forObservers(observer => observer.onSeek())
       this.registerListeners(dispatcher);
     }
@@ -94,6 +99,23 @@ export class MusicPlayer {
     return Math.floor(this.dispatcher.streamTime / 1000) + this.startingSeconds;
   }
 
+  public getVolume(): number {
+    return this.volume;
+  }
+
+  public setVolume(volume: number): void {
+    volume = Math.min(150, Math.abs(volume));
+    this.volume = volume;
+    if (this.isCurrentlyPlaying() && this.dispatcher.volumeEditable) {
+      this.dispatcher.setVolume(this.getVolumeInternal());
+    }
+    this.forObservers(observer => observer.onVolumeChange())
+  }
+
+  private getVolumeInternal() {
+    return this.volume / 100;
+  }
+
   public stop() {
     this.url = null;
     if (this.isCurrentlyPlaying()) {
@@ -101,6 +123,7 @@ export class MusicPlayer {
       this.dispatcher.removeAllListeners();
     }
   }
+
   private forObservers(func: (observer: PlayerObserver) => void) {
     for (const observer of this.observers) {
       func(observer);

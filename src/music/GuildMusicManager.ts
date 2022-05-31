@@ -76,6 +76,10 @@ export class GuildMusicManager {
     this.musicPlayer.seek(seconds);
   }
 
+  public setVolume(volume: number): void {
+    this.musicPlayer.setVolume(volume);
+  }
+
   public pause(): void {
     this.trackScheduler.pause();
   }

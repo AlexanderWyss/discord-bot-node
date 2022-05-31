@@ -27,6 +27,7 @@ export interface PlaylistInfo {
 export interface CurrentTrackInfo extends TrackInfo {
   readonly paused: boolean;
   readonly position: number;
+  readonly volume: number;
 }
 
 export type QueueType = 'previous' | 'queue';
