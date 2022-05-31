@@ -156,7 +156,7 @@ export class QueueComponent implements OnInit, OnDestroy {
   }
 
   whileVolumeChange(value: number) {
-    this.clearSeekTimeout();
+    this.clearVolumeTimeout();
   }
 
   private clearVolumeTimeout() {
@@ -176,8 +176,8 @@ export class QueueComponent implements OnInit, OnDestroy {
   }
 
   volumeHover() {
-    this.volumeOpenHover = true;
     this.clearVolumeHoverTimeout();
+    this.volumeOpenHover = true;
   }
 
   volumeHoverEnd() {
