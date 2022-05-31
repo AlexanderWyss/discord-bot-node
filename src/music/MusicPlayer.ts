@@ -31,6 +31,7 @@ export class MusicPlayer {
   }
 
   public play(url: string) {
+    this.stop();
     this.url = url;
     const stream = YoutubeService.getInstance().getStream(url);
     this.startingSeconds = 0;
@@ -44,6 +45,7 @@ export class MusicPlayer {
       const stream = YoutubeService.getInstance().getStream(this.url + '&start=' + seconds);
       if (this.isCurrentlyPlaying()) {
         this.dispatcher.removeAllListeners();
+        this.dispatcher.end();
       }
       const dispatcher = this.voiceConnection.play(stream, {highWaterMark: 1, seek: seconds});
       this.forObservers(observer => observer.onSeek())
@@ -99,7 +101,6 @@ export class MusicPlayer {
       this.dispatcher.removeAllListeners();
     }
   }
-
   private forObservers(func: (observer: PlayerObserver) => void) {
     for (const observer of this.observers) {
       func(observer);

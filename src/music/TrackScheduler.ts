@@ -25,21 +25,25 @@ export class TrackScheduler implements PlayerObserver {
     this.updateObservers();
   }
 
-  public async playNext() {
+  public async playNext(fromEvent = false) {
     if (this.musicPlayer.isConnected()) {
       let trackInfo = this.tracks.shift();
       if (!trackInfo && this.autoRadio) {
         await this.musicManager.radio(this.currentlyPlaying.url, false);
         trackInfo = this.tracks.shift();
       }
-      if (!trackInfo && this.repeat && this.previousTracks.length > 0) {
-        if (this.currentlyPlaying) {
-          this.previousTracks.unshift(this.currentlyPlaying);
-          this.currentlyPlaying = null;
+      if (!trackInfo && this.repeat) {
+        if (this.previousTracks.length > 0) {
+          if (this.currentlyPlaying) {
+            this.previousTracks.unshift(this.currentlyPlaying);
+            this.currentlyPlaying = null;
+          }
+          this.tracks = this.previousTracks.reverse();
+          this.previousTracks = [];
+          trackInfo = this.tracks.shift();
+        } else if (this.currentlyPlaying && fromEvent) {
+          return this.restart();
         }
-        this.tracks = this.previousTracks.reverse();
-        this.previousTracks = [];
-        trackInfo = this.tracks.shift();
       }
       if (trackInfo) {
         if (this.currentlyPlaying) {
@@ -56,17 +60,21 @@ export class TrackScheduler implements PlayerObserver {
     }
   }
 
-  public playPrevious() {
+  public playPrevious(fromEvent = false) {
     if (this.musicPlayer.isConnected()) {
       let trackInfo = this.previousTracks.shift();
-      if (!trackInfo && this.repeat && this.tracks.length > 0) {
-        if (this.currentlyPlaying) {
-          this.tracks.unshift(this.currentlyPlaying);
-          this.currentlyPlaying = null;
+      if (!trackInfo && this.repeat) {
+        if (this.tracks.length > 0) {
+          if (this.currentlyPlaying) {
+            this.tracks.unshift(this.currentlyPlaying);
+            this.currentlyPlaying = null;
+          }
+          this.previousTracks = this.tracks.reverse();
+          this.tracks = [];
+          trackInfo = this.previousTracks.shift();
+        } else if (this.currentlyPlaying && fromEvent) {
+          return this.restart();
         }
-        this.previousTracks = this.tracks.reverse();
-        this.tracks = [];
-        trackInfo = this.previousTracks.shift();
       }
       if (trackInfo) {
         if (this.currentlyPlaying) {
@@ -127,16 +135,22 @@ export class TrackScheduler implements PlayerObserver {
   }
 
   public pause() {
+    this.musicPlayer.validateCurrentlyPlaying();
     this.musicPlayer.pause();
   }
 
   public resume() {
-    this.musicPlayer.resume();
+    if (this.currentlyPlaying && !this.musicPlayer.isCurrentlyPlaying()) {
+      this.restart();
+    } else {
+      this.musicPlayer.validateCurrentlyPlaying();
+      this.musicPlayer.resume();
+    }
   }
 
   public async onEnd(): Promise<void> {
     try {
-      await this.playNext();
+      await this.playNext(true);
     } catch (e) {
       console.log(e);
     }
@@ -166,7 +180,7 @@ export class TrackScheduler implements PlayerObserver {
 
   public getCurrentlyPlaying(): CurrentTrackInfo {
     return {
-      paused: this.musicPlayer.isCurrentlyPlaying() ? this.isPaused() : false,
+      paused: this.musicPlayer.isCurrentlyPlaying() ? this.isPaused() : true,
       position: this.musicPlayer.isCurrentlyPlaying() ? this.musicPlayer.getPosition() : NaN,
       ...this.currentlyPlaying
     };

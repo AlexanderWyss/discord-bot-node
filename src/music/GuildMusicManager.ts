@@ -85,7 +85,6 @@ export class GuildMusicManager {
   }
 
   public togglePause(): void {
-    this.musicPlayer.validateCurrentlyPlaying();
     if (this.trackScheduler.isPaused()) {
       this.resume();
     } else {
