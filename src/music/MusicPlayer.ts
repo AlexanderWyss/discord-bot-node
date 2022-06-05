@@ -25,6 +25,9 @@ export class MusicPlayer {
   private volume: number = 20;
 
   constructor(private guild: Guild) {
+    if (process.env.DEFAULT_VOLUME != null) {
+      this.setVolume(parseInt(process.env.DEFAULT_VOLUME, 10));
+    }
   }
 
   public register(observer: PlayerObserver) {
@@ -105,11 +108,15 @@ export class MusicPlayer {
 
   public setVolume(volume: number): void {
     volume = Math.min(150, Math.abs(volume));
-    this.volume = volume;
-    if (this.isCurrentlyPlaying() && this.dispatcher.volumeEditable) {
-      this.dispatcher.setVolume(this.getVolumeInternal());
+    if (!isNaN(volume)) {
+      this.volume = volume;
+      if (this.isCurrentlyPlaying() && this.dispatcher.volumeEditable) {
+        this.dispatcher.setVolume(this.getVolumeInternal());
+      }
+      this.forObservers(observer => observer.onVolumeChange())
+    } else {
+      console.error(`Volume ${volume} couldn't be applied.`);
     }
-    this.forObservers(observer => observer.onVolumeChange())
   }
 
   private getVolumeInternal() {

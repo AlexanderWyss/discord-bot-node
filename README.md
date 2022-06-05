@@ -18,6 +18,7 @@ OWNER=<Discord owner User Id>
 URL=<url/ip of this server in format http(s)://foo.bar:port>
 PORT=<port to start server on (Default 3000)>
 PREFIX=<Discord bot command prefix>
+DEFAULT_VOLUME=<0-150 (optional: default 20)>
 ```
 
 Build the server first then the client.
