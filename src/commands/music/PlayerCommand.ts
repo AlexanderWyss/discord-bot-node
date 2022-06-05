@@ -9,7 +9,7 @@ export class PlayerCommand extends SafeCommand {
       name: "player",
       group: "music",
       memberName: "player",
-      description: "Get the Player Url for this Guild",
+      description: "Get the Player Url for this Guild. " + process.env.URL + "/guilds",
       examples: ["player"]
     });
   }
