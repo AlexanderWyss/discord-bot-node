@@ -12,7 +12,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@discordjs/opus": "^0.7.0",
+    "@discordjs/opus": "^0.8.0",
     "@types/cors": "^2.8.12",
     "@types/he": "^1.1.2",
     "@types/socket.io": "^2.1.13",
