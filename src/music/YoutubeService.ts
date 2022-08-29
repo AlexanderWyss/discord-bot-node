@@ -5,8 +5,8 @@ import ytsr, {Playlist, Shelf, Video, Item as ytsrItem} from "ytsr";
 import {PlaylistInfo, ShelfInfo, TrackInfo} from "./TrackInfo";
 
 export class YoutubeService {
-
   public static currentId = 0;
+  private readonly radioMaxLength: number = 600;
 
   public static getInstance() {
     if (!this.instance) {
@@ -34,6 +34,9 @@ export class YoutubeService {
   }
 
   private constructor() {
+    if (process.env.RADIO_MAX_VIDEO_LENGTH != null) {
+      this.radioMaxLength = parseInt(process.env.RADIO_MAX_VIDEO_LENGTH, 10);
+    }
   }
 
   public getInfo(param: string): Promise<TrackInfo | TrackInfo[]> {
@@ -60,7 +63,15 @@ export class YoutubeService {
   public radio(url: string, includeCurrent: boolean): Promise<TrackInfo[]> {
     if (ytdl.validateURL(url)) {
       return ytdl.getBasicInfo(url).then(info => {
-        const tracks = info.related_videos.map(related => this.parseReleatedVideo(related));
+        let tracks = info.related_videos.map(related => this.parseReleatedVideo(related));
+        if (this.radioMaxLength) {
+          const filteredTracks = tracks.filter(track => track.duration <= this.radioMaxLength);
+          if (filteredTracks.length !== 0) {
+            tracks = filteredTracks;
+          } else {
+            console.log("Radio filter ignored. No track matches length criteria.")
+          }
+        }
         if (includeCurrent) {
           tracks.unshift(this.parseVideoInfo(info));
         }
