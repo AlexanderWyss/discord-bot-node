@@ -63,7 +63,7 @@ export class YoutubeService {
   public radio(url: string, includeCurrent: boolean): Promise<TrackInfo[]> {
     if (ytdl.validateURL(url)) {
       return ytdl.getBasicInfo(url).then(info => {
-        let tracks = info.related_videos.map(related => this.parseReleatedVideo(related));
+        let tracks = info.related_videos.map(related => this.parseReleatedVideo(related)).filter(track => track.duration);
         if (this.radioMaxLength) {
           const filteredTracks = tracks.filter(track => track.duration <= this.radioMaxLength);
           if (filteredTracks.length !== 0) {
@@ -84,7 +84,7 @@ export class YoutubeService {
 
   public getPlaylistTracks(param: string): Promise<TrackInfo[]> {
     return ytpl(param)
-      .then(playlist => playlist.items.filter(item => item.author !== null && item.duration !== null))
+      .then(playlist => playlist.items.filter(item => item.author && item.duration))
       .then(items => items.map(item => this.parsePlaylistItem(item as ytplItem)));
   }
 
@@ -103,7 +103,12 @@ export class YoutubeService {
     if (item.type === "shelf") {
       return this.parseShelfVertical(item);
     } else if (item.type === "video") {
-      return this.parseVideo(item as Video);
+      const trackInfo = this.parseVideo(item as Video);
+      if (trackInfo.duration) {
+        return trackInfo;
+      } else {
+        return undefined;
+      }
     } else if (item.type === "playlist") {
       return this.parsePlaylist(item as Playlist);
     }
@@ -115,7 +120,7 @@ export class YoutubeService {
     return {
       type: "shelf",
       title: shelf.title,
-      items: shelf.items.filter(item => item.type === 'video').map(item => this.parseVideo(item as Video)),
+      items: shelf.items.filter(item => item.type === 'video').map(item => this.parseVideo(item as Video)).filter(track => track.duration),
       thumbnailUrl: firstVideo ? firstVideo.bestThumbnail.url : ''
     };
   }
@@ -146,7 +151,11 @@ export class YoutubeService {
   private getVideoInfo(url: string): Promise<TrackInfo> {
     return ytdl.getBasicInfo(url).then(video => {
       if (video) {
-        return this.parseVideoInfo(video);
+        const trackInfo = this.parseVideoInfo(video);
+        if (!trackInfo.duration) {
+          throw new Error("Video not supported.");
+        }
+        return trackInfo;
       } else {
         throw new Error("Video not found");
       }
