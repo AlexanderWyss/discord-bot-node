@@ -31,7 +31,7 @@
     "he": "^1.2.0",
     "libsodium-wrappers": "^0.7.10",
     "morgan": "~1.10.0",
-    "socket.io": "^2.4.1",
+    "socket.io": "^2.5.0",
     "sqlite": "^4.1.1",
     "ytdl-core": "4.9.2",
     "ytpl": "^2.3.0",
