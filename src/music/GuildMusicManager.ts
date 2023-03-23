@@ -24,13 +24,6 @@ export class GuildMusicManager {
       throw new Error("You must be in a channel.");
     }
     return this.musicPlayer.join(channel.id);
-    /*  TODO
-        connection.on(VoiceConnectionStatus.Ready, () => {
-        if (this.trackScheduler.getCurrentlyPlaying() && this.trackScheduler.getCurrentlyPlaying().url) {
-          this.restart();
-        }
-        return val;
-     */
   }
 
   public leave(): void {
