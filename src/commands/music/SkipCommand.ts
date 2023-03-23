@@ -1,7 +1,4 @@
-import {CommandoMessage} from "discord.js-commando";
-import {Bot} from "../../Bot";
-import {SafeCommand} from "../SafeCommand";
-
+/*
 export class SkipCommand extends SafeCommand {
 
   public constructor(private bot: Bot) {
@@ -33,3 +30,4 @@ export class SkipCommand extends SafeCommand {
     }
   }
 }
+*/

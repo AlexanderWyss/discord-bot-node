@@ -1,7 +1,4 @@
-import {CommandoMessage} from "discord.js-commando";
-import {Bot} from "../../Bot";
-import {SafeCommand} from "../SafeCommand";
-
+/*
 export class PlayCommand extends SafeCommand {
 
   public constructor(private bot: Bot) {
@@ -35,4 +32,4 @@ export class PlayCommand extends SafeCommand {
     }
     return this.bot.getGuildMusicManager(message.guild).playNow(args.url, message.member.voice.channel);
   }
-}
+}*/

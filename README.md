@@ -1,5 +1,7 @@
 # Discord Music Bot with Webinterface
 
+## Update to no Discord Api WIP some things are missing
+
 ## Demo
 [Discord Server](https://discord.gg/7v9jSsukYw)
 
@@ -43,6 +45,11 @@ docker run -d -p 80:80 --restart unless-stopped --name discord-bot-node -e NODE_
 ## Web UI
 The Web UI can be used by multiple Users concurrently.
 ![Web UI](https://raw.githubusercontent.com/AlexanderWyss/README-assets/master/discord-bot-node-web-ui.png)
+
+
+## Slash Commands
+The slash commands must initially be register with !RegisterCommands.
+This must be done per guild.
 
 ### Keyboard Shortcuts:
 * `<ctrl> + f` Focus search

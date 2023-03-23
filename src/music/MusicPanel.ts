@@ -1,4 +1,11 @@
-import {DMChannel, Message, MessageEmbed, NewsChannel, ReactionCollector, TextChannel} from "discord.js";
+import {
+  DMChannel,
+  Message,
+  NewsChannel,
+  ReactionCollector,
+  TextBasedChannel,
+  TextChannel
+} from "discord.js";
 import he from "he";
 import {ReactionManager} from "./ReactionManager";
 import {TrackInfo} from "./TrackInfo";
@@ -12,8 +19,8 @@ export class MusicPanel implements TrackSchedulerObserver {
   constructor(private trackScheduler: TrackScheduler, private reactionManager: ReactionManager) {
   }
 
-  public start(channel: TextChannel | DMChannel | NewsChannel) {
-    this.trackScheduler.register(this);
+  public start(channel: TextBasedChannel) {
+   /* this.trackScheduler.register(this);
     this.message = channel.send({embed: this.buildMessage(this.trackScheduler.getCurrentlyPlaying())});
     this.message.then(message => message.createReactionCollector((reaction, user) =>
       user.id !== channel.client.user.id)
@@ -24,21 +31,21 @@ export class MusicPanel implements TrackSchedulerObserver {
     this.message.then(message => {
         this.reactionManager.addReactions(message);
       }
-    );
+    );*/
   }
 
   public onChange(trackScheduler: TrackScheduler): void {
-    this.message = this.message.then(message => message.edit(this.buildMessage(trackScheduler.getCurrentlyPlaying())));
+   // this.message = this.message.then(message => message.edit(this.buildMessage(trackScheduler.getCurrentlyPlaying())));
   }
 
   public destroy() {
-    this.trackScheduler.deregister(this);
+    /*this.trackScheduler.deregister(this);
     this.collector.stop();
-    this.message.then(message => message.delete()).catch(e => console.error(e));
+    this.message.then(message => message.delete()).catch(e => console.error(e));*/
   }
 
-  private buildMessage(currentlyPlaying: TrackInfo): MessageEmbed {
-    const embed = new MessageEmbed()
+  private buildMessage(currentlyPlaying: TrackInfo) {
+  /*  const embed = new MessageEmbed()
       .setTitle("Music Panel")
       .setColor("#0099ff");
     if (currentlyPlaying && currentlyPlaying.type) {
@@ -47,6 +54,6 @@ export class MusicPanel implements TrackSchedulerObserver {
         .addField("Url", currentlyPlaying.url)
         .setThumbnail(currentlyPlaying.thumbnailUrl);
     }
-    return embed;
+    return embed;*/
   }
 }

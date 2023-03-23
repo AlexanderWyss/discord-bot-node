@@ -1,4 +1,4 @@
-import {DMChannel, Guild, NewsChannel, Snowflake, TextChannel, VoiceChannel, VoiceConnection} from "discord.js";
+import {Guild, Snowflake, TextBasedChannel, VoiceBasedChannel, VoiceChannel} from "discord.js";
 import {ChannelInfo} from "./ChannelInfo";
 import {MusicPanel} from "./MusicPanel";
 import {MusicPlayer} from "./MusicPlayer";
@@ -6,6 +6,7 @@ import {ReactionManager} from "./ReactionManager";
 import {CurrentTrackInfo, QueueType, TrackInfo} from "./TrackInfo";
 import {TrackScheduler} from "./TrackScheduler";
 import {YoutubeService} from "./YoutubeService";
+import {VoiceConnection} from "@discordjs/voice";
 
 export class GuildMusicManager {
   private readonly trackScheduler: TrackScheduler;
@@ -18,27 +19,29 @@ export class GuildMusicManager {
     this.trackScheduler = new TrackScheduler(this.musicPlayer, this);
   }
 
-  public join(channel: VoiceChannel): Promise<VoiceConnection> {
+  public join(channel: VoiceBasedChannel): VoiceConnection {
     if (channel == null) {
       throw new Error("You must be in a channel.");
     }
-    return channel.join().then(val => {
-      if (this.trackScheduler.getCurrentlyPlaying() && this.trackScheduler.getCurrentlyPlaying().url) {
-        this.restart();
-      }
-      return val;
-    });
+    return this.musicPlayer.join(channel.id);
+    /*  TODO
+        connection.on(VoiceConnectionStatus.Ready, () => {
+        if (this.trackScheduler.getCurrentlyPlaying() && this.trackScheduler.getCurrentlyPlaying().url) {
+          this.restart();
+        }
+        return val;
+     */
   }
 
   public leave(): void {
     if (this.isVoiceConnected()) {
       this.pause();
-      this.guild.me.voice.channel.leave();
+      this.musicPlayer.leave();
     }
   }
 
   public async playNow(url: string, channel?: VoiceChannel): Promise<void> {
-    if (channel && this.guild.me.voice.channel == null) {
+    if (channel && !this.isVoiceConnected()) {
       await this.join(channel);
     }
     return YoutubeService.getInstance().getInfo(url).then(trackInfo => this.trackScheduler.now(trackInfo));
@@ -100,7 +103,7 @@ export class GuildMusicManager {
     this.trackScheduler.restart();
   }
 
-  public displayMusicPanel(channel: TextChannel | DMChannel | NewsChannel): void {
+  public displayMusicPanel(channel: TextBasedChannel): void {
     if (this.musicpanel) {
       this.musicpanel.destroy();
     }
@@ -145,7 +148,7 @@ export class GuildMusicManager {
   }
 
   public isVoiceConnected(): boolean {
-    return !!this.guild.me.voice.channel;
+    return this.musicPlayer.isConnected();
   }
 
   public removeTrackById(id: number) {
@@ -153,7 +156,7 @@ export class GuildMusicManager {
   }
 
   public getVoiceChannels(): ChannelInfo[] {
-    return this.guild.channels.cache.filter(channel => channel.type === "voice").map(channel => {
+    return this.guild.channels.cache.filter(channel => channel.isVoiceBased()).map(channel => {
       return {
         id: channel.id,
         name: channel.name
@@ -163,10 +166,10 @@ export class GuildMusicManager {
 
   public joinByChannelId(id: string) {
     const channel = this.guild.channels.resolve(id);
-    if (channel.type === "voice") {
-      return this.join(channel as VoiceChannel);
+    if (channel.isVoiceBased()) {
+      return this.join(channel);
     }
-    return Promise.reject('not a voice channel');
+    throw new Error('not a voice channel');
   }
 
   public toggleRepeat() {
@@ -249,6 +252,6 @@ export class GuildMusicManager {
   }
 
   isBotOnlyMemberInVoiceChannel(): boolean {
-    return this.musicPlayer.isConnected() && this.guild.voice.channel.members.size === 1;
+    return this.isVoiceConnected() && this.musicPlayer.getChannel().members.size === 1;
   }
 }

@@ -1,21 +1,19 @@
-import {Guild, Snowflake, VoiceState} from "discord.js";
-import {CommandoClient} from "discord.js-commando";
-import {JoinCommand} from "./commands/music/JoinCommand";
-import {LeaveCommand} from "./commands/music/LeaveCommand";
-import {MusicPanelCommand} from "./commands/music/MusicPanelCommand";
-import {PauseCommand} from "./commands/music/PauseCommand";
-import {PlayCommand} from "./commands/music/PlayCommand";
-import {PlayerCommand} from "./commands/music/PlayerCommand";
-import {ResumeCommand} from "./commands/music/ResumeCommand";
-import {SkipCommand} from "./commands/music/SkipCommand";
+import {
+  ChatInputCommandInteraction,
+  Client,
+  Events,
+  GatewayIntentBits,
+  Guild,
+  Interaction,
+  Message,
+  Snowflake
+} from "discord.js";
 import {GuildInfo} from "./music/GuildInfo";
 import {GuildMusicManager} from "./music/GuildMusicManager";
+import {CommandManager} from "./commands/Command";
 
 export class Bot {
-
-  public get client(): CommandoClient {
-    return this.commandoClient;
-  }
+  private commandManger: CommandManager;
 
   public static getInstance(): Bot {
     if (!this.bot) {
@@ -32,8 +30,7 @@ export class Bot {
   }
 
   private static bot: Bot;
-
-  private commandoClient: CommandoClient;
+  public client: Client;
   private musicManagers = new Map<Snowflake, GuildMusicManager>();
 
   private constructor() {
@@ -41,30 +38,13 @@ export class Bot {
   }
 
   public start(token: string, owner: string) {
-    this.commandoClient = new CommandoClient({owner, commandPrefix: process.env.PREFIX});
-    this.commandoClient.registry
-      .registerGroups([
-        ["music", "Music"]
-      ])
-      .registerDefaultGroups()
-      .registerDefaultTypes()
-      .registerDefaultCommands({ping: false})
-      .registerCommands([
-        new PlayCommand(this), new JoinCommand(this), new LeaveCommand(this),
-        new SkipCommand(this), new PauseCommand(this), new ResumeCommand(this),
-        new MusicPanelCommand(this), new PlayerCommand(this)
-      ]);
-    this.commandoClient.login(token).then(success => {
-      this.commandoClient.user.setActivity(this.commandoClient.commandPrefix + "Help").catch(err => console.error("Set Activity failed: " + err));
+    this.client = new Client({intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions, GatewayIntentBits.MessageContent]});
+    this.commandManger = new CommandManager(token);
+    this.client.login(token).then(() => {
       console.log("Logged in");
-      this.commandoClient.on('voiceStateUpdate', (oldState: VoiceState | undefined, newState: VoiceState) => {
-        try {
-          this.getGuildMusicManager(newState.guild).onUserChangeVoiceState();
-        } catch (err) {
-          console.error(err);
-        }
-      });
-    }, error => console.error("Login failed: " + error));
+      this.listenToInteractions();
+      this.listenToMessages();
+    }, (error: any) => console.error("Login failed: " + error));
     process.on("exit", () => {
       this.close();
     });
@@ -80,6 +60,62 @@ export class Bot {
       this.close();
       process.exit();
     });
+  }
+
+  private listenToMessages() {
+    this.client.on(Events.MessageCreate, async message => {
+      console.log("=================================================");
+      console.log(`Discord message: \"${message.content}\" from user: ${message.author.id}`);
+      try {
+        await this.handleMessage(message);
+      } catch (err) {
+        console.error(err);
+        await message.channel.send(err.message);
+      }
+      console.log("=================================================");
+    });
+  }
+
+  private async handleMessage(message: Message) {
+    if (message.content === "!RegisterCommands") {
+      await this.commandManger.registerCommands(message.guildId, this.client.user.id);
+    }
+  }
+
+  private listenToInteractions() {
+    this.client.on(Events.InteractionCreate, async interaction => {
+      console.log("=================================================");
+      console.log(`Discord interaction: \"${interaction.type}\" from user: ${interaction.user.id}`);
+      try {
+        if (interaction.isChatInputCommand()) {
+          await this.handleChatInputCommand(interaction);
+        }
+      } catch (err) {
+        console.error(err);
+        await this.sendInteractionResponse(interaction, err.message);
+      }
+      console.log("=================================================");
+    });
+  }
+
+  private async sendInteractionResponse(interaction: Interaction, response: string) {
+    if (interaction.isRepliable()) {
+      await interaction.reply(response);
+    } else {
+      interaction.channel.send(response);
+    }
+  }
+
+  private async handleChatInputCommand(interaction: ChatInputCommandInteraction) {
+    let response = this.commandManger.execute(interaction, this);
+    if (response instanceof Promise) {
+      response = await response;
+    }
+    if (typeof response === "string") {
+      await interaction.reply(response);
+    } else {
+      await interaction.reply("ok");
+    }
   }
 
   public getGuildMusicManager(guild: Guild): GuildMusicManager {
@@ -109,7 +145,7 @@ export class Bot {
   }
 
   public getGuilds(): GuildInfo[] {
-    return this.client.guilds.cache.map(guild => {
+    return this.client.guilds.cache.map((guild: any) => {
       return {
         id: guild.id,
         name: guild.name,

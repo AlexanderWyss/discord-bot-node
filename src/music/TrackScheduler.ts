@@ -139,7 +139,6 @@ export class TrackScheduler implements PlayerObserver {
   }
 
   public pause() {
-    this.musicPlayer.validateCurrentlyPlaying();
     this.musicPlayer.pause();
   }
 
@@ -147,7 +146,6 @@ export class TrackScheduler implements PlayerObserver {
     if (this.currentlyPlaying && !this.musicPlayer.isCurrentlyPlaying()) {
       this.restart();
     } else {
-      this.musicPlayer.validateCurrentlyPlaying();
       this.musicPlayer.resume();
     }
   }
@@ -164,14 +162,6 @@ export class TrackScheduler implements PlayerObserver {
   public async onError(err: Error): Promise<void> {
     console.error(err);
     await this.onEnd();
-  }
-
-  public onDebug(information: string): void {
-    // NOOP
-  }
-
-  public onSpeaking(value: boolean): void {
-    // NOOP
   }
 
   public onStart(): void {

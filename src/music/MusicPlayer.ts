@@ -1,21 +1,42 @@
-import {Guild, StreamDispatcher} from "discord.js";
+import {Guild, VoiceChannel} from "discord.js";
 import {PlayerObserver} from "./PlayerObserver";
 import {YoutubeService} from "./YoutubeService";
+import {
+  AudioPlayerState,
+  AudioPlayerStatus,
+  AudioResource,
+  createAudioPlayer,
+  createAudioResource,
+  getVoiceConnection,
+  joinVoiceChannel,
+  VoiceConnection
+} from "@discordjs/voice";
+import fluentFfmpeg from "fluent-ffmpeg";
+import {Stream} from "stream";
+import ffmpegPath from "ffmpeg-static";
 
 export class MusicPlayer {
+  private player = createAudioPlayer();
+  private _audioResource: AudioResource;
 
   private get voiceConnection() {
-    if (this.guild.voice && this.guild.voice.connection) {
-      return this.guild.voice.connection;
+    const voiceConnection = getVoiceConnection(this.guild.id);
+
+    if (voiceConnection) {
+      return voiceConnection;
     }
     throw new Error("Voice not connected. Add the Bot to a voice channel.");
   }
 
-  private get dispatcher() {
-    if (this.voiceConnection.dispatcher) {
-      return this.voiceConnection.dispatcher;
+  private get audioResource() {
+    if (this._audioResource) {
+      return this._audioResource;
     }
     throw new Error("There isn't any song playing");
+  }
+
+  private set audioResource(audioResource: AudioResource) {
+    this._audioResource = audioResource;
   }
 
   private observers: PlayerObserver[] = [];
@@ -28,6 +49,7 @@ export class MusicPlayer {
     if (process.env.DEFAULT_VOLUME != null) {
       this.setVolume(parseInt(process.env.DEFAULT_VOLUME, 10));
     }
+    this.registerListeners();
   }
 
   public register(observer: PlayerObserver) {
@@ -37,69 +59,98 @@ export class MusicPlayer {
   public play(url: string) {
     this.stop();
     this.url = url;
-    const stream = YoutubeService.getInstance().getStream(url);
     this.startingSeconds = 0;
-    const dispatcher = this.voiceConnection.play(stream, {highWaterMark: 1, volume: this.getVolumeInternal()});
-    this.registerListeners(dispatcher);
+    this.player.play(this.createAudioResource(url));
+    this.forObservers(observer => observer.onStart());
+  }
+
+  private registerListeners(): void {
+    this.player.on(AudioPlayerStatus.Playing, (oldState, newState) => this.handleStartEvent(oldState, newState));
+    this.player.on(AudioPlayerStatus.Buffering, (oldState, newState) => this.handleStartEvent(oldState, newState));
+    this.player.on(AudioPlayerStatus.Idle, () => this.forObservers(observer => {
+      this.audioResource = null;
+      observer.onEnd();
+    }));
+    this.player.on(AudioPlayerStatus.Paused, () => this.forObservers(observer => observer.onTogglePause(true)));
+    this.player.on(AudioPlayerStatus.AutoPaused, () => this.forObservers(observer => observer.onTogglePause(true)));
+    this.player.on("error", (err: Error) => this.forObservers(observer => {
+      this.audioResource = null;
+      observer.onError(err);
+    }));
+  }
+
+  private handleStartEvent(oldState: AudioPlayerState, newState: AudioPlayerState) {
+    if (oldState.status === AudioPlayerStatus.Paused || oldState.status === AudioPlayerStatus.AutoPaused) {
+      this.forObservers(observer => observer.onTogglePause(false));
+    } else if (oldState.status !== AudioPlayerStatus.Playing && oldState.status !== AudioPlayerStatus.Buffering) {
+      this.forObservers(observer => observer.onStart());
+    }
   }
 
   public seek(seconds: number): void {
     if (this.url != null) {
       this.startingSeconds = seconds;
-      const stream = YoutubeService.getInstance().getStream(this.url + '&start=' + seconds);
       if (this.isCurrentlyPlaying()) {
-        this.dispatcher.removeAllListeners();
-        this.dispatcher.end();
+        this.player.stop();
       }
-      const dispatcher = this.voiceConnection.play(stream, {
-        highWaterMark: 1,
-        seek: seconds,
-        volume: this.getVolumeInternal()
-      });
+      this.player.play(this.createAudioResource(this.url, this.startingSeconds));
       this.forObservers(observer => observer.onSeek())
-      this.registerListeners(dispatcher);
     }
   }
 
-  private registerListeners(dispatcher: StreamDispatcher): void {
-    dispatcher.on("debug", (information: string) => this.forObservers(observer => observer.onDebug(information)));
-    dispatcher.on("start", () => this.forObservers(observer => observer.onStart()));
-    dispatcher.on("finish", () => this.forObservers(observer => observer.onEnd()));
-    dispatcher.on("error", (err: Error) => this.forObservers(observer => observer.onError(err)));
-    dispatcher.on("speaking", (value: boolean) => this.forObservers(observer => observer.onSpeaking(value)));
+
+  private createAudioResource(url: string, seek: number = 0) {
+    const stream = YoutubeService.getInstance().getStream(url);
+    if (seek > 0) {
+      const bufferStream = new Stream.PassThrough();
+      fluentFfmpeg({source: stream})
+        .setFfmpegPath(ffmpegPath)
+        .format("opus")
+        .seekInput(seek)
+        .on("error", err => {
+          if (err && err instanceof Error && err.message.includes("Premature close")) {
+            return;
+          }
+          console.error(err)
+        })
+        .stream(bufferStream);
+      this.audioResource = createAudioResource(bufferStream, {inlineVolume: true});
+    } else {
+      this.audioResource = createAudioResource(stream, {inlineVolume: true});
+    }
+    this.audioResource.volume.setVolumeLogarithmic(this.getVolumeInternal())
+    return this.audioResource;
   }
 
   public pause() {
     if (this.isCurrentlyPlaying()) {
-      this.dispatcher.pause();
+      this.player.pause(true);
     }
-    this.forObservers(observer => observer.onTogglePause(this.isPaused()));
   }
 
   public resume() {
     if (this.isCurrentlyPlaying()) {
-      this.dispatcher.resume();
+      this.player.unpause();
     }
-    this.forObservers(observer => observer.onTogglePause(this.isPaused()));
   }
 
   public isPaused(): boolean {
     if (this.isCurrentlyPlaying()) {
-      return this.dispatcher.paused;
+      return this.player.state.status === AudioPlayerStatus.Paused || this.player.state.status === AudioPlayerStatus.AutoPaused;
     }
     return true;
   }
 
   public isCurrentlyPlaying() {
-    return this.isConnected() && this.guild.voice.connection.dispatcher && !this.dispatcher.writableEnded;
+    return this.isConnected() && !!this._audioResource;
   }
 
   public isConnected() {
-    return this.guild && this.guild.voice && this.guild.voice.connection;
+    return !!getVoiceConnection(this.guild.id);
   }
 
   public getPosition(): number {
-    return Math.floor(this.dispatcher.streamTime / 1000) + this.startingSeconds;
+    return Math.floor(this.audioResource.playbackDuration / 1000) + this.startingSeconds;
   }
 
   public getVolume(): number {
@@ -110,8 +161,8 @@ export class MusicPlayer {
     volume = Math.min(150, Math.abs(volume));
     if (!isNaN(volume)) {
       this.volume = volume;
-      if (this.isCurrentlyPlaying() && this.dispatcher.volumeEditable) {
-        this.dispatcher.setVolume(this.getVolumeInternal());
+      if (this.isCurrentlyPlaying()) {
+        this.audioResource.volume.setVolumeLogarithmic(this.getVolumeInternal());
       }
       this.forObservers(observer => observer.onVolumeChange())
     } else {
@@ -126,8 +177,7 @@ export class MusicPlayer {
   public stop() {
     this.url = null;
     if (this.isCurrentlyPlaying()) {
-      this.dispatcher.end();
-      this.dispatcher.removeAllListeners();
+      this.player.stop();
     }
   }
 
@@ -137,7 +187,21 @@ export class MusicPlayer {
     }
   }
 
-  public validateCurrentlyPlaying() {
-    return !!!this.dispatcher;
+  public join(channelId: string): VoiceConnection {
+    const voiceConnection = joinVoiceChannel({
+      channelId,
+      guildId: this.guild.id,
+      adapterCreator: this.guild.voiceAdapterCreator
+    });
+    voiceConnection.subscribe(this.player);
+    return voiceConnection;
+  }
+
+  public leave() {
+    this.voiceConnection.destroy();
+  }
+
+  public getChannel() {
+    return this.guild.channels.cache.get(getVoiceConnection(this.guild.id).joinConfig.channelId) as VoiceChannel;
   }
 }
