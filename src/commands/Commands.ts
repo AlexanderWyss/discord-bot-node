@@ -55,10 +55,23 @@ export const COMMANDS: Command[] = [
   }, {
     data: new SlashCommandBuilder()
       .setName("skip")
-      .setDescription("WIP: Skip to the next/previous song or beginning of the song"),
-    // TODO args
+      .setDescription("Skip to the next song."),
     execute(interaction, bot) {
       return bot.getGuildMusicManager(interaction.guild).skip();
+    }
+  }, {
+    data: new SlashCommandBuilder()
+      .setName("previous")
+      .setDescription("Skip to the previous song."),
+    execute(interaction, bot) {
+      return bot.getGuildMusicManager(interaction.guild).skipBack();
+    }
+  }, {
+    data: new SlashCommandBuilder()
+      .setName("restart")
+      .setDescription("Restart the current song."),
+    execute(interaction, bot) {
+      return bot.getGuildMusicManager(interaction.guild).restart();
     }
   },
 ];
