@@ -44,6 +44,13 @@ export class Bot {
       console.log("Logged in");
       this.listenToInteractions();
       this.listenToMessages();
+      this.client.on(Events.VoiceStateUpdate, (oldState, newState) => {
+        try {
+          this.getGuildMusicManager(newState.guild).onUserChangeVoiceState();
+        } catch (err) {
+          console.error(err);
+        }
+      });
     }, (error: any) => console.error("Login failed: " + error));
     process.on("exit", () => {
       this.close();
@@ -64,7 +71,6 @@ export class Bot {
 
   private listenToMessages() {
     this.client.on(Events.MessageCreate, async message => {
-      console.log(`Discord message: \"${message.content}\" from user: ${message.author.id}`);
       try {
         await this.handleMessage(message);
       } catch (err) {

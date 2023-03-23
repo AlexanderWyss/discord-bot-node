@@ -222,7 +222,6 @@ export class GuildMusicManager {
     }
   }
 
-  // TODO
   onUserChangeVoiceState() {
     if (this.isBotOnlyMemberInVoiceChannel()) {
       this.autoLeaveTimeout = setTimeout(() => {
