@@ -42,14 +42,13 @@ docker run -d -p 80:80 --restart unless-stopped --name discord-bot-node -e NODE_
 ```
 [Docker Hub](https://hub.docker.com/r/alexanderwyss/discord-bot-node)
 
-## Web UI
-The Web UI can be used by multiple Users concurrently.
-![Web UI](https://raw.githubusercontent.com/AlexanderWyss/README-assets/master/discord-bot-node-web-ui.png)
-
-
 ## Slash Commands
 The slash commands must initially be register with !RegisterCommands.
 This must be done per guild.
+
+## Web UI
+The Web UI can be used by multiple Users concurrently.
+![Web UI](https://raw.githubusercontent.com/AlexanderWyss/README-assets/master/discord-bot-node-web-ui.png)
 
 ### Keyboard Shortcuts:
 * `<ctrl> + f` Focus search
