@@ -20,22 +20,21 @@ export const COMMANDS: Command[] = [
   }, {
     data: new SlashCommandBuilder()
       .setName("musicpanel")
-      .setDescription("TODO"),
-    // TODO
+      .setDescription("Display Music Control Panel."),
     execute(interaction, bot) {
       return bot.getGuildMusicManager(interaction.guild).displayMusicPanel(interaction.channel);
     }
   }, {
     data: new SlashCommandBuilder()
       .setName("pause")
-      .setDescription("Pauses the song"),
+      .setDescription("Pauses the song."),
     execute(interaction, bot) {
       return bot.getGuildMusicManager(interaction.guild).pause();
     }
   }, {
     data: new SlashCommandBuilder()
       .setName("play")
-      .setDescription("Play a song now, next or append to queue")
+      .setDescription("Play a song now, next or append to queue.")
       .addStringOption(option =>
         option.setName("url")
           .setDescription("What song do you want to play?")
@@ -80,7 +79,7 @@ export const COMMANDS: Command[] = [
   }, {
     data: new SlashCommandBuilder()
       .setName("resume")
-      .setDescription("Resumes the song"),
+      .setDescription("Resumes the song."),
     execute(interaction, bot) {
       return bot.getGuildMusicManager(interaction.guild).resume();
     }

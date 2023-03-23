@@ -1,59 +1,113 @@
 import {
-  DMChannel,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonInteraction,
+  ButtonStyle,
+  ComponentType,
+  EmbedBuilder,
+  InteractionCollector,
   Message,
-  NewsChannel,
-  ReactionCollector,
-  TextBasedChannel,
-  TextChannel
+  MessageCreateOptions,
+  MessageEditOptions,
+  TextBasedChannel
 } from "discord.js";
 import he from "he";
-import {ReactionManager} from "./ReactionManager";
 import {TrackInfo} from "./TrackInfo";
 import {TrackScheduler} from "./TrackScheduler";
 import {TrackSchedulerObserver} from "./TrackSchedulerObserver";
+import {MessageActionRowComponentBuilder} from "@discordjs/builders";
+import {GuildMusicManager} from "./GuildMusicManager";
 
 export class MusicPanel implements TrackSchedulerObserver {
   private message: Promise<Message>;
-  private collector: ReactionCollector;
+  private static readonly PREVIOUS = "⏮";
+  private static readonly PREVIOUSID = "previous";
+  private static readonly RESTART = "⏪";
+  private static readonly RESTARTID = "restart";
+  private static readonly PAUSE_RESUME = "⏯";
+  private static readonly PAUSE_RESUMEID = "pause";
+  private static readonly SKIP = "⏭";
+  private static readonly SKIPID = "skip";
+  private collector: InteractionCollector<ButtonInteraction>;
 
-  constructor(private trackScheduler: TrackScheduler, private reactionManager: ReactionManager) {
+  constructor(private trackScheduler: TrackScheduler, private musicManager: GuildMusicManager) {
   }
 
   public start(channel: TextBasedChannel) {
-   /* this.trackScheduler.register(this);
-    this.message = channel.send({embed: this.buildMessage(this.trackScheduler.getCurrentlyPlaying())});
-    this.message.then(message => message.createReactionCollector((reaction, user) =>
-      user.id !== channel.client.user.id)
-    ).then(collector => {
-      this.collector = collector;
-      this.collector.on("collect", reaction => this.reactionManager.apply(reaction));
+    this.trackScheduler.register(this);
+    this.message = channel.send(this.buildMessage(this.trackScheduler.getCurrentlyPlaying()));
+    this.message.then(async message => {
+      this.collector = message.createMessageComponentCollector({componentType: ComponentType.Button})
+      this.collector.on("collect", async (interaction: ButtonInteraction) => {
+        try {
+          await interaction.deferUpdate();
+          switch (interaction.customId) {
+            case MusicPanel.PREVIOUSID:
+              this.musicManager.skipBack();
+              break;
+            case MusicPanel.RESTARTID:
+              this.musicManager.restart();
+              break;
+            case MusicPanel.PAUSE_RESUMEID:
+              this.musicManager.togglePause();
+              break;
+            case MusicPanel.SKIPID:
+              await this.musicManager.skip();
+              break;
+            default:
+              console.error(`Unexpected interaction: ` + interaction.customId);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      });
+
+      this.collector.on("end", collected => {
+        console.log("MusicPanel collector closed.");
+      });
     });
-    this.message.then(message => {
-        this.reactionManager.addReactions(message);
-      }
-    );*/
   }
 
   public onChange(trackScheduler: TrackScheduler): void {
-   // this.message = this.message.then(message => message.edit(this.buildMessage(trackScheduler.getCurrentlyPlaying())));
+    this.message = this.message.then(message => message.edit(this.buildMessage(trackScheduler.getCurrentlyPlaying())));
   }
 
   public destroy() {
-    /*this.trackScheduler.deregister(this);
+    this.trackScheduler.deregister(this);
     this.collector.stop();
-    this.message.then(message => message.delete()).catch(e => console.error(e));*/
+    this.message.then(message => message.delete()).catch(e => console.error(e));
   }
 
-  private buildMessage(currentlyPlaying: TrackInfo) {
-  /*  const embed = new MessageEmbed()
+  private buildMessage(currentlyPlaying: TrackInfo): MessageCreateOptions & MessageEditOptions {
+    const embed = new EmbedBuilder()
       .setTitle("Music Panel")
       .setColor("#0099ff");
     if (currentlyPlaying && currentlyPlaying.type) {
-      embed.addField("Title", he.decode(currentlyPlaying.title))
-        .addField("Artist", he.decode(currentlyPlaying.artist))
-        .addField("Url", currentlyPlaying.url)
-        .setThumbnail(currentlyPlaying.thumbnailUrl);
+      embed.addFields(
+        {name: "Title", value: he.decode(currentlyPlaying.title)},
+        {name: "Artist", value: he.decode(currentlyPlaying.artist)},
+        {name: "Url", value: currentlyPlaying.url}
+      ).setThumbnail(currentlyPlaying.thumbnailUrl);
     }
-    return embed;*/
+    const buttons = new ActionRowBuilder<MessageActionRowComponentBuilder>()
+      .addComponents(
+        new ButtonBuilder()
+          .setCustomId(MusicPanel.PREVIOUSID)
+          .setLabel(MusicPanel.PREVIOUS)
+          .setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder()
+          .setCustomId(MusicPanel.RESTARTID)
+          .setLabel(MusicPanel.RESTART)
+          .setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder()
+          .setCustomId(MusicPanel.PAUSE_RESUMEID)
+          .setLabel(MusicPanel.PAUSE_RESUME)
+          .setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder()
+          .setCustomId(MusicPanel.SKIPID)
+          .setLabel(MusicPanel.SKIP)
+          .setStyle(ButtonStyle.Secondary),
+      )
+    return {embeds: [embed], components: [buttons]};
   }
 }

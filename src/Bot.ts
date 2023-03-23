@@ -110,7 +110,7 @@ export class Bot {
     if (typeof response === "string") {
       await interaction.reply(response);
     } else {
-      await interaction.reply("Done.");
+      await interaction.reply({content: "Done.", ephemeral: true});
     }
   }
 

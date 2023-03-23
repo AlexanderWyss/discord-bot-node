@@ -2,7 +2,6 @@ import {Guild, Snowflake, TextBasedChannel, VoiceBasedChannel} from "discord.js"
 import {ChannelInfo} from "./ChannelInfo";
 import {MusicPanel} from "./MusicPanel";
 import {MusicPlayer} from "./MusicPlayer";
-import {ReactionManager} from "./ReactionManager";
 import {CurrentTrackInfo, QueueType, TrackInfo} from "./TrackInfo";
 import {TrackScheduler} from "./TrackScheduler";
 import {YoutubeService} from "./YoutubeService";
@@ -100,7 +99,7 @@ export class GuildMusicManager {
     if (this.musicpanel) {
       this.musicpanel.destroy();
     }
-    this.musicpanel = new MusicPanel(this.trackScheduler, new ReactionManager(this));
+    this.musicpanel = new MusicPanel(this.trackScheduler, this);
     this.musicpanel.start(channel);
   }
 
@@ -223,6 +222,7 @@ export class GuildMusicManager {
     }
   }
 
+  // TODO
   onUserChangeVoiceState() {
     if (this.isBotOnlyMemberInVoiceChannel()) {
       this.autoLeaveTimeout = setTimeout(() => {
