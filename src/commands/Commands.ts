@@ -21,6 +21,7 @@ export const COMMANDS: Command[] = [
     data: new SlashCommandBuilder()
       .setName("musicpanel")
       .setDescription("TODO"),
+    // TODO
     execute(interaction, bot) {
       return bot.getGuildMusicManager(interaction.guild).displayMusicPanel(interaction.channel);
     }
@@ -34,9 +35,40 @@ export const COMMANDS: Command[] = [
   }, {
     data: new SlashCommandBuilder()
       .setName("play")
-      .setDescription("TODO"),
-    // TODO
+      .setDescription("Play a song now, next or append to queue")
+      .addStringOption(option =>
+        option.setName("url")
+          .setDescription("What song do you want to play?")
+          .setRequired(true)
+          .setMinLength(1)
+      )
+      .addStringOption(option =>
+        option.setName("nownextorqueue")
+          .setDescription("When to play it. (Default: now)")
+          .setRequired(false)
+          .setChoices(
+            {
+              name: "now",
+              value: "now"
+            }, {
+              name: "next",
+              value: "next"
+            }, {
+              name: "queue",
+              value: "queue"
+            }
+          )
+      ),
     execute(interaction, bot) {
+      const options = interaction.options;
+      const url = options.getString("url", true);
+      const nowNextOrQueue = options.getString("nownextorqueue", false);
+      if (nowNextOrQueue === "next") {
+        return bot.getGuildMusicManager(interaction.guild).playNext(url);
+      } else if (nowNextOrQueue === "queue") {
+        return bot.getGuildMusicManager(interaction.guild).queue(url);
+      }
+      return bot.getGuildMusicManager(interaction.guild).playNow(url, (interaction.member as GuildMember)?.voice?.channel);
     }
   }, {
     data: new SlashCommandBuilder()

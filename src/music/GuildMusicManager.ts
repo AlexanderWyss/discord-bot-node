@@ -1,4 +1,4 @@
-import {Guild, Snowflake, TextBasedChannel, VoiceBasedChannel, VoiceChannel} from "discord.js";
+import {Guild, Snowflake, TextBasedChannel, VoiceBasedChannel} from "discord.js";
 import {ChannelInfo} from "./ChannelInfo";
 import {MusicPanel} from "./MusicPanel";
 import {MusicPlayer} from "./MusicPlayer";
@@ -33,7 +33,7 @@ export class GuildMusicManager {
     }
   }
 
-  public async playNow(url: string, channel?: VoiceChannel): Promise<void> {
+  public async playNow(url: string, channel?: VoiceBasedChannel): Promise<void> {
     if (channel && !this.isVoiceConnected()) {
       await this.join(channel);
     }
