@@ -11,7 +11,7 @@
 
 [Create bot, get token and add to Discord server](https://github.com/AlexanderWyss/discord-bot-node/blob/master/DiscordBotREADME.md)
 
-Node.js 12.0.0 or newer is required.
+Node.js 16.0.0 or newer is required.
 
 Create .env file or set environment variables in commandline and add NODE_ENV=production to disable .env file.
 ```
