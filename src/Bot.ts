@@ -64,7 +64,6 @@ export class Bot {
 
   private listenToMessages() {
     this.client.on(Events.MessageCreate, async message => {
-      console.log("=================================================");
       console.log(`Discord message: \"${message.content}\" from user: ${message.author.id}`);
       try {
         await this.handleMessage(message);
@@ -72,7 +71,6 @@ export class Bot {
         console.error(err);
         await message.channel.send(err.message);
       }
-      console.log("=================================================");
     });
   }
 
@@ -84,7 +82,6 @@ export class Bot {
 
   private listenToInteractions() {
     this.client.on(Events.InteractionCreate, async interaction => {
-      console.log("=================================================");
       console.log(`Discord interaction: \"${interaction.type}\" from user: ${interaction.user.id}`);
       try {
         if (interaction.isChatInputCommand()) {
@@ -94,7 +91,6 @@ export class Bot {
         console.error(err);
         await this.sendInteractionResponse(interaction, err.message);
       }
-      console.log("=================================================");
     });
   }
 
@@ -114,7 +110,7 @@ export class Bot {
     if (typeof response === "string") {
       await interaction.reply(response);
     } else {
-      await interaction.reply("ok");
+      await interaction.reply("Done.");
     }
   }
 
