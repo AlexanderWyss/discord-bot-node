@@ -19,7 +19,6 @@ TOKEN=<discord token>
 OWNER=<Discord owner User Id>
 URL=<url/ip of this server in format http(s)://foo.bar:port>
 PORT=<port to start server on (Default 3000)>
-PREFIX=<Discord bot command prefix>
 DEFAULT_VOLUME=<0-150 (optional: default 20)>
 RADIO_MAX_VIDEO_LENGTH=<length in seconds, 0 for no max length, Default: 600)
 ```
@@ -38,7 +37,7 @@ If the client was build without prod flag it will always access the server via l
 ## Docker
 Or run with Docker:
 ```
-docker run -d -p 80:80 --restart unless-stopped --name discord-bot-node -e NODE_ENV=production -e PORT=80 -e TOKEN=<discord token> -e OWNER=<discord owner id> -e URL=<url/ip e.g http(s)://foo.bar:port> -e PREFIX=<prefix e.g !> alexanderwyss/discord-bot-node:latest
+docker run -d -p 80:80 --restart unless-stopped --name discord-bot-node -e NODE_ENV=production -e PORT=80 -e TOKEN=<discord token> -e OWNER=<discord owner id> -e URL=<url/ip e.g http(s)://foo.bar:port> alexanderwyss/discord-bot-node:latest
 ```
 [Docker Hub](https://hub.docker.com/r/alexanderwyss/discord-bot-node)
 
