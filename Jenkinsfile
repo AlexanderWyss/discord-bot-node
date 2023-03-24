@@ -6,7 +6,7 @@ node {
     stage('Dependencies Server') {
         sh 'node --version'
         sh 'npm --version'
-        sh 'npm ci --unsafe-perm'
+        sh 'npm ci'
     }
     stage('Build Server') {
         sh 'npm run build'

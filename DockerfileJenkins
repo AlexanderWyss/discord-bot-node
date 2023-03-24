@@ -3,5 +3,5 @@ WORKDIR /usr/src/app
 COPY dist/ dist/
 COPY bin/ bin/
 COPY package*.json ./
-RUN npm ci --production
+RUN npm ci --omit=dev
 CMD [ "node", "./bin/www" ]
