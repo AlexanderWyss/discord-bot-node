@@ -4,6 +4,8 @@ node {
         checkout scm
     }
     stage('Dependencies Server') {
+        sh 'node --version'
+        sh 'npm --version'
         sh 'npm ci --unsafe-perm'
     }
     stage('Build Server') {
