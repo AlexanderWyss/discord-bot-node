@@ -1,11 +1,11 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Channel, GuildInfo, JoinGuild, PlaylistInfo, QueueInfo, QueueType, ShelfInfo, TrackInfo} from './models';
-import {Observable} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Socket} from 'ngx-socket-io';
 import {Title} from '@angular/platform-browser';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatLegacySnackBar as MatSnackBar} from '@angular/material/legacy-snack-bar';
 import {catchError} from 'rxjs/operators';
 import {environment} from '../environments/environment';
 
@@ -149,9 +149,9 @@ export class MusicService {
     this.http.get(this.baseUrl + '/' + this.guildId + '/remove/' + id).pipe(this.handleError()).subscribe();
   }
 
-  search(query: string): Observable<Array<TrackInfo | ShelfInfo | PlaylistInfo>> {
+  search(query: string): Observable<(TrackInfo | ShelfInfo | PlaylistInfo)[]> {
     return this.http.get(this.baseUrl + '/search/' + encodeURIComponent(query))
-      .pipe(this.handleError()) as Observable<Array<TrackInfo | ShelfInfo>>;
+      .pipe(this.handleError()) as Observable<(TrackInfo | ShelfInfo)[]>;
   }
 
   getChannels(): Observable<Channel[]> {
@@ -198,7 +198,7 @@ export class MusicService {
   }
 
   private handleError() {
-    return catchError(err => {
+    return catchError<any, Observable<never>>(err => {
         let message: string;
         if (err.error && err.error.message) {
           message = err.error.message;
@@ -210,7 +210,7 @@ export class MusicService {
           duration: 3000,
           panelClass: 'error'
         });
-        throw err;
+        return throwError(err);
       }
     );
   }

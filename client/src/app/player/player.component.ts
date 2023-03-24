@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MusicService} from '../music.service';
 import {GuildInfo, PlaylistInfo, ShelfInfo, TrackInfo} from '../models';
-import {MatDialog} from '@angular/material/dialog';
+import {MatLegacyDialog as MatDialog} from '@angular/material/legacy-dialog';
 import {BookmarkCreatorComponent} from '../bookmark-creator/bookmark-creator.component';
 import {JoinChannelComponent} from '../join-channel/join-channel.component';
 
@@ -11,7 +11,7 @@ import {JoinChannelComponent} from '../join-channel/join-channel.component';
   styleUrls: ['./player.component.scss']
 })
 export class PlayerComponent implements OnInit {
-  searchResult: Array<TrackInfo | ShelfInfo | PlaylistInfo> = [];
+  searchResult: (TrackInfo | ShelfInfo | PlaylistInfo)[] = [];
   guild: GuildInfo;
 
   constructor(private musicService: MusicService,
