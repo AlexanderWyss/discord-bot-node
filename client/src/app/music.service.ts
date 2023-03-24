@@ -105,7 +105,7 @@ export class MusicService {
       } else {
         url = value.url;
       }
-      this.http.get(this.baseUrl + '/' + this.guildId + '/' + command + '/' + encodeURIComponent(url))
+      this.http.post(this.baseUrl + '/post/' + this.guildId + '/' + command, {url})
         .pipe(this.handleError()).subscribe();
     } else {
       this.http.post(this.baseUrl + '/' + this.guildId + '/' + command, {tracks: value.items}).pipe(this.handleError()).subscribe();
@@ -149,9 +149,9 @@ export class MusicService {
     this.http.get(this.baseUrl + '/' + this.guildId + '/remove/' + id).pipe(this.handleError()).subscribe();
   }
 
-  search(query: string): Observable<Array<TrackInfo | ShelfInfo | PlaylistInfo>> {
-    return this.http.get(this.baseUrl + '/search/' + encodeURIComponent(query))
-      .pipe(this.handleError()) as Observable<Array<TrackInfo | ShelfInfo>>;
+  search(query: string): Observable<(TrackInfo | ShelfInfo | PlaylistInfo)[]> {
+    return this.http.post(this.baseUrl + '/post/search', {query})
+      .pipe(this.handleError()) as Observable<(TrackInfo | ShelfInfo)[]>;
   }
 
   getChannels(): Observable<Channel[]> {
@@ -169,7 +169,7 @@ export class MusicService {
   add(queue: QueueType, track: TrackInfo | ShelfInfo | PlaylistInfo, index: number) {
     let body: any;
     if (track.type === 'playlist') {
-      this.http.get(this.baseUrl + '/' + this.guildId + '/add/' + queue + '/' + index + '/' + encodeURIComponent(track.url))
+      this.http.post(this.baseUrl + '/post/' + this.guildId + '/add/' + queue + '/' + index, {url: track.url})
         .pipe(this.handleError()).subscribe();
       return;
     } else if (track.type === 'video') {
@@ -193,7 +193,7 @@ export class MusicService {
   }
 
   getPlaylistTracks(url: string): Observable<TrackInfo[]> {
-    return this.http.get(this.baseUrl + '/playlist/' + encodeURIComponent(url) + '/items')
+    return this.http.post(this.baseUrl + '/post/playlist/items', {url})
       .pipe(this.handleError()) as Observable<TrackInfo[]>;
   }
 
