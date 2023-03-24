@@ -9,7 +9,7 @@
   <div>
     <mat-slider class="seekSlider" min="0"
                 [max]="queueInfo?.currentTrack?.duration != null ? queueInfo.currentTrack.duration : 0"
-                [(ngModel)]="queueInfo.currentTrack.position"
+                [(ngModel)]="queueInfo?.currentTrack.position"
                 (change)="seek($event)" (input)="whileSeeking($event.value)" color="primary"></mat-slider>
   </div>
   <div class="buttons">
