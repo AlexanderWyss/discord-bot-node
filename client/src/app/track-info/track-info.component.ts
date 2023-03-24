@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {PlaylistInfo, ShelfInfo, TrackInfo} from '../models';
 
 export type Events = 'NOW' | 'NEXT' | 'QUEUE' | 'REMOVE' | 'BROWSE' | 'RADIO';
@@ -13,7 +13,7 @@ export interface TrackInfoEvent {
   templateUrl: './track-info.component.html',
   styleUrls: ['./track-info.component.scss']
 })
-export class TrackInfoComponent implements OnInit {
+export class TrackInfoComponent {
 
   @Input() track: any;
   @Input() events: Events[];
@@ -21,9 +21,6 @@ export class TrackInfoComponent implements OnInit {
 
 
   constructor() {
-  }
-
-  ngOnInit() {
   }
 
   emit(type: Events, params: any) {

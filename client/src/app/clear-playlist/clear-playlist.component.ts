@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 
 @Component({
@@ -6,11 +6,8 @@ import {MatDialogRef} from '@angular/material/dialog';
   templateUrl: './clear-playlist.component.html',
   styleUrls: ['./clear-playlist.component.scss']
 })
-export class ClearPlaylistComponent implements OnInit {
+export class ClearPlaylistComponent {
 
   constructor(public dialogRef: MatDialogRef<ClearPlaylistComponent>) { }
-
-  ngOnInit(): void {
-  }
 
 }
