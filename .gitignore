@@ -6,4 +6,5 @@
 token.txt
 owner.txt
 youtube-api.txt
+.env.test
 .env
