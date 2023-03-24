@@ -1,11 +1,11 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {PlaylistInfo, QueueInfo, QueueType, ShelfInfo, TrackInfo} from '../models';
 import {MusicService} from '../music.service';
-import {MatLegacyDialog as MatDialog} from '@angular/material/legacy-dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {TrackInfoEvent} from '../track-info/track-info.component';
 import {CdkDragDrop, copyArrayItem, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {ClearPlaylistComponent} from '../clear-playlist/clear-playlist.component';
-import {MatLegacySliderChange as MatSliderChange} from '@angular/material/legacy-slider';
+import {MatSliderChange} from '@angular/material/slider';
 import {MatRipple, RippleRef} from '@angular/material/core';
 
 @Component({
@@ -15,7 +15,7 @@ import {MatRipple, RippleRef} from '@angular/material/core';
 })
 export class QueueComponent implements OnInit, OnDestroy {
 
-  @Input() searchResult: (TrackInfo | ShelfInfo | PlaylistInfo)[] = [];
+  @Input() searchResult: Array<TrackInfo | ShelfInfo | PlaylistInfo> = [];
   queueInfo: QueueInfo;
   counter;
   isSeeking = false;
