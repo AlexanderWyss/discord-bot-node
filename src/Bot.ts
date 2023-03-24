@@ -91,6 +91,7 @@ export class Bot {
       console.log(`Discord interaction: \"${interaction.type}\" from user: ${interaction.user.id}`);
       try {
         if (interaction.isChatInputCommand()) {
+          await interaction.deferReply({ephemeral: true});
           await this.handleChatInputCommand(interaction);
         }
       } catch (err) {
@@ -102,7 +103,7 @@ export class Bot {
 
   private async sendInteractionResponse(interaction: Interaction, response: string) {
     if (interaction.isRepliable()) {
-      await interaction.reply(response);
+      await interaction.editReply(response);
     } else {
       interaction.channel.send(response);
     }
@@ -114,9 +115,9 @@ export class Bot {
       response = await response;
     }
     if (typeof response === "string") {
-      await interaction.reply(response);
+      await interaction.editReply(response);
     } else {
-      await interaction.reply({content: "Done.", ephemeral: true});
+      await interaction.editReply("Done.");
     }
   }
 
