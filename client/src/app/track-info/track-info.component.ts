@@ -5,7 +5,7 @@ export type Events = 'NOW' | 'NEXT' | 'QUEUE' | 'REMOVE' | 'BROWSE' | 'RADIO';
 
 export interface TrackInfoEvent {
   type: Events;
-  params: TrackInfo|ShelfInfo|PlaylistInfo;
+  params: TrackInfo | ShelfInfo | PlaylistInfo;
 }
 
 @Component({
@@ -17,6 +17,8 @@ export class TrackInfoComponent {
 
   @Input() track: any;
   @Input() events: Events[];
+  @Input() isMobile: boolean = false;
+  @Input() isDraggable: boolean = true;
   @Output() event = new EventEmitter<TrackInfoEvent>();
 
 

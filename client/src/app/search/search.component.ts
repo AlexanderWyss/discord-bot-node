@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {PlaylistInfo, ShelfInfo, TrackInfo} from '../models';
 import {MusicService} from '../music.service';
 import {TrackInfoEvent} from '../track-info/track-info.component';
@@ -11,19 +11,20 @@ import {TrackInfoEvent} from '../track-info/track-info.component';
 export class SearchComponent implements OnInit, OnDestroy {
 
   @ViewChild('searchElement') searchElement: ElementRef;
+  @Input() isMobile: boolean = false;
   url = '';
-  searchResult: Array<TrackInfo | ShelfInfo | PlaylistInfo> = [];
-  @Output() searchResultChange = new EventEmitter<Array<TrackInfo | ShelfInfo | PlaylistInfo>>();
+  searchResult: (TrackInfo | ShelfInfo | PlaylistInfo)[] = [];
+  @Output() searchResultChange = new EventEmitter<(TrackInfo | ShelfInfo | PlaylistInfo)[]>();
   loading: boolean;
   isBrowsing: boolean;
-  cache: Array<TrackInfo | ShelfInfo | PlaylistInfo> = [];
+  cache: (TrackInfo | ShelfInfo | PlaylistInfo)[] = [];
 
   constructor(private musicService: MusicService) {
   }
 
 
   ngOnInit() {
-    window.addEventListener('keydown', (event) => this.searchEvent(event));
+    window.addEventListener('keydown', event => this.searchEvent(event));
   }
 
   private searchEvent(event: KeyboardEvent) {
@@ -129,7 +130,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     (event.target as any).select();
   }
 
-  setSearchResult(result: Array<TrackInfo | ShelfInfo | PlaylistInfo>): void {
+  setSearchResult(result: (TrackInfo | ShelfInfo | PlaylistInfo)[]): void {
     this.searchResult = result;
     this.searchResultChange.emit(result);
   }

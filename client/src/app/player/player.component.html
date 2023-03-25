@@ -15,10 +15,10 @@
 <div *ngIf="isMobile()" class="container mobile">
   <mat-tab-group>
     <mat-tab label="Player">
-      <app-queue cdkScrollable class="component" [searchResult]="searchResult"></app-queue>
+      <app-queue cdkScrollable class="component" [searchResult]="searchResult" [isMobile]="true"></app-queue>
     </mat-tab>
     <mat-tab label="Search">
-      <app-search cdkScrollable class="component" (searchResultChange)="searchResult = $event"></app-search>
+      <app-search cdkScrollable class="component" (searchResultChange)="searchResult = $event" [isMobile]="true"></app-search>
     </mat-tab>
   </mat-tab-group>
 </div>

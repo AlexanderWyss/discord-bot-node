@@ -1,5 +1,5 @@
 <div id="imageContainer">
-  <img [src]="queueInfo?.currentTrack?.thumbnailUrl">
+  <img [alt]="queueInfo?.currentTrack?.title" [src]="queueInfo?.currentTrack?.thumbnailUrl">
 </div>
 <div id="currentTrackInfo" class="shadow-bottom sticky-top">
   <h3>{{queueInfo?.currentTrack?.title}}</h3>
@@ -52,14 +52,14 @@
     <div cdkDropList id="previousList" #previousList="cdkDropList" [cdkDropListData]="queueInfo?.previousTracks"
          [cdkDropListConnectedTo]="'queueList'" (cdkDropListDropped)="drop($event)">
       <app-track-info *ngFor="let track of queueInfo?.previousTracks" [track]="track" [events]="['REMOVE']"
-                      (event)="trackInfoEvent($event)"></app-track-info>
+                      (event)="trackInfoEvent($event)" [isMobile]="isMobile"></app-track-info>
     </div>
   </mat-expansion-panel>
 </div>
 <div cdkDropList id="queueList" #queueList="cdkDropList" [cdkDropListData]="queueInfo?.tracks"
      [cdkDropListConnectedTo]="'previousList'" (cdkDropListDropped)="drop($event)">
   <app-track-info *ngFor="let track of queueInfo?.tracks" [track]="track" [events]="['REMOVE']"
-                  (event)="trackInfoEvent($event)"></app-track-info>
+                  (event)="trackInfoEvent($event)" [isMobile]="isMobile"></app-track-info>
 </div>
 
 <ng-template cdkConnectedOverlay

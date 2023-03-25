@@ -1,7 +1,7 @@
-<mat-card cdkDrag>
+<mat-card cdkDrag [cdkDragDisabled]="!isDraggable">
   <mat-card-content>
     <div class="thumbnail">
-      <img [src]="track.thumbnailUrl">
+      <img [alt]="track.title" [src]="track.thumbnailUrl">
       <div *ngIf="track.type === 'shelf'">{{track.items.length}}<mat-icon>playlist_play</mat-icon></div>
       <div *ngIf="track.type === 'playlist'">{{track.length}}<mat-icon>playlist_play</mat-icon></div>
     </div>
@@ -10,6 +10,9 @@
       <small *ngIf="track.artist">{{track.artist}}</small>
       <small *ngIf="track.duration">{{track.duration | minuteSeconds}}</small>
       <div class="buttons">
+        <button mat-icon-button *ngIf="isMobile && isDraggable" cdkDragHandle>
+          <mat-icon>drag_handle</mat-icon>
+        </button>
         <button mat-icon-button *ngIf="events.includes('REMOVE')" (click)="emit('REMOVE', track)">
           <mat-icon>delete</mat-icon>
         </button>

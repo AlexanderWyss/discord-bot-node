@@ -15,7 +15,8 @@ import {MatRipple, RippleRef} from '@angular/material/core';
 })
 export class QueueComponent implements OnInit, OnDestroy {
 
-  @Input() searchResult: Array<TrackInfo | ShelfInfo | PlaylistInfo> = [];
+  @Input() searchResult: (TrackInfo | ShelfInfo | PlaylistInfo)[] = [];
+  @Input() isMobile: boolean = false;
   queueInfo: QueueInfo;
   counter;
   isSeeking = false;
