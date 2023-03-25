@@ -1,6 +1,5 @@
 pipeline {
     agent any
-    def dockerImage
     stages {
         stage('Dependencies Server') {
             steps {
@@ -37,13 +36,9 @@ pipeline {
                 }
             }
         }
-        stage('Build image') {
+        stage('Build and publish docker image') {
             steps {
-                dockerImage = docker.build("alexanderwyss/discord-bot-node", "-f DockerfileJenkins .")
-            }
-        }
-        stage('Push image') {
-            steps {
+                def dockerImage = docker.build("alexanderwyss/discord-bot-node", "-f DockerfileJenkins .")
                 docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
                     dockerImage.push(BUILD_NUMBER)
                     dockerImage.push("latest")
