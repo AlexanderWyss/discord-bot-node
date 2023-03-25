@@ -42,8 +42,13 @@ docker run -d -p 80:80 --restart unless-stopped --name discord-bot-node -e NODE_
 [Docker Hub](https://hub.docker.com/r/alexanderwyss/discord-bot-node)
 
 ## Slash Commands
-The slash commands must initially be register with !RegisterCommands.
-This must be done per guild.
+Slash commands are a way to interact with the bot through discord. Start typing / to see a list of available commands.
+
+The slash commands must initially be registered with "!RegisterCommands".
+- It can only be done by the bot owner, as defined by the env variable OWNER.
+- It can be done in any text channel of a guild.
+- It must be done for every guild separately.
+- It should be repeated after every update of the bot.
 
 ## Web UI
 The Web UI can be used by multiple Users concurrently.

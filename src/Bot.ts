@@ -17,10 +17,9 @@ export class Bot {
 
   public static getInstance(): Bot {
     if (!this.bot) {
-      this.bot = new Bot();
+      this.bot = new Bot(process.env.OWNER);
       const token = process.env.TOKEN;
-      const owner = process.env.OWNER;
-      this.bot.start(token, owner);
+      this.bot.start(token);
     }
     return this.bot;
   }
@@ -33,11 +32,11 @@ export class Bot {
   public client: Client;
   private musicManagers = new Map<Snowflake, GuildMusicManager>();
 
-  private constructor() {
+  private constructor(private ownerId: string) {
 
   }
 
-  public start(token: string, owner: string) {
+  public start(token: string) {
     this.client = new Client({intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions, GatewayIntentBits.MessageContent]});
     this.commandManger = new CommandManager(token);
     this.client.login(token).then(() => {
@@ -81,7 +80,7 @@ export class Bot {
   }
 
   private async handleMessage(message: Message) {
-    if (message.content === "!RegisterCommands") {
+    if (message.author.id === this.ownerId && message.content === "!RegisterCommands") {
       await this.commandManger.registerCommands(message.guildId, this.client.user.id);
     }
   }
