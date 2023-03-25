@@ -85,9 +85,9 @@ The slash commands must initially be registered with "!RegisterCommands".
 - It should be repeated after every update of the bot.
 
 ## Web UI
-The Web UI can be used by multiple Users concurrently.
+The Web UI can be used by multiple users concurrently.
 - Search YouTube
-- Manage your playlist
+- Manage your playlist with drag and drop
 - Seek in song
 - Make the bot join a voice channel or leave it
 - Light/Dark mode
