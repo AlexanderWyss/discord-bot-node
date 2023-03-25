@@ -86,6 +86,13 @@ The slash commands must initially be registered with "!RegisterCommands".
 
 ## Web UI
 The Web UI can be used by multiple Users concurrently.
+- Search YouTube
+- Manage your playlist
+- Seek in song
+- Make the bot join a voice channel or leave it
+- Light/Dark mode
+- Adjust volume
+- ...
 ![Web UI](https://raw.githubusercontent.com/AlexanderWyss/README-assets/master/discord-bot-node-web-ui.png)
 
 ### Keyboard Shortcuts:
