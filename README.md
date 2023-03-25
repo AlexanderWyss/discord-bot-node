@@ -1,7 +1,5 @@
 # Discord Music Bot with Webinterface
 
-## Update to new Discord Api WIP some things are missing
-
 ## Demo
 [Discord Server](https://discord.gg/7v9jSsukYw)
 
