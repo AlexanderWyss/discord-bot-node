@@ -93,6 +93,7 @@ The Web UI can be used by multiple users concurrently.
 - Light/Dark mode
 - Adjust volume
 - ...
+
 ![Web UI](https://raw.githubusercontent.com/AlexanderWyss/README-assets/master/discord-bot-node-web-ui.png)
 
 ### Keyboard Shortcuts:
