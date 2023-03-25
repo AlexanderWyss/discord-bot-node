@@ -45,7 +45,7 @@ Due to this the client will automatically be downloaded from the releases of thi
 1. Create a free replit account. [SignUp](https://replit.com/signup)
 2. Follow the instructions of [Create bot, get token and add to Discord server](https://github.com/AlexanderWyss/discord-bot-node/blob/master/DiscordBotREADME.md)
 3. [Deploy to replit](https://repl.it/github/AlexanderWyss/discord-bot-node)
-4. Import from GitHub
+4. Change Language from "TypeScript" to "Blank Repl" and Import from GitHub
 ![Web UI](https://raw.githubusercontent.com/AlexanderWyss/README-assets/master/replit_import.png)
 5. Open Secrets in the Tools menu
 ![Secrets](https://raw.githubusercontent.com/AlexanderWyss/README-assets/master/replit_secrets.png)
