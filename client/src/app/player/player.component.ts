@@ -4,6 +4,7 @@ import {GuildInfo, PlaylistInfo, ShelfInfo, TrackInfo} from '../models';
 import {MatDialog} from '@angular/material/dialog';
 import {BookmarkCreatorComponent} from '../bookmark-creator/bookmark-creator.component';
 import {JoinChannelComponent} from '../join-channel/join-channel.component';
+import {CookieService} from "ngx-cookie-service";
 
 @Component({
   selector: 'app-player',
@@ -11,15 +12,22 @@ import {JoinChannelComponent} from '../join-channel/join-channel.component';
   styleUrls: ['./player.component.scss']
 })
 export class PlayerComponent implements OnInit {
-  searchResult: Array<TrackInfo | ShelfInfo | PlaylistInfo> = [];
+  private readonly lightModeCookie = "light_mode";
+  searchResult: (TrackInfo | ShelfInfo | PlaylistInfo)[] = [];
   guild: GuildInfo;
+  isLightMode: boolean = true;
 
   constructor(private musicService: MusicService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private cookieService: CookieService) {
   }
 
 
   ngOnInit() {
+    if (this.cookieService.check(this.lightModeCookie)) {
+      this.isLightMode = this.cookieService.get(this.lightModeCookie) === "true";
+    }
+    this.toggleLightMode();
     this.musicService.onGuild().subscribe(guild => this.guild = guild);
   }
 
@@ -41,5 +49,14 @@ export class PlayerComponent implements OnInit {
 
   isMobile(): boolean {
     return window.screen.width <= 700;
+  }
+
+  toggleLightMode() {
+    if (this.isLightMode) {
+      document.getElementById("body").classList.add("lightTheme");
+    } else {
+      document.getElementById("body").classList.remove("lightTheme");
+    }
+    this.cookieService.set(this.lightModeCookie, String(this.isLightMode));
   }
 }

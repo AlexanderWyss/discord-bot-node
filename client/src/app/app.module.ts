@@ -36,6 +36,8 @@ import {MatSliderModule} from '@angular/material/slider';
 import {PortalModule} from '@angular/cdk/portal';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {MatRippleModule} from '@angular/material/core';
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {CookieService} from "ngx-cookie-service";
 
 const config: SocketIoConfig = {url: getUrl(), options: {}};
 
@@ -77,9 +79,10 @@ const config: SocketIoConfig = {url: getUrl(), options: {}};
     MatSliderModule,
     PortalModule,
     OverlayModule,
-    MatRippleModule
+    MatRippleModule,
+    MatSlideToggleModule
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

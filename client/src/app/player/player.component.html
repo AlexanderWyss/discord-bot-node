@@ -1,7 +1,10 @@
 <div id="title-container">
-  <img *ngIf="guild?.icon" [src]="guild?.icon">
+  <img *ngIf="guild?.icon" [src]="guild?.icon" alt="guild-icon">
   <h1 id="title">{{guild?.name}}</h1>
-  <button mat-stroked-button class="end" (click)="channels()">Channels</button>
+  <mat-icon class="end">{{isLightMode ? "light_mode" : "dark_mode"}}</mat-icon>
+  <mat-slide-toggle (change)="toggleLightMode()" [(ngModel)]="isLightMode" color="primary">
+  </mat-slide-toggle>
+  <button mat-stroked-button (click)="channels()">Channels</button>
   <button mat-stroked-button (click)="leave()">Leave</button>
   <button mat-stroked-button (click)="bookmarkTools()">Bookmark Tools</button>
 </div>
