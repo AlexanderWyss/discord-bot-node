@@ -62,7 +62,7 @@ Due to this the client will automatically be downloaded from the releases of thi
    - Once the message "Logged in" appears in the console it's running, and a webview should open automatically.
 From this webview you can double check your configured URL.
 9. Open Discord and go to the server you added the bot to in step 2.
-10. Send "!RegisterCommands" a text chat of that server.
+10. Send "!RegisterCommands" to a text chat of that server.
     - In the replit console it should print "Successfully registered X commands."
 11. Enjoy.
     - The very first song will take quite some time to load, after that the speed should be reasonable.
