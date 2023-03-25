@@ -32,6 +32,42 @@ client> npm run build:prod
 
 If the client was build without prod flag it will always access the server via localhost:3000 (for development).
 
+## Deploy with replit
+Replit is a free and easy way to deploy the bot for yourself.
+
+This project was not designed for replit. The provided configuration is only meant to deploy it.
+
+With the free version you may be limited by the available resources. 
+The client cannot be built because it will run out of ram. 
+Due to this the client will automatically be downloaded from the releases of this git repo.
+
+### Step by Step
+1. Create a free replit account. [SignUp](https://replit.com/signup)
+2. Follow the instructions of [Create bot, get token and add to Discord server](https://github.com/AlexanderWyss/discord-bot-node/blob/master/DiscordBotREADME.md)
+3. [Deploy to replit](https://repl.it/github/AlexanderWyss/discord-bot-node)
+4. Import from GitHub
+![Web UI](https://raw.githubusercontent.com/AlexanderWyss/README-assets/master/replit_import.png)
+5. Open Secrets in the Tools menu
+![Secrets](https://raw.githubusercontent.com/AlexanderWyss/README-assets/master/replit_secrets.png)
+6. Add following Secrets (key : value)
+   - NODE_ENV : production
+   - TOKEN : {token from step 2}
+   - OWNER : {owner id from step 2}
+   - URL : https://{replit name}.{replit username}.repl.co
+     - eg. https://discord-bot-node.awyss.repl.co
+       ![Run](https://raw.githubusercontent.com/AlexanderWyss/README-assets/master/replit_secrets_list.png)
+7. Run
+![Run](https://raw.githubusercontent.com/AlexanderWyss/README-assets/master/replit_run.png)
+8. Be patient.
+   - Once the message "Logged in" appears in the console it's running, and a webview should open automatically.
+From this webview you can double check your configured URL.
+9. Open Discord and go to the server you added the bot to in step 2.
+10. Send "!RegisterCommands" a text chat of that server.
+    - In the replit console it should print "Successfully registered X commands."
+11. Enjoy.
+    - The very first song will take quite some time to load, after that the speed should be reasonable.
+
+
 ## Docker
 Or run with Docker:
 ```

@@ -1,4 +1,4 @@
-compile = "npm i && npm run build && wget -O client.zip https://github.com/AlexanderWyss/discord-bot-node/releases/download/2.0.0-SNAPSHOT/client.zip && unzip client.zip -d ./dist/client/"
+compile = "npm i && npm run build && wget -O client.zip https://github.com/AlexanderWyss/discord-bot-node/releases/download/2.0.0-SNAPSHOT/client.zip && unzip -o client.zip -d ./dist/client/"
 run = "node ./bin/www"
 
 [packager]
