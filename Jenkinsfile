@@ -38,10 +38,12 @@ pipeline {
         }
         stage('Build and publish docker image') {
             steps {
-                def dockerImage = docker.build("alexanderwyss/discord-bot-node", "-f DockerfileJenkins .")
-                docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                    dockerImage.push(BUILD_NUMBER)
-                    dockerImage.push("latest")
+                script {
+                    def dockerImage = docker.build("alexanderwyss/discord-bot-node", "-f DockerfileJenkins .")
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                        dockerImage.push(BUILD_NUMBER)
+                        dockerImage.push("latest")
+                    }
                 }
             }
         }
