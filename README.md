@@ -1,4 +1,4 @@
-# Discord Music Bot with Webinterface
+# Discord Music Bot with Website
 
 ## Demo
 [Discord Server](https://discord.gg/7v9jSsukYw)
