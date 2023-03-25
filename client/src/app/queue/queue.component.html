@@ -4,8 +4,7 @@
 <div id="currentTrackInfo" class="shadow-bottom sticky-top">
   <h3>{{queueInfo?.currentTrack?.title}}</h3>
   <small>{{queueInfo?.currentTrack?.artist}}</small>
-  <small>{{queueInfo?.currentTrack?.position | minuteSeconds}}
-    /{{queueInfo?.currentTrack?.duration | minuteSeconds}}</small>
+  <small>{{queueInfo?.currentTrack?.position | minuteSeconds}}/{{queueInfo?.currentTrack?.duration | minuteSeconds}}</small>
   <div>
     <mat-slider class="seekSlider" min="0"
                 [max]="queueInfo?.currentTrack?.duration != null ? queueInfo.currentTrack.duration : 0"
