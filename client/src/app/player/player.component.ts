@@ -57,6 +57,6 @@ export class PlayerComponent implements OnInit {
     } else {
       document.getElementById("body").classList.remove("lightTheme");
     }
-    this.cookieService.set(this.lightModeCookie, String(this.isLightMode));
+    this.cookieService.set(this.lightModeCookie, String(this.isLightMode), {path: "/", expires: 30});
   }
 }
