@@ -1,7 +1,7 @@
 pipeline {
     agent any
+    def dockerImage
     stages {
-        def dockerImage
         stage('Dependencies Server') {
             steps {
                 sh 'node --version'
