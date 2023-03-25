@@ -105,6 +105,7 @@ export class TrackScheduler implements PlayerObserver {
 
   public queue(tracks: TrackInfo | TrackInfo[]) {
     if (Array.isArray(tracks)) {
+      tracks = tracks.slice();
       for (const track of tracks) {
         this.tracks.push(track);
       }
@@ -116,6 +117,7 @@ export class TrackScheduler implements PlayerObserver {
 
   public next(tracks: TrackInfo | TrackInfo[]) {
     if (Array.isArray(tracks)) {
+      tracks = tracks.slice();
       for (const track of tracks.reverse()) {
         this.tracks.unshift(track);
       }
@@ -127,6 +129,7 @@ export class TrackScheduler implements PlayerObserver {
 
   public async now(tracks: TrackInfo | TrackInfo[]) {
     if (Array.isArray(tracks)) {
+      tracks = tracks.slice();
       if (tracks.length > 0) {
         await this.now(tracks.shift());
         this.next(tracks);

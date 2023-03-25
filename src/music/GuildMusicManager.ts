@@ -32,28 +32,34 @@ export class GuildMusicManager {
     }
   }
 
-  public async playNow(url: string, channel?: VoiceBasedChannel): Promise<void> {
+  public async playNow(url: string, channel?: VoiceBasedChannel): Promise<TrackInfo | TrackInfo[]> {
     if (channel && !this.isVoiceConnected()) {
       await this.join(channel);
     }
-    return YoutubeService.getInstance().getInfo(url).then(trackInfo => this.trackScheduler.now(trackInfo));
+    const trackInfo = await YoutubeService.getInstance().getInfo(url);
+    await this.trackScheduler.now(trackInfo);
+    return trackInfo;
   }
 
   public radio(url: string, includeCurrent = true): Promise<void> {
     return YoutubeService.getInstance().radio(url, includeCurrent).then(tracks => this.queueList(tracks));
   }
 
-  public playNext(url: string): Promise<void> {
+  public async playNext(url: string): Promise<TrackInfo | TrackInfo[]> {
     if (this.musicPlayer.isCurrentlyPlaying()) {
-      return YoutubeService.getInstance().getInfo(url).then(trackInfo => this.trackScheduler.next(trackInfo));
+      const trackInfo = await YoutubeService.getInstance().getInfo(url);
+      await this.trackScheduler.next(trackInfo);
+      return trackInfo;
     } else {
       return this.playNow(url);
     }
   }
 
-  public queue(url: string): Promise<void> {
+  public async queue(url: string): Promise<TrackInfo | TrackInfo[]> {
     if (this.musicPlayer.isCurrentlyPlaying()) {
-      return YoutubeService.getInstance().getInfo(url).then(trackInfo => this.trackScheduler.queue(trackInfo));
+      const trackInfo = await YoutubeService.getInstance().getInfo(url);
+      await this.trackScheduler.queue(trackInfo);
+      return trackInfo;
     } else {
       return this.playNow(url);
     }
