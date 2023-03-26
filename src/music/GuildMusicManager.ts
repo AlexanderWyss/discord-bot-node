@@ -46,23 +46,15 @@ export class GuildMusicManager {
   }
 
   public async playNext(url: string): Promise<TrackInfo | TrackInfo[]> {
-    if (this.musicPlayer.isCurrentlyPlaying()) {
-      const trackInfo = await YoutubeService.getInstance().getInfo(url);
-      await this.trackScheduler.next(trackInfo);
-      return trackInfo;
-    } else {
-      return this.playNow(url);
-    }
+    const trackInfo = await YoutubeService.getInstance().getInfo(url);
+    await this.trackScheduler.next(trackInfo);
+    return trackInfo;
   }
 
   public async queue(url: string): Promise<TrackInfo | TrackInfo[]> {
-    if (this.musicPlayer.isCurrentlyPlaying()) {
-      const trackInfo = await YoutubeService.getInstance().getInfo(url);
-      await this.trackScheduler.queue(trackInfo);
-      return trackInfo;
-    } else {
-      return this.playNow(url);
-    }
+    const trackInfo = await YoutubeService.getInstance().getInfo(url);
+    await this.trackScheduler.queue(trackInfo);
+    return trackInfo;
   }
 
   public skip(): Promise<void> {
