@@ -80,7 +80,7 @@ export class WebRouter {
       this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId).togglePause(), res);
     });
     this.router.get("/:guildId/remove/:id", (req: any, res: any, next: any) => {
-      this.handleResponse(() => this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
+      this.handleResponse(this.bot.getGuildMusicManagerByIdIfExists(req.params.guildId)
         .removeTrackById(parseInt(req.params.id, 10)), res);
     });
     this.router.get("/search/:query", (req: any, res: any, next: any) => {

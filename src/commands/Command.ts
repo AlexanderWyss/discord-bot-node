@@ -3,6 +3,9 @@ import {SharedNameAndDescription} from "@discordjs/builders";
 import {RESTPostAPIChatInputApplicationCommandsJSONBody} from "discord-api-types/v10";
 import {COMMANDS} from "./Commands";
 import {Bot} from "../Bot";
+import {PLAY_COMMANDS} from "./PlayCommands";
+import {MUSIC_CONTROL_COMMANDS} from "./MusicControlCommands";
+import {PLAYLIST_CONTROL_COMMANDS} from "./PlayListControlCommands";
 
 export type CommandExecutable = (interaction: ChatInputCommandInteraction, bot: Bot) => string | void | Promise<string | void>;
 export type CommandBuilder = SharedNameAndDescription & { toJSON(): RESTPostAPIChatInputApplicationCommandsJSONBody };
@@ -13,7 +16,7 @@ export interface Command {
 }
 
 export class CommandManager {
-  private static readonly COMMANDS: Command[] = [...COMMANDS];
+  private static readonly COMMANDS: Command[] = [...COMMANDS, ...PLAY_COMMANDS, ...MUSIC_CONTROL_COMMANDS, ...PLAYLIST_CONTROL_COMMANDS];
   private readonly commands = new Map<string, Command>();
 
   constructor(private token: string) {

@@ -5,109 +5,109 @@ import {
   ButtonStyle,
   ComponentType,
   EmbedBuilder,
-  InteractionCollector,
-  Message,
+  escapeMarkdown,
   MessageCreateOptions,
-  MessageEditOptions,
-  TextBasedChannel
+  MessageEditOptions
 } from "discord.js";
-import he from "he";
-import {TrackInfo} from "./TrackInfo";
 import {TrackScheduler} from "./TrackScheduler";
-import {TrackSchedulerObserver} from "./TrackSchedulerObserver";
 import {MessageActionRowComponentBuilder} from "@discordjs/builders";
 import {GuildMusicManager} from "./GuildMusicManager";
+import {TrackSchedulerObserverPanel} from "./TrackSchedulerObserverPanel";
 
-export class MusicPanel implements TrackSchedulerObserver {
-  private message: Promise<Message>;
-  private static readonly PREVIOUS = "⏮";
-  private static readonly PREVIOUSID = "previous";
-  private static readonly RESTART = "⏪";
-  private static readonly RESTARTID = "restart";
-  private static readonly PAUSE_RESUME = "⏯";
-  private static readonly PAUSE_RESUMEID = "pause";
-  private static readonly SKIP = "⏭";
-  private static readonly SKIPID = "skip";
-  private collector: InteractionCollector<ButtonInteraction>;
+export class MusicPanel extends TrackSchedulerObserverPanel {
+  private static readonly PREVIOUS = "previous";
+  private static readonly RESTART = "restart";
+  private static readonly PAUSE_RESUME = "pause";
+  private static readonly SKIP = "skip";
+  private static readonly REPEAT = "repeat";
+  private static readonly VOLUME_UP = "vol_up";
+  private static readonly VOLUME_DOWN = "vol_down";
 
-  constructor(private trackScheduler: TrackScheduler, private musicManager: GuildMusicManager) {
+  constructor(trackScheduler: TrackScheduler, private musicManager: GuildMusicManager) {
+    super(trackScheduler);
   }
 
-  public start(channel: TextBasedChannel) {
-    this.trackScheduler.register(this);
-    this.message = channel.send(this.buildMessage(this.trackScheduler.getCurrentlyPlaying()));
-    this.message.then(async message => {
-      this.collector = message.createMessageComponentCollector({componentType: ComponentType.Button})
-      this.collector.on("collect", async (interaction: ButtonInteraction) => {
-        try {
-          await interaction.deferUpdate();
-          switch (interaction.customId) {
-            case MusicPanel.PREVIOUSID:
-              this.musicManager.skipBack();
-              break;
-            case MusicPanel.RESTARTID:
-              this.musicManager.restart();
-              break;
-            case MusicPanel.PAUSE_RESUMEID:
-              this.musicManager.togglePause();
-              break;
-            case MusicPanel.SKIPID:
-              await this.musicManager.skip();
-              break;
-            default:
-              console.error(`Unexpected interaction: ` + interaction.customId);
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      });
-
-      this.collector.on("end", collected => {
-        console.log("MusicPanel collector closed.");
-      });
-    });
-  }
-
-  public onChange(trackScheduler: TrackScheduler): void {
-    this.message = this.message.then(message => message.edit(this.buildMessage(trackScheduler.getCurrentlyPlaying())));
-  }
-
-  public destroy() {
-    this.trackScheduler.deregister(this);
-    this.collector.stop();
-    this.message.then(message => message.delete()).catch(e => console.error(e));
-  }
-
-  private buildMessage(currentlyPlaying: TrackInfo): MessageCreateOptions & MessageEditOptions {
+  protected buildTrackMessage(trackScheduler: TrackScheduler): MessageCreateOptions & MessageEditOptions {
+    const currentlyPlaying = trackScheduler.getCurrentlyPlaying();
     const embed = new EmbedBuilder()
       .setTitle("Music Panel")
       .setColor("#0099ff");
     if (currentlyPlaying && currentlyPlaying.type) {
       embed.addFields(
-        {name: "Title", value: he.decode(currentlyPlaying.title)},
-        {name: "Artist", value: he.decode(currentlyPlaying.artist)},
+        {name: "Title", value: escapeMarkdown(currentlyPlaying.title)},
+        {name: "Artist", value: escapeMarkdown(currentlyPlaying.artist), inline: true},
+        {name: "Volume", value: String(currentlyPlaying.volume), inline: true},
         {name: "Url", value: currentlyPlaying.url}
       ).setThumbnail(currentlyPlaying.thumbnailUrl);
     }
-    const buttons = new ActionRowBuilder<MessageActionRowComponentBuilder>()
+    const tracks = trackScheduler.getTracks().slice(0, 3);
+    let trackList = tracks.map(track => escapeMarkdown(`${track.id}. ${track.title}`)).join("\n");
+    if (trackList.length === 0) {
+      trackList = " ";
+    }
+    embed.addFields({name: "Up next", value: trackList})
+    const row1 = new ActionRowBuilder<MessageActionRowComponentBuilder>()
       .addComponents(
         new ButtonBuilder()
-          .setCustomId(MusicPanel.PREVIOUSID)
-          .setLabel(MusicPanel.PREVIOUS)
+          .setCustomId(MusicPanel.RESTART)
+          .setEmoji("↪")
           .setStyle(ButtonStyle.Secondary),
         new ButtonBuilder()
-          .setCustomId(MusicPanel.RESTARTID)
-          .setLabel(MusicPanel.RESTART)
+          .setCustomId(MusicPanel.PREVIOUS)
+          .setEmoji("⏮")
           .setStyle(ButtonStyle.Secondary),
         new ButtonBuilder()
-          .setCustomId(MusicPanel.PAUSE_RESUMEID)
-          .setLabel(MusicPanel.PAUSE_RESUME)
+          .setCustomId(MusicPanel.PAUSE_RESUME)
+          .setEmoji(currentlyPlaying.paused ? "▶" : "⏸")
           .setStyle(ButtonStyle.Secondary),
         new ButtonBuilder()
-          .setCustomId(MusicPanel.SKIPID)
-          .setLabel(MusicPanel.SKIP)
+          .setCustomId(MusicPanel.SKIP)
+          .setEmoji("⏭")
+          .setStyle(ButtonStyle.Secondary));
+
+    const row2 = new ActionRowBuilder<MessageActionRowComponentBuilder>()
+      .addComponents(
+        new ButtonBuilder()
+          .setCustomId(MusicPanel.REPEAT)
+          .setEmoji("🔁")
+          .setStyle(trackScheduler.getRepeat() ? ButtonStyle.Primary : ButtonStyle.Secondary),
+        new ButtonBuilder()
+          .setCustomId(MusicPanel.VOLUME_DOWN)
+          .setEmoji("🔉")
+          .setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder()
+          .setCustomId(MusicPanel.VOLUME_UP)
+          .setEmoji("🔊")
           .setStyle(ButtonStyle.Secondary),
       )
-    return {embeds: [embed], components: [buttons]};
+    return {embeds: [embed], components: [row1, row2]};
+  }
+
+  protected async handleButtonInteraction(id: string, interaction: ButtonInteraction): Promise<void> {
+    switch (interaction.customId) {
+      case MusicPanel.PREVIOUS:
+        this.musicManager.skipBack();
+        break;
+      case MusicPanel.RESTART:
+        this.musicManager.restart();
+        break;
+      case MusicPanel.PAUSE_RESUME:
+        this.musicManager.togglePause();
+        break;
+      case MusicPanel.SKIP:
+        await this.musicManager.skip();
+        break;
+      case MusicPanel.REPEAT:
+        await this.musicManager.toggleRepeat();
+        break;
+      case MusicPanel.VOLUME_DOWN:
+        await this.musicManager.setVolume(this.musicManager.getCurrentTrack().volume - 5);
+        break;
+      case MusicPanel.VOLUME_UP:
+        await this.musicManager.setVolume(this.musicManager.getCurrentTrack().volume + 5);
+        break;
+      default:
+        console.error(`Unexpected interaction: ` + interaction.customId);
+    }
   }
 }

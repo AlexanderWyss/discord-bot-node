@@ -204,10 +204,29 @@ export class TrackScheduler implements PlayerObserver {
     return this.musicManager;
   }
 
-  public removeById(id: number) {
-    this.tracks = this.tracks.filter(track => track.id !== id);
-    this.previousTracks = this.previousTracks.filter(track => track.id !== id);
+  public async removeById(id: number): Promise<boolean> {
+    if (id === this.currentlyPlaying?.id) {
+      await this.tryPlayNext();
+    }
+    let success = false;
+    const trackIndex = this.tracks.findIndex(track => track.id === id);
+    if (trackIndex !== -1) {
+      success = success || this.tracks.splice(trackIndex, 1).length > 0;
+    }
+    const previousTrackIndex = this.previousTracks.findIndex(track => track.id === id);
+    if (previousTrackIndex !== -1) {
+      success = success || this.previousTracks.splice(previousTrackIndex, 1).length > 0;
+    }
     this.updateObservers();
+    return success;
+  }
+
+  private async tryPlayNext() {
+    try {
+      await this.playNext();
+    } catch (e) {
+      console.debug();
+    }
   }
 
   public setRepeat(value: boolean) {
@@ -282,7 +301,11 @@ export class TrackScheduler implements PlayerObserver {
 
   private updateObservers() {
     for (const observer of this.observers) {
-      observer.onChange(this);
+      try {
+        observer.onChange(this);
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
 }

@@ -6,11 +6,13 @@ import {CurrentTrackInfo, QueueType, TrackInfo} from "./TrackInfo";
 import {TrackScheduler} from "./TrackScheduler";
 import {YoutubeService} from "./YoutubeService";
 import {VoiceConnection} from "@discordjs/voice";
+import {PlaylistPanel} from "./PlaylistPanel";
 
 export class GuildMusicManager {
   private readonly trackScheduler: TrackScheduler;
   private readonly musicPlayer: MusicPlayer;
   private musicpanel: MusicPanel;
+  private playlistPanel: PlaylistPanel;
   private autoLeaveTimeout: NodeJS.Timeout = null;
 
   constructor(private guild: Guild) {
@@ -101,10 +103,21 @@ export class GuildMusicManager {
     this.musicpanel.start(channel);
   }
 
+  public displayPlaylistPanel(channel: TextBasedChannel) {
+    if (this.playlistPanel) {
+      this.playlistPanel.destroy();
+    }
+    this.playlistPanel = new PlaylistPanel(this.trackScheduler, this);
+    this.playlistPanel.start(channel);
+  }
+
   public close(): void {
     this.leave();
     if (this.musicpanel) {
       this.musicpanel.destroy();
+    }
+    if (this.playlistPanel) {
+      this.playlistPanel.destroy();
     }
     this.clearAutoLeaveTimeout();
   }
@@ -141,8 +154,8 @@ export class GuildMusicManager {
     return this.musicPlayer.isConnected();
   }
 
-  public removeTrackById(id: number) {
-    this.trackScheduler.removeById(id);
+  public removeTrackById(id: number): Promise<boolean> {
+    return this.trackScheduler.removeById(id);
   }
 
   public getVoiceChannels(): ChannelInfo[] {
@@ -243,5 +256,17 @@ export class GuildMusicManager {
 
   isBotOnlyMemberInVoiceChannel(): boolean {
     return this.isVoiceConnected() && this.musicPlayer.getChannel().members.size === 1;
+  }
+
+  tryJoin(channel: VoiceBasedChannel): boolean {
+    try {
+      if (this.isVoiceConnected()) {
+        return false;
+      }
+      return !!this.join(channel);
+    } catch (e) {
+      console.debug(e);
+      return false;
+    }
   }
 }
