@@ -5,7 +5,7 @@ import {
   ButtonStyle,
   ComponentType,
   EmbedBuilder,
-  escapeMarkdown,
+  escapeMarkdown, GuildMember,
   MessageCreateOptions,
   MessageEditOptions
 } from "discord.js";
@@ -20,8 +20,11 @@ export class MusicPanel extends TrackSchedulerObserverPanel {
   private static readonly PAUSE_RESUME = "pause";
   private static readonly SKIP = "skip";
   private static readonly REPEAT = "repeat";
+  private static readonly RADIO = "radio";
   private static readonly VOLUME_UP = "vol_up";
   private static readonly VOLUME_DOWN = "vol_down";
+  private static readonly JOIN = "join";
+  private static readonly LEAVE = "leave";
 
   constructor(trackScheduler: TrackScheduler, private musicManager: GuildMusicManager) {
     super(trackScheduler);
@@ -63,7 +66,12 @@ export class MusicPanel extends TrackSchedulerObserverPanel {
         new ButtonBuilder()
           .setCustomId(MusicPanel.SKIP)
           .setEmoji("⏭")
-          .setStyle(ButtonStyle.Secondary));
+          .setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder()
+          .setCustomId(MusicPanel.JOIN)
+          .setLabel("Join")
+          .setStyle(ButtonStyle.Success)
+      );
 
     const row2 = new ActionRowBuilder<MessageActionRowComponentBuilder>()
       .addComponents(
@@ -72,6 +80,10 @@ export class MusicPanel extends TrackSchedulerObserverPanel {
           .setEmoji("🔁")
           .setStyle(trackScheduler.getRepeat() ? ButtonStyle.Primary : ButtonStyle.Secondary),
         new ButtonBuilder()
+          .setCustomId(MusicPanel.RADIO)
+          .setEmoji("📻")
+          .setStyle(trackScheduler.getAutoRadio() ? ButtonStyle.Primary : ButtonStyle.Secondary),
+        new ButtonBuilder()
           .setCustomId(MusicPanel.VOLUME_DOWN)
           .setEmoji("🔉")
           .setStyle(ButtonStyle.Secondary),
@@ -79,6 +91,10 @@ export class MusicPanel extends TrackSchedulerObserverPanel {
           .setCustomId(MusicPanel.VOLUME_UP)
           .setEmoji("🔊")
           .setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder()
+          .setCustomId(MusicPanel.LEAVE)
+          .setLabel("Leave")
+          .setStyle(ButtonStyle.Danger)
       )
     return {embeds: [embed], components: [row1, row2]};
   }
@@ -100,11 +116,20 @@ export class MusicPanel extends TrackSchedulerObserverPanel {
       case MusicPanel.REPEAT:
         await this.musicManager.toggleRepeat();
         break;
+      case MusicPanel.RADIO:
+        await this.musicManager.toggleRadio();
+        break;
       case MusicPanel.VOLUME_DOWN:
         await this.musicManager.setVolume(this.musicManager.getCurrentTrack().volume - 5);
         break;
       case MusicPanel.VOLUME_UP:
         await this.musicManager.setVolume(this.musicManager.getCurrentTrack().volume + 5);
+        break;
+      case MusicPanel.JOIN:
+        await this.musicManager.join((interaction.member as GuildMember).voice.channel);
+        break;
+      case MusicPanel.LEAVE:
+        await this.musicManager.leave();
         break;
       default:
         console.error(`Unexpected interaction: ` + interaction.customId);
