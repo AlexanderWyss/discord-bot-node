@@ -16,9 +16,13 @@ Create .env file or set environment variables in commandline and add NODE_ENV=pr
 TOKEN=<discord token>
 OWNER=<Discord owner User Id>
 URL=<url/ip of this server in format http(s)://foo.bar:port>
-PORT=<port to start server on (Default 3000)>
-DEFAULT_VOLUME=<0-150 (optional: default 20)>
-RADIO_MAX_VIDEO_LENGTH=<length in seconds, 0 for no max length, Default: 600)
+PORT=<port to start server on, default: 3000>
+DEFAULT_VOLUME=<0-150, default: 20>
+RADIO_MAX_VIDEO_LENGTH=<length in seconds, 0 for no max length, default: 600, will exclude all songs longer than the duration from the radio.>
+AUTO_LEAVE_TIMEOUT=<length in seconds, -1 to disable, Default: 60, will make the bot leave after the given amount of time, if he is alone.>
+RESUME_ON_BOT_JOIN=<true/false, default: false, whether the bot resumes music playback when he joins a channel.>
+PAUSE_ON_USER_LEAVE<true/false, default: true, whether the bots pauses music playback when he is alone.>
+RESUME_ON_USER_JOIN=<true/false, default: true, whether the bots resumes music playback when he is no longer alone.>
 ```
 
 Build the server first then the client.

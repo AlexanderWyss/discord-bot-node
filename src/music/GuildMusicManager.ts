@@ -14,17 +14,37 @@ export class GuildMusicManager {
   private musicpanel: MusicPanel;
   private playlistPanel: PlaylistPanel;
   private autoLeaveTimeout: NodeJS.Timeout = null;
+  private readonly autoLeaveTimeoutSeconds: number = 60;
+  private readonly resumeOnBotJoin: boolean = false;
+  private readonly pauseOnUserLeave: boolean = true;
+  private readonly resumeOnUserJoin: boolean = true;
 
   constructor(private guild: Guild) {
     this.musicPlayer = new MusicPlayer(this.guild);
     this.trackScheduler = new TrackScheduler(this.musicPlayer, this);
+    if (process.env.AUTO_LEAVE_TIMEOUT != null) {
+      this.autoLeaveTimeoutSeconds = parseInt(process.env.AUTO_LEAVE_TIMEOUT, 10);
+    }
+    if (process.env.RESUME_ON_BOT_JOIN != null) {
+      this.resumeOnBotJoin = process.env.RESUME_ON_BOT_JOIN === String(true);
+    }
+    if (process.env.PAUSE_ON_USER_LEAVE != null) {
+      this.pauseOnUserLeave = process.env.PAUSE_ON_USER_LEAVE === String(true);
+    }
+    if (process.env.RESUME_ON_USER_JOIN != null) {
+      this.resumeOnUserJoin = process.env.RESUME_ON_USER_JOIN === String(true);
+    }
   }
 
-  public join(channel: VoiceBasedChannel): VoiceConnection {
+  public join(channel: VoiceBasedChannel, resume: boolean = this.resumeOnBotJoin): VoiceConnection {
     if (channel == null) {
       throw new Error("You must be in a channel.");
     }
-    return this.musicPlayer.join(channel.id);
+    const voiceConnection = this.musicPlayer.join(channel.id);
+    if (resume) {
+      this.resume();
+    }
+    return voiceConnection;
   }
 
   public leave(): void {
@@ -36,7 +56,7 @@ export class GuildMusicManager {
 
   public async playNow(url: string, channel?: VoiceBasedChannel): Promise<TrackInfo | TrackInfo[]> {
     if (channel && !this.isVoiceConnected()) {
-      await this.join(channel);
+      await this.join(channel, false);
     }
     const trackInfo = await YoutubeService.getInstance().getInfo(url);
     await this.trackScheduler.now(trackInfo);
@@ -233,17 +253,25 @@ export class GuildMusicManager {
     }
   }
 
-  onUserChangeVoiceState() {
+  onUserChangeVoiceState(isSelf: boolean) {
     if (this.isBotOnlyMemberInVoiceChannel()) {
-      this.autoLeaveTimeout = setTimeout(() => {
-        this.autoLeaveTimeout = null;
-        if (this.isBotOnlyMemberInVoiceChannel()) {
-          this.leave();
-          console.log('auto leave guild: ' + this.guild.name);
-        }
-      }, 60000);
+      if (this.pauseOnUserLeave && !isSelf) {
+        this.pause();
+      }
+      if (this.autoLeaveTimeoutSeconds >= 0) {
+        this.autoLeaveTimeout = setTimeout(() => {
+          this.autoLeaveTimeout = null;
+          if (this.isBotOnlyMemberInVoiceChannel()) {
+            this.leave();
+            console.log('auto leave guild: ' + this.guild.name);
+          }
+        }, this.autoLeaveTimeoutSeconds * 1000);
+      }
     } else {
       this.clearAutoLeaveTimeout();
+      if (this.resumeOnUserJoin && !isSelf) {
+        this.resume();
+      }
     }
   }
 

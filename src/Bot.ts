@@ -45,7 +45,7 @@ export class Bot {
       this.listenToMessages();
       this.client.on(Events.VoiceStateUpdate, (oldState, newState) => {
         try {
-          this.getGuildMusicManager(newState.guild).onUserChangeVoiceState();
+          this.getGuildMusicManager(newState.guild).onUserChangeVoiceState(newState.member.id === this.client.user.id);
         } catch (err) {
           console.error(err);
         }
