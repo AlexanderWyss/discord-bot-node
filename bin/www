@@ -1,21 +1,5 @@
 #!/usr/bin/env node
 
-function workaroundForNodeYtsrIssue174() {
-    console.nativeError = console.error;
-    console.error = function (...data) {
-        if (!(data && data.length > 0 && data[0] && typeof data[0] === "string" &&
-            (data[0].startsWith("TypeError: Cannot read properties of undefined (reading 'reelPlayerHeaderRenderer')")
-                || data[0].includes("***********************************")
-                || data[0].startsWith("failed at func parseItem: Cannot read properties of undefined (reading 'reelPlayerHeaderRenderer')")
-                || data[0].startsWith("pls post the the files in")
-                || (data[0].startsWith("os: ") && data[0].includes("node.js:") && data[0].includes("ytsr:"))
-            ))) {
-            console.nativeError(...data);
-        }
-    }
-}
-
-workaroundForNodeYtsrIssue174();
 /**
  * Module dependencies.
  */
