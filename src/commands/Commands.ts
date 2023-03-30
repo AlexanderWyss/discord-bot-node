@@ -1,13 +1,22 @@
 import {Command} from "./Command";
-import {GuildMember, SlashCommandBuilder} from "discord.js";
+import {GuildMember, SlashCommandBuilder, ChannelType} from "discord.js";
 
 export const COMMANDS: Command[] = [
   {
     data: new SlashCommandBuilder()
       .setName("join")
-      .setDescription("Join your channel."),
+      .setDescription("Join your channel.")
+      .addChannelOption(option => option.setName("channel")
+        .setDescription("A voice channel")
+        .addChannelTypes(ChannelType.GuildVoice, ChannelType.GuildStageVoice)
+        .setRequired(false)
+      ),
     execute(interaction, bot) {
-      bot.getGuildMusicManager(interaction.guild).join((interaction.member as GuildMember).voice.channel);
+      let channel = interaction.options.getChannel<ChannelType.GuildVoice | ChannelType.GuildStageVoice>("channel", false);
+      if (channel == null) {
+        channel = (interaction.member as GuildMember).voice.channel;
+      }
+      bot.getGuildMusicManager(interaction.guild).join(channel);
       return "Joined.";
     }
   }, {
