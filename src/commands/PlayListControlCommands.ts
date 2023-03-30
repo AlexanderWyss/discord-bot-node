@@ -33,5 +33,43 @@ export const PLAYLIST_CONTROL_COMMANDS: Command[] = [
       bot.getGuildMusicManager(interaction.guild).displayPlaylistPanel(interaction.channel);
       return "Displaying playlist.";
     }
+  }, {
+    data: new SlashCommandBuilder()
+      .setName("repeat")
+      .setDescription("Enable/Disable playlist repeat.")
+      .addBooleanOption(option =>
+        option.setName("value")
+          .setDescription("true or false (default: toggle)")
+          .setRequired(false)
+      ),
+    async execute(interaction, bot) {
+      const value = interaction.options.getBoolean("value", false);
+      const guildMusicManager = bot.getGuildMusicManager(interaction.guild);
+      if (value == null) {
+        guildMusicManager.toggleRepeat();
+      } else {
+        guildMusicManager.setRepeat(value);
+      }
+      return "Repeat " + (guildMusicManager.getRepeat() ? "enabled." : "disabled.");
+    }
+  }, {
+    data: new SlashCommandBuilder()
+      .setName("autoradio")
+      .setDescription("Enable/Disable auto radio.")
+      .addBooleanOption(option =>
+        option.setName("value")
+          .setDescription("true or false (default: toggle)")
+          .setRequired(false)
+      ),
+    async execute(interaction, bot) {
+      const value = interaction.options.getBoolean("value", false);
+      const guildMusicManager = bot.getGuildMusicManager(interaction.guild);
+      if (value == null) {
+        guildMusicManager.toggleRadio();
+      } else {
+        guildMusicManager.setRadio(value);
+      }
+      return "Auto radio " + (guildMusicManager.getAutoRadio() ? "enabled." : "disabled.");
+    }
   },
 ];

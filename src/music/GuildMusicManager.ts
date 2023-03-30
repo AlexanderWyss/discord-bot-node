@@ -203,12 +203,20 @@ export class GuildMusicManager {
     return this.trackScheduler.getRepeat();
   }
 
+  public setRepeat(value: boolean) {
+    this.trackScheduler.setRepeat(value);
+  }
+
   public toggleRadio() {
     this.trackScheduler.setAutoRadio(!this.trackScheduler.getAutoRadio());
   }
 
   public getAutoRadio(): boolean {
     return this.trackScheduler.getAutoRadio();
+  }
+
+  public setRadio(value: boolean) {
+    this.trackScheduler.setAutoRadio(value);
   }
 
   public add(queue: QueueType, track: TrackInfo | TrackInfo[], index: number) {
