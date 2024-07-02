@@ -107,6 +107,7 @@ export class MusicPlayer {
         .setFfmpegPath(ffmpegPath)
         .format("opus")
         .seekInput(seek)
+          // @ts-ignore
         .on("error", err => {
           if (err && err instanceof Error && err.message.includes("Premature close")) {
             return;
