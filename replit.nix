@@ -2,6 +2,6 @@
     deps = [
         pkgs.wget
         pkgs.unzip
-        pkgs.nodejs-20_x
+        pkgs.nodejs-18_x
     ];
 }
